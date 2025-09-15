@@ -1,18 +1,19 @@
-import { supabase } from "../supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
-export async function getJobsTodayCount(orgId: string): Promise<number> {
-  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
-
-  const { count, error } = await supabase
+export async function getJobsCountInRange(
+  orgId: string,
+  fromUtc: Date,
+  toUtc: Date,
+  statuses: string[] = ["scheduled"]
+): Promise<number> {
+  let q = supabase
     .from("jobs")
-    .select("*", { count: "exact", head: true })
+    .select("id", { count: "exact", head: true })
     .eq("org_id", orgId)
-    .gte("scheduled_at", `${today}T00:00:00Z`)
-    .lte("scheduled_at", `${today}T23:59:59Z`);
-
-  if (error) {
-    console.error("getJobsTodayCount error:", error);
-    return 0;
-  }
+    .gte("scheduled_at", fromUtc.toISOString())
+    .lt("scheduled_at", toUtc.toISOString());
+  if (statuses.length) q = q.in("status", statuses);
+  const { count, error } = await q;
+  if (error) throw error;
   return count ?? 0;
 }

@@ -12,5 +12,5 @@
     }
   },
   "forwardPorts": [5173],
-  "postCreateCommand": "corepack enable && pnpm i"
+  "postCreateCommand": "corepack enable && pnpm install"
 }

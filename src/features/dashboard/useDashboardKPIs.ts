@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../app/providers/AuthProvider";
-import { getOpenEstimatesValue } from "../../lib/api/estimates";
-import { getJobsTodayCount } from "../../lib/api/jobs";
-import { getARBalance } from "../../lib/api/invoices";
-import { getLeadsThisWeekCount } from "../../lib/api/leads";
+import { getOpenEstimatesValueInRange } from "../../lib/api/estimates"; // ⬅️ changed
+import { getJobsCountInRange } from "../../lib/api/jobs";
+import { getARBalanceInRange } from "../../lib/api/invoices";
+import { getLeadsCountInRange } from "../../lib/api/leads";
+import { useDashboardFilters } from "@/features/dashboard/state/dashboardFilters"; // ⬅️ new
 
 type KPIState = {
   openEstimatesValue: number | null;
@@ -14,6 +15,7 @@ type KPIState = {
 
 export function useDashboardKPIs() {
   const { orgId } = useAuth();
+  const { fromUtc, toUtc, refreshToken } = useDashboardFilters(); // ⬅️ new
   const [data, setData] = useState<KPIState>({
     openEstimatesValue: null,
     jobsTodayCount: null,
@@ -31,10 +33,11 @@ export function useDashboardKPIs() {
     setError(null);
 
     Promise.all([
-      getOpenEstimatesValue(orgId),
-      getJobsTodayCount(orgId),
-      getARBalance(orgId),
-      getLeadsThisWeekCount(orgId),
+      // Open Estimates, respects date range
+      getOpenEstimatesValueInRange(orgId, fromUtc, toUtc),
+      getJobsCountInRange(orgId, fromUtc, toUtc),    
+      getARBalanceInRange(orgId, fromUtc, toUtc), 
+      getLeadsCountInRange(orgId, fromUtc, toUtc),  
     ])
       .then(([openEstimatesValue, jobsTodayCount, arBalance, leadsThisWeekCount]) => {
         if (cancelled) return;
@@ -52,7 +55,8 @@ export function useDashboardKPIs() {
     return () => {
       cancelled = true;
     };
-  }, [orgId]);
+    //re-run when range or manual refresh changes
+  }, [orgId, fromUtc, toUtc, refreshToken]);
 
   return { ...data, loading, error };
 }

@@ -1,21 +1,26 @@
-import { supabase } from "../supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
-export async function getARBalance(orgId: string): Promise<number> {
-  const { data, error } = await supabase
+type InvoiceRow = { total: number | string | null; status: string; issue_date: string };
+
+export async function getARBalanceInRange(
+  orgId: string,
+  fromUtc: Date,
+  toUtc: Date,
+  statuses: string[] = ["open", "overdue"]
+): Promise<number> {
+  const fromDate = fromUtc.toISOString().slice(0, 10);
+  const toDate   = toUtc.toISOString().slice(0, 10);
+
+  let q = supabase
     .from("invoices")
-    .select("total, status")
+    .select("total, status, issue_date")
     .eq("org_id", orgId)
-    .in("status", ["open", "overdue", "partial"]);
+    .gte("issue_date", fromDate)
+    .lt("issue_date", toDate);
+  if (statuses.length) q = q.in("status", statuses);
 
-  if (error) {
-    console.error("getARBalance error:", error);
-    return 0;
-  }
-
-  return (
-    data?.reduce(
-      (sum, row: { total: number | null }) => sum + (row.total ?? 0),
-      0
-    ) ?? 0
-  );
+  const { data, error } = await q;
+  if (error) throw error;
+  const rows = (data ?? []) as InvoiceRow[];
+  return rows.reduce((sum, r) => sum + Number(r.total ?? 0), 0);
 }

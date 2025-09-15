@@ -1,35 +1,49 @@
-import React, {createContext, useContext, useMemo, useState, PropsWithChildren} from "react";
-import { startOfDay, endOfDay, subDays } from "date-fns";
-import { utcToZonedTime, zonedTimeToUtc } from "date-fns-tz";
+/* eslint-disable react-refresh/only-export-components */
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  PropsWithChildren,
+} from "react";
+import { addDays } from "date-fns";
 
 type RangePreset = "today" | "7d" | "30d" | "90d";
-const TZ = "America/Chicago";
 
 type Ctx = {
   preset: RangePreset;
   setPreset: (p: RangePreset) => void;
-  fromUtc: Date; // use in Supabase queries
-  toUtc: Date;   // use in Supabase queries (exclusive)
+  fromUtc: Date; // inclusive
+  toUtc: Date;   // exclusive
   refreshToken: number;
   refresh: () => void;
 };
 
 const DashboardFiltersContext = createContext<Ctx | null>(null);
 
+/** Build [start of UTC day, start of next UTC day) windows. */
 function computeRange(preset: RangePreset) {
-  const nowCST = utcToZonedTime(new Date(), TZ);
+  const now = new Date();
+
+  // Start of "today" in UTC
+  const startTodayUtc = new Date(Date.UTC(
+    now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0
+  ));
+
   if (preset === "today") {
-    const s = startOfDay(nowCST);
-    const e = endOfDay(nowCST);
-    return { fromUtc: zonedTimeToUtc(s, TZ), toUtc: zonedTimeToUtc(e, TZ) };
+    const fromUtc = startTodayUtc;
+    const toUtc   = addDays(startTodayUtc, 1);
+    return { fromUtc, toUtc };
   }
-  const days = preset === "7d" ? 6 : preset === "30d" ? 29 : 89; // inclusive window
-  const endLocal = endOfDay(nowCST);
-  const startLocal = startOfDay(subDays(nowCST, days));
-  return { fromUtc: zonedTimeToUtc(startLocal, TZ), toUtc: zonedTimeToUtc(endLocal, TZ) };
+
+  // For last Nd: start at start of (N-1) days ago; end at start of tomorrow
+  const daysBack = preset === "7d" ? 6 : preset === "30d" ? 29 : 89;
+  const fromUtc = addDays(startTodayUtc, -daysBack);
+  const toUtc   = addDays(startTodayUtc, 1); // exclusive
+  return { fromUtc, toUtc };
 }
 
-export function DashboardFiltersProvider({children}: PropsWithChildren) {
+export function DashboardFiltersProvider({ children }: PropsWithChildren) {
   const [preset, setPreset] = useState<RangePreset>("7d");
   const [refreshToken, setRefreshToken] = useState(0);
 
@@ -45,7 +59,11 @@ export function DashboardFiltersProvider({children}: PropsWithChildren) {
     };
   }, [preset, refreshToken]);
 
-  return <DashboardFiltersContext.Provider value={value}>{children}</DashboardFiltersContext.Provider>;
+  return (
+    <DashboardFiltersContext.Provider value={value}>
+      {children}
+    </DashboardFiltersContext.Provider>
+  );
 }
 
 export function useDashboardFilters() {
