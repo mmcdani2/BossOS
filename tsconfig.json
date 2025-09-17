@@ -1,7 +1,11 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@bossos/types": ["packages/types/src"],
+      "@bossos/core": ["packages/core/src"]
+    }
+  },
+  "include": ["test-import.ts", "test-core.ts", "packages/**/*"]
 }
