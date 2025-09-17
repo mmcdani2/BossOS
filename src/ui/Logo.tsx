@@ -10,7 +10,7 @@ export default function Logo() {
             WebkitTextFillColor: "transparent",
             marginBottom: "1rem"
         }}>
-            BossOS
+            Boss.OS
         </div>
     )
 }

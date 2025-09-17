@@ -8,6 +8,7 @@ import "./index.css";
 
 console.log("ENV:", import.meta.env.VITE_SUPABASE_URL, import.meta.env.VITE_SUPABASE_ANON_KEY?.slice(0, 8));
 
+// eslint-disable-next-line react-refresh/only-export-components
 function Protected({ children }: { children: React.ReactNode }) {
   const { user, initialized } = useAuth();
 

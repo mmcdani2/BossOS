@@ -361,6 +361,68 @@ body {
 }
 .um-support-phone:hover{ background: rgba(255,255,255,0.06); }
 
+.um-support-title {
+  margin-bottom: 8px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;       /* bigger than links */
+  letter-spacing: -0.01em;
+}
+
+.um-support-contacts {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.um-support-phone,
+.um-support-email {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: #e5e7eb;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.um-support-phone:hover,
+.um-support-email:hover {
+  background: rgba(255,255,255,0.06);
+}
+
+
 /* Kill default link underlines inside panel */
 .um-panel a{ text-decoration: none; }
+
+/* Compact avatar-only trigger */
+.um-trigger--icon {
+  padding: 0;                 /* no text padding */
+  width: 40px; height: 40px;  /* ≥44px recommended; adjust if you prefer 44 */
+  border-radius: 9999px;
+  display: grid; place-items: center;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.16);
+}
+.um-trigger--icon:hover { background: rgba(255,255,255,0.12); border-color: rgba(255,255,255,0.22); }
+.um-trigger--icon:focus-visible { outline: 2px solid rgba(255,255,255,0.35); outline-offset: 2px; }
+
+/* Ensure avatar fills the circle cleanly */
+.um-trigger--icon .um-avatar {
+  width: 100%; height: 100%;
+  background: transparent;    /* avatar image or initials fill the circle */
+  font-size: 0.9rem;          /* tune initials size if needed */
+}
+
+/* ----- Accordion styles ----- */
+.um-accordion { padding: 8px 10px 4px; display: flex; flex-direction: column; gap: 6px; }
+
+.um-acc-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: 12px 14px; border-radius: 12px; border: 0; cursor: pointer;
+  background: rgba(255,255,255,0.04); color: #e5e7eb; text-align: left;
+}
+.um-acc-header:hover { background: rgba(255,255,255,0.06); }
+.um-acc-title { font-weight: 600; letter-spacing: .01em; }
+.um-acc-caret { color: #9ca3af; transition: transform .15s ease; }
+.um-acc-caret--open { transform: rotate(180deg); }
 
