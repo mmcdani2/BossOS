@@ -50,8 +50,9 @@ function BottomNavPortalInsideRouter() {
 // ---- Layout that shows page content + bottom nav ----
 function Chrome() {
   React.useEffect(() => {
-    document.body.classList.add("with-bottomnav");
-    return () => document.body.classList.remove("with-bottomnav");
+    document.body.classList.add("with-bottomnav", "with-topnav");
+    return () =>
+      document.body.classList.remove("with-bottomnav", "with-topnav");
   }, []);
   return (
     <>

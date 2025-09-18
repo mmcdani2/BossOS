@@ -4,6 +4,11 @@
   color-scheme: dark;
 }
 
+:root {
+  color-scheme: dark;
+  --nav-h: 64px; /* ← set to your actual top nav height (56 or 64 typically) */
+}
+
 * {
   box-sizing: border-box;
 }
@@ -427,11 +432,11 @@ body {
 .with-bottomnav main,
 .with-bottomnav .route-root,
 .with-bottomnav .auth-center {
-  padding-bottom: 96px; /* adjust if you change bar height */
+  padding-bottom: 96px;
 }
 
-.with-bottomnav main,
-.with-bottomnav .route-root,
-.with-bottomnav .auth-center {
-  padding-bottom: 96px; /* adjust after you eyeball the bar height */
+/* NEW: leave room for the fixed top nav */
+.with-topnav main,
+.with-topnav .route-root {
+  padding-top: var(--nav-h);
 }

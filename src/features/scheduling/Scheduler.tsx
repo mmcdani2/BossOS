@@ -99,7 +99,7 @@ export default function Scheduler() {
   return (
     <div className="route-root px-3 pb-6">
       {/* Toolbar */}
-      <div className="sticky top-14 z-10 -mx-3 px-3 py-2 bg-black/30 backdrop-blur supports-[backdrop-filter]:bg-black/30 border-b border-white/10">
+      <div className="sticky top-[var(--nav-h)] z-10 -mx-3 px-3 py-2 bg-black/30 backdrop-blur supports-[backdrop-filter]:bg-black/30 border-b border-white/10">
         <div className="max-w-[1200px] mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <button
