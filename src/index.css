@@ -440,3 +440,23 @@ body {
 .with-topnav .route-root {
   padding-top: var(--nav-h);
 }
+
+/* Set your BottomNav height once (tweak to your actual) */
+:root { --bottom-nav-h: 90px; }
+
+/* Desktop usually hides BottomNav; zero it out there */
+@media (min-width: 768px) {
+  :root { --bottom-nav-h: 0px; }
+}
+
+/* Safe bottom padding for any scrolling container */
+.pb-safe-bnav {
+  padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Optional spacer for places where padding isn't applied or margins collapse */
+.bnav-spacer {
+  height: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
+}
+
+

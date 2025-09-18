@@ -12,8 +12,8 @@ import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 // Reused UI
-import PageHeader from "@/ui/PageHeader";     // brand-only (logo left, UserMenu right)
-import ViewToolbar from "@/ui/ViewToolbar";   // matches DashboardToolbar layout (title left, controls right)
+import PageHeader from "@/ui/PageHeader";     // brand-only (Boss.OS left, UserMenu right)
+import ViewToolbar from "@/ui/ViewToolbar";   // matches DashboardToolbar layout
 
 type JobEvent = {
   id: string;
@@ -102,123 +102,126 @@ export default function Scheduler() {
   }
 
   return (
-    <div className="route-root px-3 pb-6">
+    <>
       {/* Slim top bar with brand + avatar (no title/subtitle/actions here) */}
       <PageHeader />
 
-      {/* View toolbar row — mirrors DashboardToolbar (title on left, controls on right) */}
-      <ViewToolbar
-        label="Scheduler"
-        right={
-          <div className="flex items-center gap-2">
-            <div className="dt-segment">
-              <button
-                className="dt-btn"
-                aria-label="Previous week"
-                onClick={() => setAnchor(addDays(anchor, -7))}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                className="dt-btn"
-                aria-label="Next week"
-                onClick={() => setAnchor(addDays(anchor, 7))}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-
-            <div className="text-sm text-white/80">
-              {format(days[0], "MMM d")} – {format(days[6], "MMM d, yyyy")}
-            </div>
-
-            <button
-              className="dt-refresh"
-              onClick={() => createQuick(new Date(), new Date().getHours())}
-              title="New Job"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="sr-only">New Job</span>
-            </button>
-          </div>
-        }
-      />
-
-      {/* Grid */}
-      <div className="max-w-[1200px] mx-auto mt-4 border border-white/10 rounded-xl overflow-hidden">
-        {/* Day headers */}
-        <div
-          className="grid"
-          style={{ gridTemplateColumns: "80px repeat(7, minmax(0,1fr))" }}
-        >
-          <div className="bg-white/5 backdrop-blur px-2 py-2 text-xs text-white/60 border-b border-white/10">
-            Time
-          </div>
-          {days.map((d) => (
-            <div
-              key={d.toISOString()}
-              className="bg-white/5 backdrop-blur px-2 py-2 text-xs text-white/80 border-b border-white/10"
-            >
-              <div className="font-medium">{format(d, "EEE")}</div>
-              <div className="text-white/60">{format(d, "MMM d")}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Rows */}
-        <div
-          className="grid"
-          style={{ gridTemplateColumns: "80px repeat(7, minmax(0,1fr))" }}
-        >
-          {HOURS.map((h) => (
-            <React.Fragment key={h}>
-              {/* Time column */}
-              <div className="border-t border-white/10 px-2 py-3 text-xs text-white/60">
-                {format(setHours(new Date(), h), "h a")}
+      {/* Match Dashboard: everything under header sits in `.shell` */}
+      <div className="shell">
+        {/* View toolbar — mirrors DashboardToolbar (title left, controls right) */}
+        <ViewToolbar
+          label="Scheduler"
+          right={
+            <div className="flex items-center gap-2">
+              <div className="dt-segment">
+                <button
+                  className="dt-btn"
+                  aria-label="Previous week"
+                  onClick={() => setAnchor(addDays(anchor, -7))}
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                <button
+                  className="dt-btn"
+                  aria-label="Next week"
+                  onClick={() => setAnchor(addDays(anchor, 7))}
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
               </div>
 
-              {/* 7 day cells for this hour */}
-              {days.map((day) => (
-                <div
-                  key={day.toISOString() + h}
-                  className="relative border-t border-l border-white/10 min-h-12 hover:bg-white/5 transition"
-                  onDoubleClick={() => createQuick(day, h)}
-                  role="button"
-                  title="Double-click to create job"
-                >
-                  {/* Events that start within this hour & day */}
-                  {events
-                    .filter((ev) => {
-                      const sd = new Date(ev.start);
-                      return isSameDay(sd, day) && sd.getHours() === h;
-                    })
-                    .map((ev) => (
-                      <div
-                        key={ev.id}
-                        className="absolute inset-x-1 top-1 rounded-md border border-indigo-400/40 bg-indigo-400/20 text-white px-2 py-1 text-xs shadow-inner"
-                      >
-                        <div className="truncate font-medium">{ev.title}</div>
-                        <div className="text-white/70">
-                          {format(new Date(ev.start), "h:mma")}–
-                          {format(new Date(ev.end), "h:mma")}
-                        </div>
-                        {ev.customer && (
-                          <div className="text-white/60 truncate">
-                            {ev.customer}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                </div>
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
-      </div>
+              <div className="text-sm text-white/80">
+                {format(days[0], "MMM d")} – {format(days[6], "MMM d, yyyy")}
+              </div>
 
-      <p className="mt-3 text-xs text-white/60">
-        Tip: Double-click a cell to add a quick one-hour job. We’ll hook this to Supabase next.
-      </p>
-    </div>
+              <button
+                className="dt-refresh"
+                onClick={() => createQuick(new Date(), new Date().getHours())}
+                title="New Job"
+              >
+                <Plus className="h-4 w-4" />
+                <span className="sr-only">New Job</span>
+              </button>
+            </div>
+          }
+        />
+
+        {/* Grid */}
+        <div className="mt-4 border border-white/10 rounded-xl overflow-hidden">
+          {/* Day headers */}
+          <div
+            className="grid"
+            style={{ gridTemplateColumns: "80px repeat(7, minmax(0,1fr))" }}
+          >
+            <div className="bg-white/5 backdrop-blur px-2 py-2 text-xs text-white/60 border-b border-white/10">
+              Time
+            </div>
+            {days.map((d) => (
+              <div
+                key={d.toISOString()}
+                className="bg-white/5 backdrop-blur px-2 py-2 text-xs text-white/80 border-b border-white/10"
+              >
+                <div className="font-medium">{format(d, "EEE")}</div>
+                <div className="text-white/60">{format(d, "MMM d")}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Rows */}
+          <div
+            className="grid"
+            style={{ gridTemplateColumns: "80px repeat(7, minmax(0,1fr))" }}
+          >
+            {HOURS.map((h) => (
+              <React.Fragment key={h}>
+                {/* Time column */}
+                <div className="border-t border-white/10 px-2 py-3 text-xs text-white/60">
+                  {format(setHours(new Date(), h), "h a")}
+                </div>
+
+                {/* 7 day cells for this hour */}
+                {days.map((day) => (
+                  <div
+                    key={day.toISOString() + h}
+                    className="relative border-t border-l border-white/10 min-h-12 hover:bg-white/5 transition"
+                    onDoubleClick={() => createQuick(day, h)}
+                    role="button"
+                    title="Double-click to create job"
+                  >
+                    {/* Events that start within this hour & day */}
+                    {events
+                      .filter((ev) => {
+                        const sd = new Date(ev.start);
+                        return isSameDay(sd, day) && sd.getHours() === h;
+                      })
+                      .map((ev) => (
+                        <div
+                          key={ev.id}
+                          className="absolute inset-x-1 top-1 rounded-md border border-indigo-400/40 bg-indigo-400/20 text-white px-2 py-1 text-xs shadow-inner"
+                        >
+                          <div className="truncate font-medium">{ev.title}</div>
+                          <div className="text-white/70">
+                            {format(new Date(ev.start), "h:mma")}–
+                            {format(new Date(ev.end), "h:mma")}
+                          </div>
+                          {ev.customer && (
+                            <div className="text-white/60 truncate">
+                              {ev.customer}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                ))}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+
+        <p className="mt-3 text-xs text-white/60">
+          Tip: Double-click a cell to add a quick one-hour job.
+        </p>
+      </div>
+    </>
   );
 }

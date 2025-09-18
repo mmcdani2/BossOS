@@ -14,12 +14,24 @@ export default function PageHeader({
   return (
     <div
       className="
-        sticky top-0 z-40 -mx-3 px-3
+        sticky top-0 z-40
         bg-black/30 backdrop-blur border-b border-white/10
         supports-[backdrop-filter]:bg-black/20
       "
     >
-      <div className="max-w-[1200px] mx-auto h-16 flex items-center justify-between gap-3">
+      {/* full-width row with fixed, safe padding from viewport edges */}
+      <div
+        className="
+          h-16 flex items-center justify-between gap-3
+          [padding-inline:max(env(safe-area-inset-left),1rem)]
+          md:[padding-inline:max(env(safe-area-inset-left),1.5rem)]
+          lg:[padding-inline:max(env(safe-area-inset-left),2rem)]
+          /* right side mirrors left safe-area */
+          [padding-inline-end:max(env(safe-area-inset-right),1rem)]
+          md:[padding-inline-end:max(env(safe-area-inset-right),1.5rem)]
+          lg:[padding-inline-end:max(env(safe-area-inset-right),2rem)]
+        "
+      >
         {/* Left: static brand + optional titles */}
         <div className="min-w-0 flex items-center gap-3">
           <div className="nav-brand text-white font-semibold">Boss.OS</div>
