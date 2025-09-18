@@ -1,4 +1,4 @@
-import Nav from "@/ui/Nav";
+import PageHeader from "../../ui/PageHeader";
 import { useDashboardKPIs } from "./useDashboardKPIs";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
@@ -154,7 +154,7 @@ function DashboardInner() {
 export default function Dashboard() {
   return (
     <>
-      <Nav />
+      <PageHeader />
       <DashboardFiltersProvider>
         <DashboardInner />
       </DashboardFiltersProvider>

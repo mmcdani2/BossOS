@@ -1,3 +1,4 @@
+// src/features/scheduler/Scheduler.tsx
 import React, { useMemo, useState, useEffect } from "react";
 import {
   addDays,
@@ -10,11 +11,15 @@ import {
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
+// Reused UI
+import PageHeader from "@/ui/PageHeader";     // brand-only (logo left, UserMenu right)
+import ViewToolbar from "@/ui/ViewToolbar";   // matches DashboardToolbar layout (title left, controls right)
+
 type JobEvent = {
   id: string;
   title: string;
   start: string; // ISO
-  end: string; // ISO
+  end: string;   // ISO
   customer?: string;
 };
 
@@ -32,15 +37,15 @@ export default function Scheduler() {
     [anchor]
   );
 
-  // demo: keep in memory; we’ll swap to Supabase next
+  // Local list for now; we’ll wire full CRUD after schema/RLS
   const [events, setEvents] = useState<JobEvent[]>([]);
 
-  // example: load from supabase (safe & non-blocking)
+  // Example fetch for the visible week (non-blocking)
   type JobRow = {
     id: string;
     title: string | null;
     start_at: string; // ISO
-    end_at: string; // ISO
+    end_at: string;   // ISO
     customer_name: string | null;
   };
 
@@ -93,42 +98,51 @@ export default function Scheduler() {
       end: end.toISOString(),
     };
     setEvents((prev) => [...prev, ev]);
-    // TODO: persist to supabase (see section 3)
+    // TODO: persist to supabase when we wire writes
   }
 
   return (
     <div className="route-root px-3 pb-6">
-      {/* Toolbar */}
-      <div className="sticky top-[var(--nav-h)] z-10 -mx-3 px-3 py-2 bg-black/30 backdrop-blur supports-[backdrop-filter]:bg-black/30 border-b border-white/10">
-        <div className="max-w-[1200px] mx-auto flex items-center justify-between gap-3">
+      {/* Slim top bar with brand + avatar (no title/subtitle/actions here) */}
+      <PageHeader />
+
+      {/* View toolbar row — mirrors DashboardToolbar (title on left, controls on right) */}
+      <ViewToolbar
+        label="Scheduler"
+        right={
           <div className="flex items-center gap-2">
-            <button
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 hover:bg-white/10"
-              onClick={() => setAnchor(addDays(anchor, -7))}
-              aria-label="Previous week"
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </button>
-            <button
-              className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/10 bg-white/5 hover:bg-white/10"
-              onClick={() => setAnchor(addDays(anchor, 7))}
-              aria-label="Next week"
-            >
-              <ChevronRight className="h-4 w-4" />
-            </button>
+            <div className="dt-segment">
+              <button
+                className="dt-btn"
+                aria-label="Previous week"
+                onClick={() => setAnchor(addDays(anchor, -7))}
+              >
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+              <button
+                className="dt-btn"
+                aria-label="Next week"
+                onClick={() => setAnchor(addDays(anchor, 7))}
+              >
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
+
             <div className="text-sm text-white/80">
               {format(days[0], "MMM d")} – {format(days[6], "MMM d, yyyy")}
             </div>
+
+            <button
+              className="dt-refresh"
+              onClick={() => createQuick(new Date(), new Date().getHours())}
+              title="New Job"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">New Job</span>
+            </button>
           </div>
-          <button
-            className="inline-flex items-center gap-2 h-9 px-3 rounded-lg border border-white/10 bg-white/5 hover:bg-white/10"
-            onClick={() => createQuick(new Date(), new Date().getHours())}
-          >
-            <Plus className="h-4 w-4" />
-            <span className="text-sm">New Job</span>
-          </button>
-        </div>
-      </div>
+        }
+      />
 
       {/* Grid */}
       <div className="max-w-[1200px] mx-auto mt-4 border border-white/10 rounded-xl overflow-hidden">
@@ -203,8 +217,7 @@ export default function Scheduler() {
       </div>
 
       <p className="mt-3 text-xs text-white/60">
-        Tip: Double-click a cell to add a quick one-hour job. We’ll hook this to
-        Supabase next.
+        Tip: Double-click a cell to add a quick one-hour job. We’ll hook this to Supabase next.
       </p>
     </div>
   );
