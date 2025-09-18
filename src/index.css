@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   color-scheme: dark;
@@ -426,3 +424,14 @@ body {
 .um-acc-caret { color: #9ca3af; transition: transform .15s ease; }
 .um-acc-caret--open { transform: rotate(180deg); }
 
+.with-bottomnav main,
+.with-bottomnav .route-root,
+.with-bottomnav .auth-center {
+  padding-bottom: 96px; /* adjust if you change bar height */
+}
+
+.with-bottomnav main,
+.with-bottomnav .route-root,
+.with-bottomnav .auth-center {
+  padding-bottom: 96px; /* adjust after you eyeball the bar height */
+}
