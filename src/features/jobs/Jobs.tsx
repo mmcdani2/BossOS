@@ -35,7 +35,6 @@ export default function Jobs() {
         />
 
         {/* Filters */}
-        {/* Filters */}
         <GlassCard className="p-3 mt-4">
           <div
             style={{

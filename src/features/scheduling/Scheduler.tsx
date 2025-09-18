@@ -23,7 +23,7 @@ type JobEvent = {
   customer?: string;
 };
 
-const HOURS = Array.from({ length: 11 }, (_, i) => 8 + i); // 8 → 18
+const HOURS = Array.from({ length: 24 }, (_, i) => i); // 0 → 23
 
 function startOfWeekISO(d: Date) {
   // Sunday start to match field service conventions

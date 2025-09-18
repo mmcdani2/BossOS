@@ -435,28 +435,24 @@ body {
   padding-bottom: 96px;
 }
 
-/* NEW: leave room for the fixed top nav */
-.with-topnav main,
-.with-topnav .route-root {
-  padding-top: var(--nav-h);
+/* Toolbar height hint for layout math (matches your dash-toolbar padding) */
+.dash-toolbar { --toolbar-h: 56px; }
+
+/* Stick a bar directly under the top nav (PageHeader) */
+.sticky-under-nav {
+  position: sticky;
+  top: var(--nav-h);        /* you already define --nav-h = 64px */
+  z-index: 40;              /* above scrolling content */
 }
 
-/* Set your BottomNav height once (tweak to your actual) */
-:root { --bottom-nav-h: 90px; }
-
-/* Desktop usually hides BottomNav; zero it out there */
-@media (min-width: 768px) {
-  :root { --bottom-nav-h: 0px; }
-}
-
-/* Safe bottom padding for any scrolling container */
-.pb-safe-bnav {
+/* Make ONLY the schedule grid scroll, never the background.
+   Leaves safe bottom padding so it never hides under BottomNav. */
+.schedule-scroll {
+  overflow: auto;
   padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
+  /* full viewport height minus header, minus toolbar, minus bottom nav */
+  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h));
 }
 
-/* Optional spacer for places where padding isn't applied or margins collapse */
-.bnav-spacer {
-  height: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
-}
 
 
