@@ -485,3 +485,47 @@ body {
 .schedule-scroll::-webkit-scrollbar { /* Chrome/Safari */
   display: none;
 }
+
+/* Lock a route to the viewport area between PageHeader and BottomNav */
+.page-viewport {
+  height: calc(100vh - var(--nav-h) - var(--bottom-nav-h, 64px));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* page itself won't scroll */
+}
+
+/* Let a child column shrink so its inner scroller can work */
+.min-h-0 {
+  min-height: 0; /* crucial so the flex child can actually shrink */
+}
+
+/* === Generic card container/header/scroll (mirrors Scheduler) === */
+.card-container {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.card-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  /* Use the same opaque bg as Scheduler to avoid the “different colored line” */
+  background: rgba(11, 15, 20, 0.95);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-scroll {
+  flex: 1;
+  overflow-y: auto;
+  /* Exact same height math you use for .schedule-scroll */
+  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h, 64px));
+  padding-bottom: calc(var(--bottom-nav-h, 64px) + env(safe-area-inset-bottom, 0px));
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.card-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
