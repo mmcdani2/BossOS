@@ -7,6 +7,7 @@
 :root {
   color-scheme: dark;
   --nav-h: 64px; /* ← set to your actual top nav height (56 or 64 typically) */
+  --bottom-nav-h: 190px; /* ← ADD: fixed BottomNav height */
 }
 
 * {
@@ -193,6 +194,7 @@ body {
   border: 1px solid rgba(255,255,255,0.08);
   backdrop-filter: blur(10px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+  --toolbar-h: 56px; /* used by schedule-scroll */
 }
 
 .dash-toolbar h1 {
@@ -429,30 +431,57 @@ body {
 .um-acc-caret { color: #9ca3af; transition: transform .15s ease; }
 .um-acc-caret--open { transform: rotate(180deg); }
 
+/* ======= REMOVE THIS LEGACY PADDING (was causing band/overlap) ======= */
+/*
 .with-bottomnav main,
 .with-bottomnav .route-root,
 .with-bottomnav .auth-center {
   padding-bottom: 96px;
 }
+*/
 
-/* Toolbar height hint for layout math (matches your dash-toolbar padding) */
+/* Toolbar height hint for layout math (used by schedule-scroll) */
 .dash-toolbar { --toolbar-h: 56px; }
 
 /* Stick a bar directly under the top nav (PageHeader) */
 .sticky-under-nav {
   position: sticky;
-  top: var(--nav-h);        /* you already define --nav-h = 64px */
-  z-index: 40;              /* above scrolling content */
+  top: var(--nav-h);
+  z-index: 40;
 }
 
-/* Make ONLY the schedule grid scroll, never the background.
-   Leaves safe bottom padding so it never hides under BottomNav. */
+.schedule-container {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Only the schedule grid scrolls; never hides under BottomNav. */
 .schedule-scroll {
   overflow: auto;
   padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
-  /* full viewport height minus header, minus toolbar, minus bottom nav */
   max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h));
 }
 
+.schedule-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(11, 15, 20, 0.95); /* same as page bg, avoids color line */
+  backdrop-filter: blur(6px);
+}
 
-
+.schedule-scroll {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h, 64px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  -ms-overflow-style: none;   /* IE/Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+.schedule-scroll::-webkit-scrollbar { /* Chrome/Safari */
+  display: none;
+}

@@ -11,9 +11,8 @@ import {
 import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
-// Reused UI
-import PageHeader from "@/ui/PageHeader";     // brand-only (Boss.OS left, UserMenu right)
-import ViewToolbar from "@/ui/ViewToolbar";   // matches DashboardToolbar layout
+import PageHeader from "@/ui/PageHeader";
+import ViewToolbar from "@/ui/ViewToolbar";
 
 type JobEvent = {
   id: string;
@@ -23,11 +22,11 @@ type JobEvent = {
   customer?: string;
 };
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i); // 0 → 23
+// 12am → 11pm
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 function startOfWeekISO(d: Date) {
-  // Sunday start to match field service conventions
-  return startOfWeek(d, { weekStartsOn: 0 });
+  return startOfWeek(d, { weekStartsOn: 0 }); // Sunday
 }
 
 export default function Scheduler() {
@@ -37,10 +36,8 @@ export default function Scheduler() {
     [anchor]
   );
 
-  // Local list for now; we’ll wire full CRUD after schema/RLS
   const [events, setEvents] = useState<JobEvent[]>([]);
 
-  // Example fetch for the visible week (non-blocking)
   type JobRow = {
     id: string;
     title: string | null;
@@ -103,63 +100,63 @@ export default function Scheduler() {
 
   return (
     <>
-      {/* Slim top bar with brand + avatar (no title/subtitle/actions here) */}
       <PageHeader />
 
-      {/* Match Dashboard: everything under header sits in `.shell` */}
       <div className="shell">
-        {/* View toolbar — mirrors DashboardToolbar (title left, controls right) */}
-        <ViewToolbar
-          label="Scheduler"
-          right={
-            <div className="flex items-center gap-2">
-              <div className="dt-segment">
+        {/* Toolbar pinned under top nav */}
+        <div className="sticky-under-nav">
+          <ViewToolbar
+            label="Scheduler"
+            right={
+              <div className="flex items-center gap-2">
+                <div className="dt-segment">
+                  <button
+                    className="dt-btn"
+                    aria-label="Previous week"
+                    onClick={() => setAnchor(addDays(anchor, -7))}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    className="dt-btn"
+                    aria-label="Next week"
+                    onClick={() => setAnchor(addDays(anchor, 7))}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
+
+                <div className="text-sm text-white/80">
+                  {format(days[0], "MMM d")} – {format(days[6], "MMM d, yyyy")}
+                </div>
+
                 <button
-                  className="dt-btn"
-                  aria-label="Previous week"
-                  onClick={() => setAnchor(addDays(anchor, -7))}
+                  className="dt-refresh"
+                  onClick={() => createQuick(new Date(), new Date().getHours())}
+                  title="New Job"
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                </button>
-                <button
-                  className="dt-btn"
-                  aria-label="Next week"
-                  onClick={() => setAnchor(addDays(anchor, 7))}
-                >
-                  <ChevronRight className="h-4 w-4" />
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">New Job</span>
                 </button>
               </div>
+            }
+          />
+        </div>
 
-              <div className="text-sm text-white/80">
-                {format(days[0], "MMM d")} – {format(days[6], "MMM d, yyyy")}
-              </div>
-
-              <button
-                className="dt-refresh"
-                onClick={() => createQuick(new Date(), new Date().getHours())}
-                title="New Job"
-              >
-                <Plus className="h-4 w-4" />
-                <span className="sr-only">New Job</span>
-              </button>
-            </div>
-          }
-        />
-
-        {/* Grid */}
-        <div className="mt-4 border border-white/10 rounded-xl overflow-hidden">
-          {/* Day headers */}
+        {/* Schedule container: sticky header row + scrollable grid */}
+        <div className="schedule-container mt-4">
+          {/* Day headers (sticky) */}
           <div
-            className="grid"
+            className="schedule-header grid"
             style={{ gridTemplateColumns: "80px repeat(7, minmax(0,1fr))" }}
           >
-            <div className="bg-white/5 backdrop-blur px-2 py-2 text-xs text-white/60 border-b border-white/10">
+            <div className="px-2 py-2 text-xs text-white/60 border-b border-white/10">
               Time
             </div>
             {days.map((d) => (
               <div
                 key={d.toISOString()}
-                className="bg-white/5 backdrop-blur px-2 py-2 text-xs text-white/80 border-b border-white/10"
+                className="px-2 py-2 text-xs text-white/80 border-b border-white/10"
               >
                 <div className="font-medium">{format(d, "EEE")}</div>
                 <div className="text-white/60">{format(d, "MMM d")}</div>
@@ -167,9 +164,9 @@ export default function Scheduler() {
             ))}
           </div>
 
-          {/* Rows */}
+          {/* Rows (the only scrolling part) */}
           <div
-            className="grid"
+            className="schedule-scroll grid"
             style={{ gridTemplateColumns: "80px repeat(7, minmax(0,1fr))" }}
           >
             {HOURS.map((h) => (
@@ -217,10 +214,6 @@ export default function Scheduler() {
             ))}
           </div>
         </div>
-
-        <p className="mt-3 text-xs text-white/60">
-          Tip: Double-click a cell to add a quick one-hour job.
-        </p>
       </div>
     </>
   );
