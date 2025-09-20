@@ -1,278 +1,107 @@
+/* src/index.css — BossOS minimal core */
 @import "tailwindcss";
 
+/* -------- Tokens -------- */
 :root {
   color-scheme: dark;
+  --nav-h: 64px;          /* top header height */
+  --toolbar-h: 56px;      /* toolbar height hint */
+  --bottom-nav-h: 120px;  /* fixed bottom bar reservation */
 }
 
-:root {
-  color-scheme: dark;
-  --nav-h: 64px; /* ← set to your actual top nav height (56 or 64 typically) */
-  --bottom-nav-h: 190px; /* ← ADD: fixed BottomNav height */
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html,
-body,
-#root {
-  height: 100%;
-  margin: 0;
-}
-
+/* -------- Base -------- */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
 body {
   background: radial-gradient(1000px 700px at 20% 0%, #161a20 0%, #0b0f14 40%, #05070a 100%);
   color: #e5e7eb;
   font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
 }
 
-/* ---------- Auth Layout ---------- */
-.auth-center {
-  min-height: 100%;
-  display: grid;
-  place-items: center;
-  padding: 24px;
-}
+/* Container with safe max width */
+.shell { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
 
-.auth-card {
-  width: min(92vw, 440px);
-  background: rgba(17, 24, 39, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  backdrop-filter: blur(18px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
-  padding: 20px;
-}
-
-.auth-card form,
-.auth-card .auth-stack {
-  display: grid;
-  gap: 12px;
-}
-
-.auth-heading {
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 700;
-  text-align: center;
-  background: linear-gradient(90deg, #f59e0b, #ef4444);
-  background-clip: text;    
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: -0.01em;
-  margin-bottom: 0.5rem;
-}
-
-.auth-subheading {
-  text-align: center;
-  font-size: 0.95rem;
-  color: #9ca3af;
-  margin-bottom: 1rem;
-}
-
-.auth-input {
-  display: block;
-  width: 100%;
-  padding: 11px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
-  color: #f3f4f6;
-  outline: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-  text-align: center;
-}
-
-.auth-input::placeholder {
-  color: #9ca3af;
-  text-align: center;
-}
-
-.auth-input:focus {
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
-}
-
-.auth-btn {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: linear-gradient(90deg, #ef4444, #f59e0b);
-  color: #0b0f14;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform .02s ease-in-out, filter .2s;
-}
-
-.auth-btn:hover {
-  filter: brightness(1.02);
-}
-
-.auth-btn:active {
-  transform: translateY(1px);
-}
-
-.auth-btn:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-}
-
-.auth-helper {
-  color: #9ca3af;
-  font-size: .9rem;
-  text-align: center;
-}
-
-.auth-error {
-  color: #f87171;
-  text-align: center;
-}
-
-/* ---------- Dashboard ---------- */
-.nav-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: rgba(17,24,39,0.5); backdrop-filter: blur(14px);
-}
-
-.nav-brand { font-weight: 800; letter-spacing: -0.02em;
+/* Brand accent used in PageHeader */
+.nav-brand {
+  font-weight: 800; letter-spacing: -0.02em;
   background: linear-gradient(90deg,#f59e0b,#ef4444);
-  background-clip: text;    
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
 }
 
-.nav-right { display:flex; align-items:center; gap:10px; }
-.nav-btn { padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.18); background:transparent; color:#e5e7eb; cursor:pointer; }
-
-.shell {
-  max-width: 1100px; margin: 24px auto; padding: 0 16px;
+/* -------- Layout utilities -------- */
+/* Page content area: between sticky PageHeader and fixed BottomNav */
+.page-viewport {
+  height: calc(100vh - var(--nav-h) - var(--bottom-nav-h));
+  display: flex; flex-direction: column;
+  overflow: hidden;
 }
 
-.kpi-grid {
-  display:grid; gap:12px; grid-template-columns: repeat(12,1fr);
+/* Stick a band right under the PageHeader */
+.sticky-under-nav { position: sticky; top: var(--nav-h); z-index: 40; }
+
+/* Optional extra sticky band (filters/KPIs) placed under toolbar */
+.sticky-band {
+  position: sticky;
+  top: calc(var(--nav-h) + var(--toolbar-h));
+  z-index: 50;
 }
 
+/* Allow flex children to actually shrink so inner scrollers can work */
+.min-h-0 { min-height: 0; }
+
+/* If not using CSS Modules, just piggyback selectors: */
+.schedule-container, .jobs-container { 
+  display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px; background: rgba(255,255,255,0.02);
+}
+.schedule-header, .jobs-header {
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(11,15,20,0.95);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.schedule-scroll, .jobs-scroll {
+  flex: 1; overflow-y: auto;
+  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h) - var(--bottom-nav-h));
+  padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.schedule-scroll::-webkit-scrollbar, .jobs-scroll::-webkit-scrollbar { display: none; }
+
+/* keep: used by sticky math across pages */
+.dash-toolbar { --toolbar-h: 56px; }
+
+/* keep: fancy active chip look */
+.dt-btn--active{
+  color:#f3f4f6;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+
+/* -------- Dashboard KPIs (lightweight) -------- */
+.kpi-grid { display:grid; gap:12px; grid-template-columns: repeat(12,1fr); }
 .kpi-card {
   grid-column: span 3;
-  background: rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
   border-radius:14px; padding:14px; backdrop-filter: blur(14px);
   display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:6px;
-  transition: background-color .16s ease, border-color .16s ease, transform .16s ease;
 }
-
-.kpi-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.18); transform: translateY(-1px); }
 .kpi-value { font-size:1.5rem; font-weight:700; letter-spacing:-0.02em; }
 .kpi-label { color:#9ca3af; font-size:.9rem; text-transform:uppercase; letter-spacing:.14em; }
-
-@media (max-width: 900px){ .kpi-card{ grid-column: span 6; } }
-@media (max-width: 520px){ .kpi-card{ grid-column: span 12; } }
+@media (max-width:900px){ .kpi-card{ grid-column: span 6; } }
+@media (max-width:520px){ .kpi-card{ grid-column: span 12; } }
 
 .kpi-trend {
-  margin-top:2px;
-  display:inline-flex; align-items:center; gap:6px;
-  padding:4px 8px; border-radius:9999px;
-  font-size:12px; font-weight:600; letter-spacing:.01em;
-  border:1px solid transparent;
+  display:inline-flex; align-items:center; gap:6px; padding:4px 8px;
+  border-radius:9999px; font-size:12px; font-weight:600; letter-spacing:.01em; border:1px solid transparent;
 }
 .kpi-trend .icon { width:14px; height:14px; display:inline-block; }
 .kpi-trend--up   { color:#34d399; background:rgba(52,211,153,0.12); border-color:rgba(52,211,153,0.22); }
 .kpi-trend--down { color:#fb7185; background:rgba(251,113,133,0.12); border-color:rgba(251,113,133,0.22); }
 .kpi-trend--flat { color:#a1a1aa; background:rgba(161,161,170,0.12); border-color:rgba(161,161,170,0.22); }
-
-/* ---- Dashboard Toolbar ---- */
-.dash-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin: 0 0 16px 0;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
-  --toolbar-h: 56px; /* used by schedule-scroll */
-}
-
-.dash-toolbar h1 {
-  font-size: 16px;
-  font-weight: 600;
-  letter-spacing: 0.2px;
-  color: #e5e7eb;
-  margin: 0;
-}
-
-.dt-group {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.dt-segment {
-  display: flex;
-  gap: 6px;
-  padding: 4px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-}
-
-.dt-btn {
-  appearance: none;
-  border: 0;
-  padding: 6px 10px;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 9px;
-  color: #cbd5e1;
-  background: transparent;
-  cursor: pointer;
-  transition: background 120ms ease, color 120ms ease, transform 80ms ease;
-}
-.dt-btn:hover { background: rgba(255,255,255,0.05); color: #e5e7eb; }
-.dt-btn:active { transform: translateY(1px); }
-
-.dt-btn--active {
-  color: #f3f4f6;
-  background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-  border: 1px solid rgba(255,255,255,0.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
-}
-
-.dt-refresh {
-  appearance: none;
-  border: 1px solid rgba(255,255,255,0.12);
-  padding: 6px 10px;
-  font-size: 12px;
-  line-height: 1;
-  border-radius: 9px;
-  color: #e5e7eb;
-  background: rgba(255,255,255,0.06);
-  cursor: pointer;
-  transition: background 120ms ease, transform 80ms ease, border-color 120ms ease;
-}
-.dt-refresh:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.2); }
-.dt-refresh:active { transform: translateY(1px); }
-
-/* small screens */
-@media (max-width: 640px) {
-  .dash-toolbar { flex-direction: column; align-items: stretch; gap: 10px; }
-  .dt-group { justify-content: space-between; }
-}
-
-.dashboard-subtitle {
-  margin: 0.5rem 0 1rem;
-  font-size: 0.875rem;
-  color: #9ca3af; /* Tailwind gray-400 */
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-2px) scale(0.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
 
 /* ================= User Menu (glass, fixed, a11y) ================= */
 .um-root { position: relative; z-index: 10000; } 
@@ -430,132 +259,3 @@ body {
 .um-acc-title { font-weight: 600; letter-spacing: .01em; }
 .um-acc-caret { color: #9ca3af; transition: transform .15s ease; }
 .um-acc-caret--open { transform: rotate(180deg); }
-
-/* ======= REMOVE THIS LEGACY PADDING (was causing band/overlap) ======= */
-/*
-.with-bottomnav main,
-.with-bottomnav .route-root,
-.with-bottomnav .auth-center {
-  padding-bottom: 96px;
-}
-*/
-
-/* Toolbar height hint for layout math (used by schedule-scroll) */
-.dash-toolbar { --toolbar-h: 56px; }
-
-/* Stick a bar directly under the top nav (PageHeader) */
-.sticky-under-nav {
-  position: sticky;
-  top: var(--nav-h);
-  z-index: 40;
-}
-
-.schedule-container {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-/* Only the schedule grid scrolls; never hides under BottomNav. */
-.schedule-scroll {
-  overflow: auto;
-  padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
-  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h));
-}
-
-.schedule-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  background: rgba(11, 15, 20, 0.95); /* same as page bg, avoids color line */
-  backdrop-filter: blur(6px);
-}
-
-.schedule-scroll {
-  flex: 1;
-  overflow-y: auto;
-  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h, 64px));
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  -ms-overflow-style: none;   /* IE/Edge */
-  scrollbar-width: none;      /* Firefox */
-}
-.schedule-scroll::-webkit-scrollbar { /* Chrome/Safari */
-  display: none;
-}
-
-/* Lock a route to the viewport area between PageHeader and BottomNav */
-.page-viewport {
-  height: calc(100vh - var(--nav-h) - var(--bottom-nav-h, 64px));
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* page itself won't scroll */
-}
-
-/* Let a child column shrink so its inner scroller can work */
-.min-h-0 {
-  min-height: 0; /* crucial so the flex child can actually shrink */
-}
-
-/* === Generic card container/header/scroll (mirrors Scheduler) === */
-.card-container {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.card-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  /* Use the same opaque bg as Scheduler to avoid the “different colored line” */
-  background: rgba(11, 15, 20, 0.95);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.card-scroll {
-  flex: 1;
-  overflow-y: auto;
-  /* Exact same height math you use for .schedule-scroll */
-  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h, 64px));
-  padding-bottom: calc(var(--bottom-nav-h, 64px) + env(safe-area-inset-bottom, 0px));
-  -ms-overflow-style: none;  /* IE/Edge */
-  scrollbar-width: none;     /* Firefox */
-}
-.card-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
-
-.jobs-container {
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-/* Only the jobs list scrolls; tuned padding so bottom edge sits just above BottomNav */
-.jobs-scroll {
-  flex: 1;
-  overflow-y: auto;
-  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h));
-  padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
-  -ms-overflow-style: none;   /* IE/Edge */
-  scrollbar-width: none;      /* Firefox */
-}
-.jobs-scroll::-webkit-scrollbar {
-  display: none;              /* Chrome/Safari */
-}
-
-.jobs-header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  background: rgba(11, 15, 20, 0.95);
-  backdrop-filter: blur(6px);
-}

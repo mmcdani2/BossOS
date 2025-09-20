@@ -25,115 +25,146 @@ export default function Jobs() {
     <>
       <PageHeader />
 
-      {/* Neutral wrapper to override BottomNav height JUST for Jobs */}
-      <section
-        className="w-full"
-        style={{ ["--bottom-nav-h" as string]: "120px" } as React.CSSProperties} // adjust if you want tighter/looser gap
-      >
-        {/* Lock the route to the viewport between top nav & BottomNav */}
-        <div
-          className="shell page-viewport"
-          style={{
-            height: "calc(100vh - var(--nav-h) - var(--bottom-nav-h))",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-          }}
-        >
-          {/* Sticky toolbar directly under the top nav */}
-          <div className="sticky-under-nav">
-            <ViewToolbar
-              label="Jobs"
-              right={
-                <button className="dt-refresh" title="New Job">
-                  <Plus className="h-4 w-4" />
-                  <span className="sr-only">New Job</span>
-                </button>
-              }
-            />
+      <section className="w-full">
+        <div className="shell page-viewport">
+          {/* Toolbar #1 — glass look, sticky under header */}
+          <div
+            className="sticky-under-nav"
+            style={{ top: "calc(var(--nav-h) - 64px)" }}
+          >
+            <GlassCard className="p-3">
+              <ViewToolbar
+                label="Jobs"
+                right={
+                  <button
+                    title="New Job"
+                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
+                             border border-white/20 bg-white/10 hover:bg-white/15 hover:border-white/30
+                             active:translate-y-px inline-flex items-center gap-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span className="sr-only">New Job</span>
+                  </button>
+                }
+              />
+            </GlassCard>
           </div>
 
-          {/* Sticky Filters + KPIs */}
+          {/* Toolbar #2 — glass look with Search + Filters (responsive) */}
           <div
+            className="z-50"
             style={{
               position: "sticky",
-              top: "calc(var(--nav-h) + var(--toolbar-h, 56px))",
-              zIndex: 50,
+              top: "calc(34px + var(--toolbar-h, 56px))",
             }}
           >
-            {/* Filters */}
-            <GlassCard className="p-3 mt-3">
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "minmax(0,1fr) auto",
-                  alignItems: "center",
-                  columnGap: "0.5rem",
-                }}
-              >
-                <div className="relative min-w-0">
-                  <Search className="h-4 w-4 absolute left-2 top-2.5 text-white/50" />
-                  <input
-                    placeholder="Search jobs, address, customer…"
-                    className="w-full pl-8 pr-3 h-9 rounded-md border border-white/10 bg-white/5 text-white placeholder:text-white/50 outline-none focus:border-indigo-400/50"
-                  />
-                </div>
+            <GlassCard className="p-3">
+              {/* Desktop / Tablet */}
+              <div className="hidden md:block">
+                <ViewToolbar
+                  label={
+                    // search on the LEFT (label column)
+                    <div className="relative min-w-[260px] max-w-[480px] w-full">
+                      <Search className="h-4 w-4 absolute left-2 top-2.5 text-white/50" />
+                      <input
+                        placeholder="Search jobs, address, customer…"
+                        className="w-full pl-8 pr-3 h-9 rounded-md border border-white/10 bg-white/5 text-white placeholder:text-white/50 outline-none focus:border-indigo-400/50"
+                      />
+                    </div>
+                  }
+                  right={
+                    // controls stay on the RIGHT (auto column)
+                    <div
+                      className="flex items-center gap-2 min-w-0 justify-end"
+                      style={{ whiteSpace: "nowrap", overflowX: "auto" }}
+                    >
+                      <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
 
-                {/* right controls; stay to the edge and allow horizontal scroll if tight */}
-                <div
-                  className="jobs-controls"
-                  style={{
-                    justifySelf: "end",
-                    minWidth: 0,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                    whiteSpace: "nowrap",
-                    overflowX: "auto",
-                    msOverflowStyle: "none",
-                    scrollbarWidth: "none",
-                  }}
-                >
-                  <style>{`.jobs-controls::-webkit-scrollbar{display:none}`}</style>
-                  <button className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-white shrink-0">
-                    <Filter className="h-4 w-4" /> Filters
-                  </button>
-                  <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
-                    <span>Status:</span>
-                    <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
-                      <option>All</option>
-                      <option>Scheduled</option>
-                      <option>In Progress</option>
-                      <option>Completed</option>
-                    </select>
+                      <button className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-white shrink-0">
+                        <Filter className="h-4 w-4" /> Filters
+                      </button>
+
+                      <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
+                        <span>Status:</span>
+                        <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
+                          <option>All</option>
+                          <option>Scheduled</option>
+                          <option>In Progress</option>
+                          <option>Completed</option>
+                        </select>
+                      </div>
+                    </div>
+                  }
+                />
+              </div>
+
+              {/* Mobile: search full-width, then 2-up row: Filters | Status */}
+              <div className="md:hidden">
+                <div className="space-y-2">
+                  {/* row 1: search */}
+                  <div className="relative">
+                    <Search className="h-4 w-4 absolute left-2 top-2.5 text-white/50" />
+                    <input
+                      placeholder="Search jobs, address, customer…"
+                      className="w-full pl-8 pr-3 h-9 rounded-md border border-white/10 bg-white/5 text-white placeholder:text-white/50 outline-none focus:border-indigo-400/50"
+                    />
+                  </div>
+
+                  {/* row 2: 2 columns */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <button className="inline-flex items-center justify-center gap-2 h-9 px-3 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-white">
+                      <Filter className="h-4 w-4" /> Filters
+                    </button>
+
+                    <div className="flex items-center justify-end gap-2 text-white/60 text-sm">
+                      <span className="hidden xs:inline">Status:</span>
+                      <select className="h-9 w-full rounded-md border border-white/10 bg-white/5 text-white px-2">
+                        <option>All</option>
+                        <option>Scheduled</option>
+                        <option>In Progress</option>
+                        <option>Completed</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
             </GlassCard>
+          </div>
 
-            {/* KPI cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
+          {/* KPI row: single line, shrinks hard on mobile, scrolls only if necessary */}
+          <div className="mt-8">
+            <div className="kpi-row flex flex-nowrap gap-2 sm:gap-3 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]">
+              <style>{`.kpi-row::-webkit-scrollbar{display:none}`}</style>
+
               {[
                 ["Scheduled", "12"],
                 ["In Progress", "4"],
                 ["Completed today", "18"],
                 ["Overdue", "2"],
               ].map(([label, value]) => (
-                <GlassCard key={label} className="p-4">
-                  <div className="text-white/60 text-xs">{label}</div>
-                  <div className="text-white text-xl font-semibold mt-1">
-                    {value}
+                <GlassCard
+                  key={label}
+                  className="flex-1 basis-0 min-w-0 p-3 sm:p-4 snap-start"
+                >
+                  <div className="h-20 sm:h-24 flex flex-col items-center justify-center text-center">
+                    <div className="text-[11px] sm:text-xs text-white/60 leading-none">
+                      {label}
+                    </div>
+                    <div className="mt-1 font-semibold text-[clamp(1rem,4.5vw,1.5rem)] sm:text-2xl text-white">
+                      {value}
+                    </div>
                   </div>
                 </GlassCard>
               ))}
             </div>
           </div>
 
-          {/* Remaining space: Jobs list box */}
-          <div className="jobs-container mt-16" style={{ flex: 1, minHeight: 0 }}>
-            {/* Only this area scrolls; height uses the local --bottom-nav-h */}
+          {/* Jobs list (same as yours) */}
+          <div
+            className="jobs-container mt-4"
+            style={{ flex: 1, minHeight: 0 }}
+          >
             <div className="jobs-scroll">
-              {/* Sticky header INSIDE the scroller */}
               <div className="jobs-header hidden md:grid grid-cols-[1fr_120px_120px_160px_120px]">
                 <div className="px-4 py-2 text-white/60">Job</div>
                 <div className="px-4 py-2 text-white/60">Date</div>
@@ -142,7 +173,7 @@ export default function Jobs() {
                 <div className="px-4 py-2 text-white/60">Status</div>
               </div>
 
-              {/* MOBILE list (cards) */}
+              {/* MOBILE list */}
               <div className="md:hidden divide-y divide-white/10">
                 {rows.map((r, i) => (
                   <div key={i} className="px-4 py-3">

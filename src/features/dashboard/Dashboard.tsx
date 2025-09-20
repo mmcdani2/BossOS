@@ -3,7 +3,8 @@ import { useDashboardKPIs } from "./useDashboardKPIs";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
 import { DashboardFiltersProvider } from "@/features/dashboard/state/dashboardFilters";
-import DashboardToolbar from "@/features/dashboard/components/DashboardToolbar";
+import ViewToolbar from "@/ui/ViewToolbar";
+import GlassCard from "@/ui/GlassCard";
 import { useDashboardFilters } from "@/features/dashboard/state/dashboardFilters";
 import { getOpenEstimatesValueInRange } from "@/lib/api/estimates";
 import { getJobsCountInRange } from "@/lib/api/jobs";
@@ -11,16 +12,16 @@ import { getARBalanceInRange } from "@/lib/api/invoices";
 import { getLeadsCountInRange } from "@/lib/api/leads";
 
 function DashboardInner() {
-  const { preset, fromUtc, toUtc, refreshToken } = useDashboardFilters();
+  const { fromUtc, toUtc, refreshToken } = useDashboardFilters();
 
-  const rangeLabel =
-    preset === "today"
-      ? "Today"
-      : preset === "7d"
-      ? "Last 7 Days"
-      : preset === "30d"
-      ? "Last 30 Days"
-      : "Last 90 Days";
+  const PRESETS = [
+    { key: "today", label: "Today" },
+    { key: "7d", label: "Last 7d" },
+    { key: "30d", label: "Last 30d" },
+    { key: "90d", label: "Last 90d" },
+  ] as const;
+
+  const { preset, setPreset, refresh } = useDashboardFilters();
 
   const {
     openEstimatesValue,
@@ -119,9 +120,60 @@ function DashboardInner() {
 
   return (
     <div className="shell">
-      <DashboardToolbar />
-      <div className="dashboard-subtitle">Showing data for: {rangeLabel}</div>
+      {/* Sticky toolbar as a card (replaces <DashboardToolbar />) */}
+      <div className="sticky-under-nav">
+        <GlassCard className="p-3">
+          <ViewToolbar
+            label="Dashboard"
+            right={
+              <>
+                {/* hide scrollbar like before */}
+                <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
+
+                {/* actions row */}
+                <div className="flex items-center gap-2">
+                  {/* grouped presets — replaces .dt-segment */}
+                  <div className="flex gap-1.5 rounded-2xl border border-white/20 bg-white/5 p-1.5">
+                    {PRESETS.map((p) => (
+                      <button
+                        key={p.key}
+                        onClick={() => setPreset(p.key)}
+                        className={[
+                          "px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-300",
+                          "hover:bg-white/5 hover:text-slate-200 active:translate-y-px",
+                          // keep gradient via small CSS class
+                          preset === p.key
+                            ? "dt-btn--active"
+                            : "border border-transparent bg-transparent",
+                        ].join(" ")}
+                      >
+                        {p.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* refresh — replaces .dt-refresh */}
+                  <button
+                    onClick={refresh}
+                    title="Manual refresh"
+                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
+                     border border-white/20 bg-white/10 hover:bg-white/15 hover:border-white/30
+                     active:translate-y-px"
+                  >
+                    Refresh
+                  </button>
+                </div>
+              </>
+            }
+          />
+        </GlassCard>
+      </div>
+
+      {/* small breathing room below the toolbar card */}
+      <div className="h-3" />
+
       {error && <div className="dashboard-alert">{error}</div>}
+
       <div className="kpi-grid">
         <div className="kpi-card">
           <div className="kpi-value">{fmtMoney(openEstimatesValue)}</div>

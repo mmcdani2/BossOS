@@ -5,7 +5,7 @@ export default function ViewToolbar({
   label,
   right,
 }: {
-  label: string;
+  label: ReactNode;
   right?: ReactNode;
 }) {
   return (
