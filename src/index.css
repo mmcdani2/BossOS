@@ -529,3 +529,33 @@ body {
   scrollbar-width: none;     /* Firefox */
 }
 .card-scroll::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+.jobs-container {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Only the jobs list scrolls; tuned padding so bottom edge sits just above BottomNav */
+.jobs-scroll {
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - var(--nav-h) - var(--toolbar-h, 56px) - var(--bottom-nav-h));
+  padding-bottom: calc(var(--bottom-nav-h) + env(safe-area-inset-bottom, 0px));
+  -ms-overflow-style: none;   /* IE/Edge */
+  scrollbar-width: none;      /* Firefox */
+}
+.jobs-scroll::-webkit-scrollbar {
+  display: none;              /* Chrome/Safari */
+}
+
+.jobs-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: rgba(11, 15, 20, 0.95);
+  backdrop-filter: blur(6px);
+}
