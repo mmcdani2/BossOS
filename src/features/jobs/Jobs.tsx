@@ -131,37 +131,9 @@ export default function Jobs() {
             </GlassCard>
           </div>
 
-          {/* KPI row: single line, shrinks hard on mobile, scrolls only if necessary */}
-          <div className="mt-8">
-            <div className="kpi-row flex flex-nowrap gap-2 sm:gap-3 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none]">
-              <style>{`.kpi-row::-webkit-scrollbar{display:none}`}</style>
-
-              {[
-                ["Scheduled", "12"],
-                ["In Progress", "4"],
-                ["Completed today", "18"],
-                ["Overdue", "2"],
-              ].map(([label, value]) => (
-                <GlassCard
-                  key={label}
-                  className="flex-1 basis-0 min-w-0 p-3 sm:p-4 snap-start"
-                >
-                  <div className="h-20 sm:h-24 flex flex-col items-center justify-center text-center">
-                    <div className="text-[11px] sm:text-xs text-white/60 leading-none">
-                      {label}
-                    </div>
-                    <div className="mt-1 font-semibold text-[clamp(1rem,4.5vw,1.5rem)] sm:text-2xl text-white">
-                      {value}
-                    </div>
-                  </div>
-                </GlassCard>
-              ))}
-            </div>
-          </div>
-
           {/* Jobs list (same as yours) */}
           <div
-            className="jobs-container mt-4"
+            className="jobs-container mt-8"
             style={{ flex: 1, minHeight: 0 }}
           >
             <div className="jobs-scroll">

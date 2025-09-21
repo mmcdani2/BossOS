@@ -131,17 +131,24 @@ function DashboardInner() {
                 <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
 
                 {/* actions row */}
-                <div className="flex items-center gap-2">
-                  {/* grouped presets — replaces .dt-segment */}
-                  <div className="flex gap-1.5 rounded-2xl border border-white/20 bg-white/5 p-1.5">
+                <div
+                  className="flex items-center gap-1 sm:gap-2 min-w-0"
+                  style={{ whiteSpace: "nowrap", overflowX: "auto" }}
+                >
+                  <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
+
+                  {/* Preset group */}
+                  <div className="flex gap-1 sm:gap-1.5 rounded-2xl border border-white/20 bg-white/5 p-1 sm:p-1.5">
                     {PRESETS.map((p) => (
                       <button
                         key={p.key}
                         onClick={() => setPreset(p.key)}
                         className={[
-                          "px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-300",
+                          // smaller on mobile, normal on sm+
+                          "rounded-[9px] leading-none text-slate-300",
+                          "px-2 py-1 text-[11px]", // mobile
+                          "sm:px-2.5 sm:py-1.5 sm:text-xs", // tablet/desktop
                           "hover:bg-white/5 hover:text-slate-200 active:translate-y-px",
-                          // keep gradient via small CSS class
                           preset === p.key
                             ? "dt-btn--active"
                             : "border border-transparent bg-transparent",
@@ -152,13 +159,14 @@ function DashboardInner() {
                     ))}
                   </div>
 
-                  {/* refresh — replaces .dt-refresh */}
+                  {/* Refresh */}
                   <button
                     onClick={refresh}
                     title="Manual refresh"
-                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
-                     border border-white/20 bg-white/10 hover:bg-white/15 hover:border-white/30
-                     active:translate-y-px"
+                    className="inline-flex items-center gap-1.5 sm:gap-2 rounded-[9px] leading-none
+               px-2 py-1 text-[11px] sm:px-2.5 sm:py-1.5 sm:text-xs
+               text-slate-200 border border-white/20 bg-white/10
+               hover:bg-white/15 hover:border-white/30 active:translate-y-px"
                   >
                     Refresh
                   </button>
