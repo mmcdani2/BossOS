@@ -134,8 +134,7 @@ export default function Jobs() {
           {/* Jobs list (same as yours) */}
           <div
             className="jobs-container mt-8"
-            style={{ flex: 1, minHeight: 0 }}
-          >
+            style={{ flex: 1, minHeight: 0 }}>
             <div className="jobs-scroll">
               <div className="jobs-header hidden md:grid grid-cols-[1fr_120px_120px_160px_120px]">
                 <div className="px-4 py-2 text-white/60">Job</div>
