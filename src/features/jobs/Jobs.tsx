@@ -4,6 +4,7 @@ import { Plus, Filter, Search, ClipboardCheck } from "lucide-react";
 import PageHeader from "../../ui/PageHeader";
 import ViewToolbar from "../../ui/ViewToolbar";
 import GlassCard from "../../ui/GlassCard";
+import UiSelect from "@/ui/UiSelect";
 
 type JobStatus = "Scheduled" | "In Progress" | "Completed";
 
@@ -20,6 +21,8 @@ export default function Jobs() {
       ? "Scheduled"
       : "Completed") as JobStatus,
   }));
+
+  const [status, setStatus] = React.useState("all");
 
   return (
     <>
@@ -74,26 +77,35 @@ export default function Jobs() {
                   }
                   right={
                     // controls stay on the RIGHT (auto column)
-                    <div
-                      className="flex items-center gap-2 min-w-0 justify-end"
-                      style={{ whiteSpace: "nowrap", overflowX: "auto" }}
-                    >
-                      <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
+                    <div className="relative z-40 flex items-center justify-end min-w-0 overflow-visible">
+  {/* keep horizontal scroll on an inner wrapper only */}
+  <div
+    className="flex items-center gap-2 min-w-0 whitespace-nowrap overflow-x-auto"
+    style={{ msOverflowStyle: "none", scrollbarWidth: "none" }}
+  >
+    <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
 
-                      <button className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-white shrink-0">
-                        <Filter className="h-4 w-4" /> Filters
-                      </button>
+    <button className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-white shrink-0">
+      <Filter className="h-4 w-4" /> Filters
+    </button>
 
-                      <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
-                        <span>Status:</span>
-                        <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
-                          <option>All</option>
-                          <option>Scheduled</option>
-                          <option>In Progress</option>
-                          <option>Completed</option>
-                        </select>
-                      </div>
-                    </div>
+    <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
+      <span>Status:</span>
+      <UiSelect
+        value={status}
+        onChange={setStatus}
+        width={140}
+        options={[
+          { label: "All", value: "all" },
+          { label: "Scheduled", value: "scheduled" },
+          { label: "In Progress", value: "inprogress" },
+          { label: "Completed", value: "completed" },
+        ]}
+      />
+    </div>
+  </div>
+</div>
+
                   }
                 />
               </div>
@@ -116,14 +128,19 @@ export default function Jobs() {
                       <Filter className="h-4 w-4" /> Filters
                     </button>
 
-                    <div className="flex items-center justify-end gap-2 text-white/60 text-sm">
-                      <span className="hidden xs:inline">Status:</span>
-                      <select className="h-9 w-full rounded-md border border-white/10 bg-white/5 text-white px-2">
-                        <option>All</option>
-                        <option>Scheduled</option>
-                        <option>In Progress</option>
-                        <option>Completed</option>
-                      </select>
+                    <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
+                      <span>Status:</span>
+                      <UiSelect
+                        value={status}
+                        onChange={setStatus}
+                        width={140}
+                        options={[
+                          { label: "All", value: "all" },
+                          { label: "Scheduled", value: "scheduled" },
+                          { label: "In Progress", value: "inprogress" },
+                          { label: "Completed", value: "completed" },
+                        ]}
+                      />
                     </div>
                   </div>
                 </div>
@@ -134,7 +151,8 @@ export default function Jobs() {
           {/* Jobs list (same as yours) */}
           <div
             className="jobs-container mt-8"
-            style={{ flex: 1, minHeight: 0 }}>
+            style={{ flex: 1, minHeight: 0 }}
+          >
             <div className="jobs-scroll">
               <div className="jobs-header hidden md:grid grid-cols-[1fr_120px_120px_160px_120px]">
                 <div className="px-4 py-2 text-white/60">Job</div>

@@ -19,8 +19,6 @@ function Portal({ children }: { children: React.ReactNode }) {
   return createPortal(children, document.body);
 }
 
-const DEV_KEEP_OPEN = true; // set to false (or remove) when routes are live
-
 export default function UserMenu() {
   const { user, signOut, orgId, setOrgId } = useAuth();
   const [open, setOpen] = useState(false);
@@ -341,27 +339,32 @@ export default function UserMenu() {
               <div id="acc-account" role="group" hidden={!sections.account}>
                 <div className="um-list">
                   <Link
-                    to="/profile"
+                    to="/account/profile"
                     className="um-item"
                     role="menuitem"
                     data-mi="1"
-                    onClick={(e) => {
-                      if (DEV_KEEP_OPEN) e.preventDefault();
-                    }}
+                    onClick={() => setOpen(false)} // remove preventDefault
                   >
                     <span className="um-item-text">Profile</span>
                     <span className="um-item-caret">›</span>
                   </Link>
                   <Link
-                    to="/preferences"
+                    to="/account/preferences"
                     className="um-item"
                     role="menuitem"
                     data-mi="1"
-                    onClick={(e) => {
-                      if (DEV_KEEP_OPEN) e.preventDefault();
-                    }}
+                    onClick={() => setOpen(false)} // remove preventDefault
                   >
                     <span className="um-item-text">Preferences</span>
+                    <span className="um-item-caret">›</span>
+                  </Link>
+                  <Link
+                    to="/account/settings"
+                    className="um-item"
+                    role="menuitem"
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="um-item-text">Settings</span>
                     <span className="um-item-caret">›</span>
                   </Link>
                   <button

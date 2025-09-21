@@ -4,6 +4,7 @@ import { Users, Search, Plus, Filter } from "lucide-react";
 import PageHeader from "@/ui/PageHeader";
 import ViewToolbar from "@/ui/ViewToolbar";
 import GlassCard from "@/ui/GlassCard";
+import UiSelect from "@/ui/UiSelect";
 
 type CustomerRow = {
   name: string;
@@ -20,6 +21,8 @@ export default function Customers() {
     phone: "(555) 123-4567",
     meta: "Last job: Jul 14 · Balance: $0.00",
   }));
+
+  const [custStatus, setCustStatus] = React.useState("all");
 
   return (
     <>
@@ -85,12 +88,17 @@ export default function Customers() {
 
                         <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
                           <span>Status:</span>
-                          <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
-                            <option>All</option>
-                            <option>Active</option>
-                            <option>Prospect</option>
-                            <option>Archived</option>
-                          </select>
+                          <UiSelect
+                            value={custStatus}
+                            onChange={setCustStatus}
+                            width={140}
+                            options={[
+                              { label: "All", value: "all" },
+                              { label: "Active", value: "active" },
+                              { label: "Prospect", value: "prospect" },
+                              { label: "Archived", value: "archived" },
+                            ]}
+                          />
                         </div>
                       </div>
                     </>
@@ -113,12 +121,17 @@ export default function Customers() {
                   </button>
                   <div className="flex items-center justify-end gap-2 text-white/60 text-sm">
                     <span className="hidden xs:inline">Status:</span>
-                    <select className="h-9 w-full rounded-md border border-white/10 bg-white/5 text-white px-2">
-                      <option>All</option>
-                      <option>Active</option>
-                      <option>Prospect</option>
-                      <option>Archived</option>
-                    </select>
+                    <UiSelect
+                      value={custStatus}
+                      onChange={setCustStatus}
+                      width="100%"
+                      options={[
+                        { label: "All", value: "all" },
+                        { label: "Active", value: "active" },
+                        { label: "Prospect", value: "prospect" },
+                        { label: "Archived", value: "archived" },
+                      ]}
+                    />
                   </div>
                 </div>
               </div>
@@ -126,7 +139,10 @@ export default function Customers() {
           </div>
 
           {/* Customers list — reuse Jobs' chrome for rounded bottom + hidden scrollbar */}
-          <div className="jobs-container mt-8" style={{ flex: 1, minHeight: 0 }}>
+          <div
+            className="jobs-container mt-8"
+            style={{ flex: 1, minHeight: 0 }}
+          >
             <div className="jobs-scroll">
               {/* Sticky header inside the scroller */}
               <div className="jobs-header hidden md:grid grid-cols-[1fr_240px_160px_1fr]">
@@ -146,16 +162,16 @@ export default function Customers() {
                           <Users className="h-4 w-4 text-white/70" />
                         </div>
                         <div className="min-w-0">
-                          <div className="truncate text-white font-medium">{r.name}</div>
+                          <div className="truncate text-white font-medium">
+                            {r.name}
+                          </div>
                           <div className="text-white/60 text-xs truncate">
                             {r.email} · {r.phone}
                           </div>
                         </div>
                       </div>
                     </div>
-                    <div className="mt-1 text-white/70 text-xs">
-                      {r.meta}
-                    </div>
+                    <div className="mt-1 text-white/70 text-xs">{r.meta}</div>
                   </div>
                 ))}
               </div>

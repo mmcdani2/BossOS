@@ -4,6 +4,7 @@ import { Boxes, Search, Plus, Filter } from "lucide-react";
 import PageHeader from "@/ui/PageHeader";
 import ViewToolbar from "@/ui/ViewToolbar";
 import GlassCard from "@/ui/GlassCard";
+import UiSelect from "@/ui/UiSelect";
 
 type Row = {
   name: string;
@@ -18,8 +19,11 @@ export default function Inventory() {
     name: `Condenser fan motor ${i + 1}`,
     sku: `CFM-20${i.toString().padStart(2, "0")}`,
     onHand: Math.max(0, 24 - i),
-    location: i % 3 === 0 ? "Warehouse A" : i % 3 === 1 ? "Truck 2" : "Warehouse B",
+    location:
+      i % 3 === 0 ? "Warehouse A" : i % 3 === 1 ? "Truck 2" : "Warehouse B",
   }));
+  const [loc, setLoc] = React.useState("all");
+  const [stock, setStock] = React.useState("all");
 
   return (
     <>
@@ -83,21 +87,32 @@ export default function Inventory() {
                         </button>
                         <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
                           <span>Location:</span>
-                          <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
-                            <option>All</option>
-                            <option>Warehouse A</option>
-                            <option>Warehouse B</option>
-                            <option>Truck 1</option>
-                            <option>Truck 2</option>
-                          </select>
+                          <UiSelect
+                            value={loc}
+                            onChange={setLoc}
+                            width={160}
+                            options={[
+                              { label: "All", value: "all" },
+                              { label: "Warehouse A", value: "wa" },
+                              { label: "Warehouse B", value: "wb" },
+                              { label: "Truck 1", value: "t1" },
+                              { label: "Truck 2", value: "t2" },
+                            ]}
+                          />
                         </div>
+
                         <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
                           <span>Stock:</span>
-                          <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
-                            <option>All</option>
-                            <option>Low (&lt;5)</option>
-                            <option>Out of stock</option>
-                          </select>
+                          <UiSelect
+                            value={stock}
+                            onChange={setStock}
+                            width={150}
+                            options={[
+                              { label: "All", value: "all" },
+                              { label: "Low (<5)", value: "low" },
+                              { label: "Out of stock", value: "out" },
+                            ]}
+                          />
                         </div>
                       </div>
                     </>
@@ -107,31 +122,60 @@ export default function Inventory() {
 
               {/* Mobile: stacked */}
               <div className="md:hidden space-y-2">
-                <div className="relative">
-                  <Search className="h-4 w-4 absolute left-2 top-2.5 text-white/50" />
-                  <input
-                    placeholder="Search SKU, name, or location…"
-                    className="w-full pl-8 pr-3 h-9 rounded-md border border-white/10 bg-white/5 text-white placeholder:text-white/50 outline-none focus:border-indigo-400/50"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <button className="inline-flex items-center justify-center gap-2 h-9 px-3 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-white">
+                <div className="flex items-center gap-2 min-w-0">
+                  {/* search box */}
+                  <div className="relative flex-1 min-w-[200px]">
+                    <Search className="h-4 w-4 absolute left-2 top-2.5 text-white/50" />
+                    <input
+                      placeholder="Search SKU, name, or location…"
+                      className="w-full pl-8 pr-3 h-9 rounded-md border border-white/10 bg-white/5 
+                 text-white placeholder:text-white/50 outline-none 
+                 focus:border-indigo-400/50"
+                    />
+                  </div>
+
+                  {/* filter button */}
+                  <button
+                    className="inline-flex items-center gap-2 h-9 px-3 rounded-md 
+               border border-white/10 bg-white/5 hover:bg-white/10 
+               text-white shrink-0"
+                  >
                     <Filter className="h-4 w-4" /> Filters
                   </button>
-                  <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
-                    <option>All Locations</option>
-                    <option>Warehouse A</option>
-                    <option>Warehouse B</option>
-                    <option>Truck 1</option>
-                    <option>Truck 2</option>
-                  </select>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <UiSelect
+                    value={loc}
+                    onChange={setLoc}
+                    width="100%"
+                    options={[
+                      { label: "All Locations", value: "all" },
+                      { label: "Warehouse A", value: "wa" },
+                      { label: "Warehouse B", value: "wb" },
+                      { label: "Truck 1", value: "t1" },
+                      { label: "Truck 2", value: "t2" },
+                    ]}
+                  />
+                  <UiSelect
+                    value={stock}
+                    onChange={setStock}
+                    width="100%"
+                    options={[
+                      { label: "All Stock", value: "all" },
+                      { label: "Low (<5)", value: "low" },
+                      { label: "Out of stock", value: "out" },
+                    ]}
+                  />
                 </div>
               </div>
             </GlassCard>
           </div>
 
           {/* Inventory list — reuse Jobs' chrome for rounded bottom + hidden scrollbar */}
-          <div className="jobs-container mt-8" style={{ flex: 1, minHeight: 0 }}>
+          <div
+            className="jobs-container mt-8"
+            style={{ flex: 1, minHeight: 0 }}
+          >
             <div className="jobs-scroll">
               {/* Sticky header inside the scroller */}
               <div className="jobs-header hidden md:grid grid-cols-[1fr_160px_120px_160px]">
@@ -171,9 +215,15 @@ export default function Inventory() {
                       <Boxes className="h-4 w-4 text-white/50" />
                       <span className="truncate">{r.name}</span>
                     </div>
-                    <div className="px-4 py-3 text-white/80 border-b border-white/10">{r.sku}</div>
-                    <div className="px-4 py-3 text-white/80 border-b border-white/10">{r.onHand}</div>
-                    <div className="px-4 py-3 text-white/80 border-b border-white/10">{r.location}</div>
+                    <div className="px-4 py-3 text-white/80 border-b border-white/10">
+                      {r.sku}
+                    </div>
+                    <div className="px-4 py-3 text-white/80 border-b border-white/10">
+                      {r.onHand}
+                    </div>
+                    <div className="px-4 py-3 text-white/80 border-b border-white/10">
+                      {r.location}
+                    </div>
                   </React.Fragment>
                 ))}
               </div>

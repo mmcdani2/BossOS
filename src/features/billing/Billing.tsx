@@ -4,6 +4,7 @@ import { Plus, Filter, Search, ReceiptText } from "lucide-react";
 import PageHeader from "@/ui/PageHeader";
 import ViewToolbar from "@/ui/ViewToolbar";
 import GlassCard from "@/ui/GlassCard";
+import UiSelect from "@/ui/UiSelect";
 
 type InvoiceRow = {
   id: string;
@@ -19,7 +20,11 @@ export default function Billing() {
     id: `INV-10${i + 12}`,
     customer: "Acme Corp",
     amount: `$${(1260 + i * 15).toLocaleString()}.00`,
-    status: (i % 3 === 0 ? "Overdue" : i % 3 === 1 ? "Paid" : "Open") as InvoiceRow["status"],
+    status: (i % 3 === 0
+      ? "Overdue"
+      : i % 3 === 1
+      ? "Paid"
+      : "Open") as InvoiceRow["status"],
     badgeClasses:
       i % 3 === 0
         ? "border-rose-400/40 bg-rose-400/10 text-rose-200"
@@ -28,6 +33,8 @@ export default function Billing() {
         : "border-amber-400/40 bg-amber-400/10 text-amber-200",
   }));
 
+  const [invStatus, setInvStatus] = React.useState("all");
+
   return (
     <>
       <PageHeader />
@@ -35,7 +42,10 @@ export default function Billing() {
       <section className="w-full">
         <div className="shell page-viewport">
           {/* Toolbar #1 — glass, sticky under header */}
-          <div className="sticky-under-nav" style={{ top: "calc(var(--nav-h) - 64px)" }}>
+          <div
+            className="sticky-under-nav"
+            style={{ top: "calc(var(--nav-h) - 64px)" }}
+          >
             <GlassCard className="p-3">
               <ViewToolbar
                 label="Invoices"
@@ -76,19 +86,27 @@ export default function Billing() {
                     </div>
                   }
                   right={
-                    <div className="flex items-center gap-2 min-w-0 justify-end" style={{ whiteSpace: "nowrap", overflowX: "auto" }}>
+                    <div
+                      className="flex items-center gap-2 min-w-0 justify-end"
+                      style={{ whiteSpace: "nowrap", overflowX: "auto" }}
+                    >
                       <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
                       <button className="inline-flex items-center gap-2 h-9 px-3 rounded-md border border-white/10 bg-white/5 hover:bg-white/10 text-white shrink-0">
                         <Filter className="h-4 w-4" /> Filters
                       </button>
                       <div className="flex items-center gap-2 text-white/60 text-sm shrink-0">
                         <span>Status:</span>
-                        <select className="h-9 rounded-md border border-white/10 bg-white/5 text-white px-2">
-                          <option>All</option>
-                          <option>Open</option>
-                          <option>Paid</option>
-                          <option>Overdue</option>
-                        </select>
+                        <UiSelect
+                          value={invStatus}
+                          onChange={setInvStatus}
+                          width={140}
+                          options={[
+                            { label: "All", value: "all" },
+                            { label: "Open", value: "open" },
+                            { label: "Paid", value: "paid" },
+                            { label: "Overdue", value: "overdue" },
+                          ]}
+                        />
                       </div>
                     </div>
                   }
@@ -110,12 +128,17 @@ export default function Billing() {
                   </button>
                   <div className="flex items-center justify-end gap-2 text-white/60 text-sm">
                     <span className="hidden xs:inline">Status:</span>
-                    <select className="h-9 w-full rounded-md border border-white/10 bg-white/5 text-white px-2">
-                      <option>All</option>
-                      <option>Open</option>
-                      <option>Paid</option>
-                      <option>Overdue</option>
-                    </select>
+                    <UiSelect
+                      value={invStatus}
+                      onChange={setInvStatus}
+                      width="100%"
+                      options={[
+                        { label: "All", value: "all" },
+                        { label: "Open", value: "open" },
+                        { label: "Paid", value: "paid" },
+                        { label: "Overdue", value: "overdue" },
+                      ]}
+                    />
                   </div>
                 </div>
               </div>
@@ -123,7 +146,10 @@ export default function Billing() {
           </div>
 
           {/* Invoices list — reuse Jobs' scroll chrome for rounded bottom + hidden scrollbar */}
-          <div className="jobs-container mt-8" style={{ flex: 1, minHeight: 0 }}>
+          <div
+            className="jobs-container mt-8"
+            style={{ flex: 1, minHeight: 0 }}
+          >
             <div className="jobs-scroll">
               {/* Sticky header inside the scroller */}
               <div className="jobs-header hidden md:grid grid-cols-[1fr_160px_140px_120px]">
@@ -142,7 +168,9 @@ export default function Billing() {
                         <ReceiptText className="h-4 w-4 text-white/50" />
                         <div className="truncate text-white">{r.id}</div>
                       </div>
-                      <span className={`ml-auto shrink-0 inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] ${r.badgeClasses}`}>
+                      <span
+                        className={`ml-auto shrink-0 inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] ${r.badgeClasses}`}
+                      >
                         {r.status}
                       </span>
                     </div>
@@ -163,10 +191,18 @@ export default function Billing() {
                       <ReceiptText className="h-4 w-4 text-white/50" />
                       <span className="truncate">{r.id}</span>
                     </div>
-                    <div className="px-4 py-3 text-white/80 border-b border-white/10">{r.customer}</div>
-                    <div className="px-4 py-3 text-white/80 border-b border-white/10">{r.amount}</div>
+                    <div className="px-4 py-3 text-white/80 border-b border-white/10">
+                      {r.customer}
+                    </div>
+                    <div className="px-4 py-3 text-white/80 border-b border-white/10">
+                      {r.amount}
+                    </div>
                     <div className="px-4 py-3 border-b border-white/10">
-                      <span className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs ${r.badgeClasses}`}>{r.status}</span>
+                      <span
+                        className={`inline-flex items-center rounded-md border px-2 py-0.5 text-xs ${r.badgeClasses}`}
+                      >
+                        {r.status}
+                      </span>
                     </div>
                   </React.Fragment>
                 ))}

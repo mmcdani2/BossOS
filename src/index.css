@@ -259,3 +259,78 @@ body {
 .um-acc-title { font-weight: 600; letter-spacing: .01em; }
 .um-acc-caret { color: #9ca3af; transition: transform .15s ease; }
 .um-acc-caret--open { transform: rotate(180deg); }
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+
+/* === THEME TOKENS ======================================================= */
+:root {
+  --brand: #6366f1;
+
+  /* text */
+  --text: #0b1220;
+  --text-muted: #425066;
+  --text-subtle: #5b6b81;
+
+  /* surfaces */
+  --surface: #ffffff;
+  --surface-1: #f6f7f9;       /* page bg / canvas */
+  --surface-2: #ffffff;       /* elevated */
+  --surface-3: #ffffff;       /* highest */
+
+  /* borders & outlines */
+  --border: rgba(10, 23, 40, 0.12);
+  --outline: rgba(10, 23, 40, 0.18);
+
+  /* shadows */
+  --shadow-1: 0 8px 30px rgba(2,10,24,0.08);
+  --shadow-2: 0 12px 40px rgba(2,10,24,0.12);
+}
+
+:root[data-theme="dark"] {
+  --text: #e5e7eb;
+  --text-muted: #cbd5e1;
+  --text-subtle: #a8b3c2;
+
+  --surface: #0c0e12;
+  --surface-1: #0b0d11;     /* page bg / canvas */
+  --surface-2: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  --surface-3: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+
+  --border: rgba(255,255,255,0.10);
+  --outline: rgba(255,255,255,0.16);
+
+  --shadow-1: 0 10px 30px rgba(0,0,0,0.35);
+  --shadow-2: 0 18px 50px rgba(0,0,0,0.45);
+}
+
+/* === tiny utilities so we avoid Tailwind color hard-codes ============== */
+.bg-surface        { background: var(--surface); }
+.bg-surface-1      { background: var(--surface-1); }
+.bg-surface-2      { background: var(--surface-2); }
+.bg-surface-3      { background: var(--surface-3); }
+
+.text-basecolor    { color: var(--text); }
+.text-muted        { color: var(--text-muted); }
+.text-subtle       { color: var(--text-subtle); }
+
+.border-token      { border-color: var(--border); }
+.outline-token     { outline-color: var(--outline); }
+
+.shadow-1          { box-shadow: var(--shadow-1); }
+.shadow-2          { box-shadow: var(--shadow-2); }
+
+/* our shared “glass” look (used by GlassCard) */
+.glass {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1);
+  border-radius: 16px;
+}
+
