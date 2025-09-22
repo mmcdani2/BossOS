@@ -20,7 +20,7 @@ export default function ViewToolbar({
     >
       {/* Left: label truncates, never forces a wrap */}
       <h1
-        className="text-lg font-semibold text-white"
+        className="text-lg font-semibold text-basecolor"
         style={{
           minWidth: 0,
           overflow: "hidden",

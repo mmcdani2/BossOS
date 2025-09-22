@@ -54,6 +54,23 @@ export default function Preferences() {
     }
   }, [loading, prefs]);
 
+  React.useEffect(() => {
+  const el = document.documentElement;
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  const apply = (mode: "light" | "dark") => el.setAttribute("data-theme", mode);
+
+  const resolve = () => {
+    const choice = (theme ?? "system") as "system" | "light" | "dark";
+    if (choice === "system") apply(media.matches ? "dark" : "light");
+    else apply(choice);
+  };
+
+  resolve();
+  const onChange = () => (theme === "system") && resolve();
+  media.addEventListener?.("change", onChange);
+  return () => media.removeEventListener?.("change", onChange);
+}, [theme]);
+
   const onSave = async () => {
     await save({
       timezone,
@@ -66,10 +83,6 @@ export default function Preferences() {
 
   return (
     <>
-      <div className="text-xs text-muted mt-2">
-        Current theme: <strong>{theme}</strong> (data-theme="
-        {document?.documentElement?.getAttribute("data-theme")}")
-      </div>
       <PageHeader />
       <div className="shell page-viewport">
         {/* Toolbar */}

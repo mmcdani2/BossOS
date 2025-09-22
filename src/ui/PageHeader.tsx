@@ -12,13 +12,10 @@ export default function PageHeader({
   action?: ReactNode; // optional right-side actions
 }) {
   return (
-    <div
-      className="
-        sticky top-0 z-40
-        bg-black/30 backdrop-blur border-b border-white/10
-        supports-[backdrop-filter]:bg-black/20
-      "
-    >
+    <div className="
+  sticky top-0 z-40
+  bg-surface-2 backdrop-blur border-b border-token
+">
       {/* full-width row with fixed, safe padding from viewport edges */}
       <div
         className="
@@ -34,16 +31,16 @@ export default function PageHeader({
       >
         {/* Left: static brand + optional titles */}
         <div className="min-w-0 flex items-center gap-3">
-          <div className="nav-brand text-white font-semibold">Boss.OS</div>
+          <div className="nav-brand text-basecolor font-semibold">Boss.OS</div>
           {(title || subtitle) && (
             <div className="min-w-0">
               {title && (
-                <h1 className="text-xl font-semibold text-white leading-none truncate">
+                <h1 className="text-xl font-semibold text-basecolor leading-none truncate">
                   {title}
                 </h1>
               )}
               {subtitle && (
-                <p className="text-white/60 text-sm leading-tight truncate">
+                <p className="text-muted/60 text-sm leading-tight truncate">
                   {subtitle}
                 </p>
               )}

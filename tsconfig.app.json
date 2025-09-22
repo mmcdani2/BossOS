@@ -10,11 +10,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client"],
+    "types": ["vite/client", "react", "react-dom"],   // <-- add these
     "baseUrl": "./src",
-    "paths": {
-      "@/*": ["*"]
-    }
+    "paths": { "@/*": ["*"] }
   },
   "include": ["src"]
 }

@@ -57,7 +57,10 @@ export default function UiSelect({
 
   // Keyboard nav
   function onKeyDown(e: React.KeyboardEvent) {
-    if (!open && (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ")) {
+    if (
+      !open &&
+      (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ")
+    ) {
       e.preventDefault();
       setOpen(true);
       setActive(Math.max(0, selectedIdx));
@@ -105,18 +108,20 @@ export default function UiSelect({
       <button
         ref={btnRef}
         type="button"
-        className="w-full h-9 px-3 pr-8 rounded-md border border-white/10 bg-white/5
-                   text-white text-sm flex items-center justify-between
-                   hover:bg-white/10 transition-colors outline-none focus:border-indigo-400/50"
+        className="w-full h-9 px-3 pr-8 rounded-md border border-token bg-surface-2
+            text-basecolor text-sm flex items-center justify-between
+            hover:opacity-95 transition-colors outline-none focus:border-indigo-400/50"
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
         onKeyDown={onKeyDown}
       >
-        <span className={`truncate ${selected ? "text-white" : "text-white/50"}`}>
+        <span
+          className={`truncate ${selected ? "text-basecolor" : "text-subtle"}`}
+        >
           {selected ? selected.label : placeholder}
         </span>
-        <ChevronDown className="absolute right-2 h-4 w-4 text-white/60 pointer-events-none" />
+        <ChevronDown className="absolute right-2 h-4 w-4 text-subtle ..." />
       </button>
 
       {/* Portal menu (escapes overflow of toolbars/cards) */}
@@ -127,8 +132,8 @@ export default function UiSelect({
             role="listbox"
             tabIndex={-1}
             style={menuStyle}
-            className="rounded-lg border border-white/10 bg-[#17181b]/95
-                       shadow-lg backdrop-blur overflow-auto max-h-64 z-50"
+            className="rounded-lg border border-token bg-surface-3
+            shadow-lg backdrop-blur overflow-auto max-h-64 z-50"
             onKeyDown={onKeyDown}
           >
             {options.map((o, i) => {
@@ -140,8 +145,8 @@ export default function UiSelect({
                   role="option"
                   aria-selected={isSel}
                   className={`px-3 py-2 text-sm cursor-pointer select-none flex items-center
-                              ${isAct ? "bg-white/10" : ""}
-                              ${isSel ? "text-white" : "text-white/80 hover:text-white"}`}
+                              ${isAct ? "opacity-95" : ""}
+                              ${isSel ? "text-basecolor" : "text-subtle hover:text-basecolor"}`}
                   onMouseEnter={() => setActive(i)}
                   onMouseDown={(e) => {
                     e.preventDefault();

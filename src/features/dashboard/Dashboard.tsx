@@ -37,9 +37,7 @@ function DashboardInner() {
 
   const [prevJobsCount, setPrevJobsCount] = useState<number | undefined>();
   const [prevLeadsCount, setPrevLeadsCount] = useState<number | undefined>();
-  const [prevOpenEstimates, setPrevOpenEstimates] = useState<
-    number | undefined
-  >();
+  const [prevOpenEstimates, setPrevOpenEstimates] = useState<number | undefined>();
   const [prevArBalance, setPrevArBalance] = useState<number | undefined>();
 
   useEffect(() => {
@@ -120,43 +118,44 @@ function DashboardInner() {
 
   return (
     <div className="shell">
-      {/* Sticky toolbar as a card (replaces <DashboardToolbar />) */}
+      {/* Sticky toolbar as a glass card */}
       <div className="sticky-under-nav">
         <GlassCard className="p-3">
           <ViewToolbar
             label="Dashboard"
             right={
               <>
-                {/* hide scrollbar like before */}
-                <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
+                {/* hide horizontal scrollbar for the actions row */}
+                <style>{`.dash-toolbar::-webkit-scrollbar{display:none}`}</style>
 
-                {/* actions row */}
                 <div
-                  className="flex items-center gap-1 sm:gap-2 min-w-0"
+                  className="dash-toolbar flex items-center gap-1 sm:gap-2 min-w-0"
                   style={{ whiteSpace: "nowrap", overflowX: "auto" }}
                 >
-                  <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
-
                   {/* Preset group */}
-                  <div className="flex gap-1 sm:gap-1.5 rounded-2xl border border-white/20 bg-white/5 p-1 sm:p-1.5">
-                    {PRESETS.map((p) => (
-                      <button
-                        key={p.key}
-                        onClick={() => setPreset(p.key)}
-                        className={[
-                          // smaller on mobile, normal on sm+
-                          "rounded-[9px] leading-none text-slate-300",
-                          "px-2 py-1 text-[11px]", // mobile
-                          "sm:px-2.5 sm:py-1.5 sm:text-xs", // tablet/desktop
-                          "hover:bg-white/5 hover:text-slate-200 active:translate-y-px",
-                          preset === p.key
-                            ? "dt-btn--active"
-                            : "border border-transparent bg-transparent",
-                        ].join(" ")}
-                      >
-                        {p.label}
-                      </button>
-                    ))}
+                  <div className="flex gap-1 sm:gap-1.5 rounded-2xl border border-token bg-surface-2 p-1 sm:p-1.5">
+                    {PRESETS.map((p) => {
+                      const isActive = preset === p.key;
+                      return (
+                        <button
+                          key={p.key}
+                          onClick={() => setPreset(p.key)}
+                          aria-pressed={isActive}
+                          className={[
+                            "rounded-[9px] leading-none text-basecolor",
+                            "px-2 py-1 text-[11px]",
+                            "sm:px-2.5 sm:py-1.5 sm:text-xs",
+                            "transition-colors active:translate-y-px focus-visible:outline-none focus-visible:ring-token",
+                            isActive
+                              ? // active token style (subtle fill + border)
+                                "border border-token [background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]"
+                              : "border border-transparent bg-transparent hover:[background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]",
+                          ].join(" ")}
+                        >
+                          {p.label}
+                        </button>
+                      );
+                    })}
                   </div>
 
                   {/* Refresh */}
@@ -164,9 +163,10 @@ function DashboardInner() {
                     onClick={refresh}
                     title="Manual refresh"
                     className="inline-flex items-center gap-1.5 sm:gap-2 rounded-[9px] leading-none
-               px-2 py-1 text-[11px] sm:px-2.5 sm:py-1.5 sm:text-xs
-               text-slate-200 border border-white/20 bg-white/10
-               hover:bg-white/15 hover:border-white/30 active:translate-y-px"
+                    px-2 py-1 text-[11px] sm:px-2.5 sm:py-1.5 sm:text-xs
+                    text-basecolor border border-token bg-surface-2
+                    hover:[background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]
+                    active:translate-y-px focus-visible:outline-none focus-visible:ring-token"
                   >
                     Refresh
                   </button>

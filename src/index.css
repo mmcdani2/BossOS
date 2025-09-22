@@ -2,12 +2,13 @@
 @import "tailwindcss";
 
 /* -------- Tokens -------- */
-:root {
-  color-scheme: dark;
-  --nav-h: 64px;          /* top header height */
-  --toolbar-h: 56px;      /* toolbar height hint */
-  --bottom-nav-h: 120px;  /* fixed bottom bar reservation */
-}
+ :root {
+   --nav-h: 64px;
+   --toolbar-h: 56px;
+   --bottom-nav-h: 120px;
+ }
+ :root[data-theme="dark"] { color-scheme: dark; }
+ :root[data-theme="light"] { color-scheme: light; }
 
 /* -------- Base -------- */
 * { box-sizing: border-box; }
@@ -280,13 +281,25 @@ body {
 
   /* surfaces */
   --surface: #ffffff;
-  --surface-1: #f6f7f9;       /* page bg / canvas */
-  --surface-2: #ffffff;       /* elevated */
-  --surface-3: #ffffff;       /* highest */
+  --surface-1: #f6f7f9;   /* page bg / canvas */
+  --surface-2: #ffffff;   /* elevated */
+  --surface-3: #ffffff;   /* highest */
 
-  /* borders & outlines */
-  --border: rgba(10, 23, 40, 0.12);
+  /* borders, dividers, focus */
+  --border: rgba(10, 23, 40, 0.16);  /* slightly stronger for light mode */
+  --divider: rgba(10, 23, 40, 0.10);
   --outline: rgba(10, 23, 40, 0.18);
+  --ring: rgba(99, 102, 241, 0.35);  /* brandy focus ring */
+
+  /* glass */
+  --glass-bg: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--surface-3) 92%, transparent) 0%,
+    color-mix(in srgb, var(--surface-3) 86%, transparent) 100%
+  );
+  --glass-stroke: color-mix(in srgb, #000 14%, transparent);
+  --glass-highlight: rgba(255, 255, 255, 0.65);
+  --glass-shadow: rgba(2, 10, 24, 0.10);
 
   /* shadows */
   --shadow-1: 0 8px 30px rgba(2,10,24,0.08);
@@ -299,42 +312,101 @@ body {
   --text-subtle: #a8b3c2;
 
   --surface: #0c0e12;
-  --surface-1: #0b0d11;     /* page bg / canvas */
-  --surface-2: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-  --surface-3: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+  --surface-1: #0b0d11; /* page bg / canvas */
+  --surface-2: #10141b; /* elevated */
+  --surface-3: #0f131a; /* highest */
 
   --border: rgba(255,255,255,0.10);
+  --divider: rgba(255,255,255,0.08);
   --outline: rgba(255,255,255,0.16);
+  --ring: rgba(99,102,241,0.45);
+
+  --glass-bg: color-mix(in srgb, var(--surface-3) 72%, transparent);
+  --glass-stroke: color-mix(in srgb, #fff 12%, transparent);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+  --glass-shadow: rgba(0, 0, 0, 0.35);
 
   --shadow-1: 0 10px 30px rgba(0,0,0,0.35);
   --shadow-2: 0 18px 50px rgba(0,0,0,0.45);
 }
 
-/* === tiny utilities so we avoid Tailwind color hard-codes ============== */
-.bg-surface        { background: var(--surface); }
-.bg-surface-1      { background: var(--surface-1); }
-.bg-surface-2      { background: var(--surface-2); }
-.bg-surface-3      { background: var(--surface-3); }
+/* === Utilities (token-backed) ========================================== */
+.bg-surface     { background: var(--surface); }
+.bg-surface-1   { background: var(--surface-1); }
+.bg-surface-2   { background: var(--surface-2); }
+.bg-surface-3   { background: var(--surface-3); }
 
-.text-basecolor    { color: var(--text); }
-.text-muted        { color: var(--text-muted); }
-.text-subtle       { color: var(--text-subtle); }
+.text-basecolor { color: var(--text); }
+.text-muted     { color: var(--text-muted); }
+.text-subtle    { color: var(--text-subtle); }
 
-.border-token      { border-color: var(--border); }
-.outline-token     { outline-color: var(--outline); }
+.border-token   { border-color: var(--border); }
+.outline-token  { outline-color: var(--outline); }
+.divide-token > :not([hidden]) ~ :not([hidden]) { border-color: var(--divider); }
 
-.shadow-1          { box-shadow: var(--shadow-1); }
-.shadow-2          { box-shadow: var(--shadow-2); }
+.shadow-1       { box-shadow: var(--shadow-1); }
+.shadow-2       { box-shadow: var(--shadow-2); }
+.ring-token     { box-shadow: 0 0 0 2px var(--ring); }
 
-/* our shared “glass” look (used by GlassCard) */
+.hairline-top    { box-shadow: inset 0 1px 0 0 var(--divider); }
+.hairline-bottom { box-shadow: inset 0 -1px 0 0 var(--divider); }
+
+/* Shared glass look */
 .glass {
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-1);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  border: 1px solid var(--glass-stroke);
   border-radius: 16px;
+  box-shadow: var(--shadow-1);
 }
 
-/* apply tokens to the page */
-html, body, #root { background: var(--surface-1); color: var(--text); }
+.glass-strong {
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--surface-3) 96%, transparent) 0%,
+    color-mix(in srgb, var(--surface-3) 90%, transparent) 100%
+  );
+  border-color: color-mix(in srgb, var(--glass-stroke) 80%, transparent);
+  box-shadow:
+    0 12px 32px var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight);
+}
 
+
+
+ :root[data-theme="light"] html,
+ :root[data-theme="light"] body,
+ :root[data-theme="light"] #root {
+   min-height: 100%;
+   color: var(--text);
+   background:
+     radial-gradient(circle at top left, rgba(180,200,255,0.4), transparent 70%),
+     linear-gradient(to bottom right, var(--surface-1), var(--surface-2));
+ }
+
+:root[data-theme="dark"] {
+  --surface-1: #0b0d11;
+  --surface-2: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  --surface-3: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+}
+
+/* === Light-mode shim for legacy dark utilities (temporary) ============= */
+:root[data-theme="light"] .text-white       { color: var(--text) !important; }
+:root[data-theme="light"] .text-white\/90   { color: color-mix(in oklab, var(--text) 90%, transparent) !important; }
+:root[data-theme="light"] .text-white\/80   { color: color-mix(in oklab, var(--text) 80%, transparent) !important; }
+:root[data-theme="light"] .text-white\/70   { color: color-mix(in oklab, var(--text) 70%, transparent) !important; }
+:root[data-theme="light"] .text-white\/60   { color: color-mix(in oklab, var(--text) 60%, transparent) !important; }
+
+:root[data-theme="light"] .border-white\/10,
+:root[data-theme="light"] .border-white\/20 { border-color: var(--border) !important; }
+
+:root[data-theme="light"] .bg-white\/5      { background: rgba(0,0,0,0.03) !important; }
+:root[data-theme="light"] .hover\:bg-white\/10:hover { background: rgba(0,0,0,0.06) !important; }
+
+:root[data-theme="light"] .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--divider) !important;
+}
 
