@@ -334,3 +334,7 @@ body {
   border-radius: 16px;
 }
 
+/* apply tokens to the page */
+html, body, #root { background: var(--surface-1); color: var(--text); }
+
+
