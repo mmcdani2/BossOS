@@ -1,13 +1,15 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-// local props that are always valid
 type Padding = "none" | "sm" | "md" | "lg";
+type Accent = "none" | "teal";
 type ExtraProps = {
   padding?: Padding;
   elevated?: boolean;
   interactive?: boolean;
   divided?: boolean;
+  /** optional dark-mode glow like the mock */
+  accent?: Accent;
 };
 
 // polymorphic helper
@@ -23,6 +25,7 @@ function GlassCardInner<T extends React.ElementType = "div">(
     elevated = true,
     interactive = false,
     divided = false,
+    accent = "none",
     ...rest
   }: PolymorphicProps<T, ExtraProps>,
   ref: React.Ref<Element>
@@ -38,16 +41,23 @@ function GlassCardInner<T extends React.ElementType = "div">(
     <As
       ref={ref}
       className={cn(
-        "glass text-basecolor",
+        // base glass pulls from tokens (light) + dark override in CSS
+        "glass text-basecolor rounded-2xl",
         pad,
         elevated && "shadow-1",
         divided && "divide-y divide-token",
+
+        // interactive states via tokens so both themes behave
         interactive && [
           "transition-all",
           "hover:[background:color-mix(in_srgb,var(--surface-3)_94%,transparent)]",
           "active:[background:color-mix(in_srgb,var(--surface-3)_90%,transparent)]",
           "focus-visible:outline-none focus-visible:ring-token"
         ],
+
+        // optional teal accent (dark-only flair via CSS selector below)
+        accent === "teal" && "glass-accent--teal",
+
         className
       )}
       {...rest}

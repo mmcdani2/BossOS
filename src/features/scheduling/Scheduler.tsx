@@ -110,7 +110,7 @@ export default function Scheduler() {
           className="sticky-under-nav"
           style={{ top: "calc(var(--nav-h) - 64px)" }} // pull it up by 24px
         >
-          <GlassCard className="p-3">
+          <GlassCard accent="teal" padding="sm" className="p-3">
             <ViewToolbar
               label="Scheduler"
               right={

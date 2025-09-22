@@ -10,6 +10,7 @@ import { getOpenEstimatesValueInRange } from "@/lib/api/estimates";
 import { getJobsCountInRange } from "@/lib/api/jobs";
 import { getARBalanceInRange } from "@/lib/api/invoices";
 import { getLeadsCountInRange } from "@/lib/api/leads";
+import { DashboardKpiCard } from "@/ui/DashboardKpiCard";
 
 function DashboardInner() {
   const { fromUtc, toUtc, refreshToken } = useDashboardFilters();
@@ -37,7 +38,9 @@ function DashboardInner() {
 
   const [prevJobsCount, setPrevJobsCount] = useState<number | undefined>();
   const [prevLeadsCount, setPrevLeadsCount] = useState<number | undefined>();
-  const [prevOpenEstimates, setPrevOpenEstimates] = useState<number | undefined>();
+  const [prevOpenEstimates, setPrevOpenEstimates] = useState<
+    number | undefined
+  >();
   const [prevArBalance, setPrevArBalance] = useState<number | undefined>();
 
   useEffect(() => {
@@ -120,7 +123,7 @@ function DashboardInner() {
     <div className="shell">
       {/* Sticky toolbar as a glass card */}
       <div className="sticky-under-nav">
-        <GlassCard className="p-3">
+        <GlassCard accent="teal" padding="sm" className="p-3">
           <ViewToolbar
             label="Dashboard"
             right={
@@ -174,38 +177,48 @@ function DashboardInner() {
               </>
             }
           />
+
+          {/* small breathing room below the toolbar card */}
+          <div className="h-3" />
+
+          {error && <div className="dashboard-alert">{error}</div>}
+
+          <div className="kpi-grid">
+            <DashboardKpiCard
+              className="kpi-card tile tile--a"
+              tone="a"
+              title="Open Estimates"
+              value={openEstimatesValue ?? 0}
+              previous={prevOpenEstimates}
+              format={(v) => `$${v.toLocaleString()}`}
+            />
+
+            <DashboardKpiCard
+              className="kpi-card tile tile--b"
+              tone="b"
+              title="Jobs"
+              value={jobsTodayCount ?? 0}
+              previous={prevJobsCount}
+            />
+
+            <DashboardKpiCard
+              className="kpi-card tile tile--c"
+              tone="c"
+              title="Invoices"
+              value={arBalance ?? 0}
+              previous={prevArBalance}
+              format={(v) => `$${v.toLocaleString()}`}
+            />
+
+            <DashboardKpiCard
+              className="kpi-card tile tile--d"
+              tone="d"
+              title="Leads"
+              value={leadsThisWeekCount ?? 0}
+              previous={prevLeadsCount}
+            />
+          </div>
         </GlassCard>
-      </div>
-
-      {/* small breathing room below the toolbar card */}
-      <div className="h-3" />
-
-      {error && <div className="dashboard-alert">{error}</div>}
-
-      <div className="kpi-grid">
-        <div className="kpi-card">
-          <div className="kpi-value">{fmtMoney(openEstimatesValue)}</div>
-          <div className="kpi-label">Open Estimates</div>
-          {renderTrend(openEstimatesValue ?? 0, prevOpenEstimates, "money")}
-        </div>
-
-        <div className="kpi-card">
-          <div className="kpi-value">{fmtCount(jobsTodayCount)}</div>
-          <div className="kpi-label">Jobs</div>
-          {renderTrend(jobsTodayCount ?? 0, prevJobsCount, "count")}
-        </div>
-
-        <div className="kpi-card">
-          <div className="kpi-value">{fmtMoney(arBalance)}</div>
-          <div className="kpi-label">Invoices</div>
-          {renderTrend(arBalance ?? 0, prevArBalance, "money")}
-        </div>
-
-        <div className="kpi-card">
-          <div className="kpi-value">{fmtCount(leadsThisWeekCount)}</div>
-          <div className="kpi-label">Leads</div>
-          {renderTrend(leadsThisWeekCount ?? 0, prevLeadsCount, "count")}
-        </div>
       </div>
     </div>
   );
