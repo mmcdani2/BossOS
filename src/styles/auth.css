@@ -1,0 +1,44 @@
+﻿/* subtle grid like the snippet’s bg-grid-slate-900/20 */
+.auth-grid-overlay {
+  background-image:
+    linear-gradient(to right, rgba(2,6,23,0.2) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(2,6,23,0.2) 1px, transparent 1px);
+  background-size: 36px 36px, 36px 36px;
+}
+
+/* ------ background ------ */
+.auth-bg {
+  background:
+    /* glowing teal/orange corner accents */
+    radial-gradient(600px 400px at 20% 15%, rgba(56,189,248,0.25), transparent 70%),
+    
+    /* faint diagonal navy base */
+    linear-gradient(135deg, #0b121a 0%, #070c12 50%, #05080c 100%);
+  background-attachment: fixed;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Optional subtle animated trend-lines */
+.auth-bg::after {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      120deg,
+      rgba(56,189,248,0.12) 0px,
+      rgba(56,189,248,0.12) 2px,
+      transparent 2px,
+      transparent 80px
+    ),
+    repeating-linear-gradient(
+      -120deg,
+      rgba(249,115,22,0.1) 0px,
+      rgba(249,115,22,0.1) 2px,
+      transparent 2px,
+      transparent 100px
+    );
+  background-size: 200px 200px, 240px 240px;
+  opacity: 0.25;
+  pointer-events: none;
+}

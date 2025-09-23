@@ -1,5 +1,14 @@
-/* src/index.css — BossOS core */
+﻿/* src/index.css â€” BossOS core */
 @import "tailwindcss";
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/auth.css";
+@import "./styles/user-menu.css";
+@import "./styles/dashboard.css";
+@import "./styles/kpi.css";
+@import "./styles/glass.css";
+@import "./styles/tiles.css";
+@import "./styles/utilities.css";
 
 /* ---------------- Tokens / Theme flags ---------------- */
 :root {
@@ -261,58 +270,14 @@ body {
   text-align: center;
 }
 
-/* subtle grid like the snippet’s bg-grid-slate-900/20 */
-.auth-grid-overlay {
-  background-image:
-    linear-gradient(to right, rgba(2,6,23,0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(2,6,23,0.2) 1px, transparent 1px);
-  background-size: 36px 36px, 36px 36px;
-}
-
+/* subtle grid like the snippetâ€™s bg-grid-slate-900/20 */
 /* Compact on tiny screens */
 @media (max-width: 380px) {
   .auth-card { max-width: 100%; border-radius: 18px; padding: 18px; }
 }
 
 /* ------ background ------ */
-.auth-bg {
-  background:
-    /* glowing teal/orange corner accents */
-    radial-gradient(600px 400px at 20% 15%, rgba(56,189,248,0.25), transparent 70%),
-    
-    /* faint diagonal navy base */
-    linear-gradient(135deg, #0b121a 0%, #070c12 50%, #05080c 100%);
-  background-attachment: fixed;
-  position: relative;
-  overflow: hidden;
-}
-
 /* Optional subtle animated trend-lines */
-.auth-bg::after {
-  content: "";
-  position: absolute; inset: 0;
-  background-image:
-    repeating-linear-gradient(
-      120deg,
-      rgba(56,189,248,0.12) 0px,
-      rgba(56,189,248,0.12) 2px,
-      transparent 2px,
-      transparent 80px
-    ),
-    repeating-linear-gradient(
-      -120deg,
-      rgba(249,115,22,0.1) 0px,
-      rgba(249,115,22,0.1) 2px,
-      transparent 2px,
-      transparent 100px
-    );
-  background-size: 200px 200px, 240px 240px;
-  opacity: 0.25;
-  pointer-events: none;
-}
-
-
-
 /* ---------------- Layout utilities ---------------- */
 .page-viewport {
   height: calc(100vh - var(--nav-h) - var(--bottom-nav-h));
@@ -361,7 +326,7 @@ body {
   grid-column: span 3;
   border-radius: 14px;
   padding: 14px;
-  min-height: 116px;                 /* keep that “card” height */
+  min-height: 116px;                 /* keep that â€œcardâ€ height */
   display: flex; flex-direction: column;
   align-items: center; justify-content: center; gap: 6px;
   /* no background/border here (handled by .tile) */
@@ -449,7 +414,7 @@ body {
   display:grid; place-items:center; background: rgba(255,255,255,0.06);
 }
 .um-radio--on{ background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.28); }
-.um-radio--on::after{ content:"✓"; font-size:12px; }
+.um-radio--on::after{ content:"âœ“"; font-size:12px; }
 
 /* Support */
 .um-support{ padding: 8px 20px 16px; }
@@ -715,3 +680,4 @@ body {
 :root[data-theme="light"] .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
   border-color: var(--divider) !important;
 }
+
