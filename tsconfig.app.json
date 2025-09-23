@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2020", "ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "Bundler",
@@ -10,9 +10,13 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "react", "react-dom"],   // <-- add these
+    "types": ["vite/client", "react", "react-dom", "vitest/globals", "node"],   // <-- add these
     "baseUrl": "./src",
     "paths": { "@/*": ["*"] }
+  },
+  "scripts": {
+    "test": "vitest",
+    "test:watch": "vitest watch"
   },
   "include": ["src"]
 }

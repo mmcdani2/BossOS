@@ -1,19 +1,24 @@
 ﻿/* subtle grid like the snippet’s bg-grid-slate-900/20 */
 .auth-grid-overlay {
-  background-image:
-    linear-gradient(to right, rgba(2,6,23,0.2) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(2,6,23,0.2) 1px, transparent 1px);
+  background-image: linear-gradient(
+      to right,
+      rgba(2, 6, 23, 0.2) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, rgba(2, 6, 23, 0.2) 1px, transparent 1px);
   background-size: 36px 36px, 36px 36px;
 }
 
 /* ------ background ------ */
 .auth-bg {
   background:
-    /* glowing teal/orange corner accents */
-    radial-gradient(600px 400px at 20% 15%, rgba(56,189,248,0.25), transparent 70%),
-    
+    /* glowing teal/orange corner accents */ radial-gradient(
+      600px 400px at 20% 15%,
+      rgba(56, 189, 248, 0.25),
+      transparent 70%
+    ),
     /* faint diagonal navy base */
-    linear-gradient(135deg, #0b121a 0%, #070c12 50%, #05080c 100%);
+      linear-gradient(135deg, #0b121a 0%, #070c12 50%, #05080c 100%);
   background-attachment: fixed;
   position: relative;
   overflow: hidden;
@@ -22,19 +27,19 @@
 /* Optional subtle animated trend-lines */
 .auth-bg::after {
   content: "";
-  position: absolute; inset: 0;
-  background-image:
-    repeating-linear-gradient(
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
       120deg,
-      rgba(56,189,248,0.12) 0px,
-      rgba(56,189,248,0.12) 2px,
+      rgba(56, 189, 248, 0.12) 0px,
+      rgba(56, 189, 248, 0.12) 2px,
       transparent 2px,
       transparent 80px
     ),
     repeating-linear-gradient(
       -120deg,
-      rgba(249,115,22,0.1) 0px,
-      rgba(249,115,22,0.1) 2px,
+      rgba(249, 115, 22, 0.1) 0px,
+      rgba(249, 115, 22, 0.1) 2px,
       transparent 2px,
       transparent 100px
     );
@@ -42,3 +47,26 @@
   opacity: 0.25;
   pointer-events: none;
 }
+
+/* styles/auth.css */
+.auth-center { min-height: 100dvh; display: grid; place-items: center; padding: 24px; }
+.auth-card { width: min(92vw, 420px); padding: 28px; border-radius: 20px; }
+.glass-surface { backdrop-filter: blur(14px); background: color-mix(in oklab, var(--panel, #0a0f14) 70%, transparent); border: 1px solid rgba(255,255,255,0.06); }
+
+.auth-logo { display:block; margin: 0 auto 12px; }
+.auth-title { font-size: 1.5rem; font-weight: 700; margin: 8px 0 12px; }
+.auth-subtext { opacity: .8; margin-bottom: 16px; }
+
+.auth-form { display: grid; gap: 10px; margin-top: 10px; }
+.auth-label { font-size: .9rem; opacity: .85; }
+.auth-input { width: 100%; padding: 12px 14px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #e6e8ec; outline: none; }
+.auth-input:focus { border-color: rgba(255,255,255,0.18); }
+
+.auth-checkbox { display:flex; gap:8px; align-items:center; font-size:.9rem; opacity:.9; user-select:none; }
+.auth-error { color: #ff7a7a; font-size: .85rem; }
+.auth-banner-error { margin-top: 6px; padding: 10px 12px; border-radius: 10px; background: rgba(255, 99, 99, .08); border: 1px solid rgba(255,99,99,.25); }
+
+.auth-button { width: 100%; margin-top: 4px; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+.auth-button:hover { border-color: rgba(255,255,255,0.2); }
+.auth-link { text-decoration: underline; text-underline-offset: 2px; text-decoration-color: #fb923c; }
+.auth-switch { margin-top: 10px; opacity: .9; }

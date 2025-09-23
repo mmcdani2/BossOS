@@ -1,5 +1,6 @@
 export default function Logo() {
     return (
+        <div className="auth-logo">
         <div style={{
             fontSize: "1.75rem",
             fontWeight: 800,
@@ -11,6 +12,7 @@ export default function Logo() {
             marginBottom: "1rem"
         }}>
             Boss.OS
+        </div>
         </div>
     )
 }

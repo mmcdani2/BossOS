@@ -1,14 +1,8 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Navigate,
-  Outlet,
-} from "react-router-dom";
+import {createBrowserRouter,RouterProvider,Navigate,Outlet,} from "react-router-dom";
 import { createPortal } from "react-dom";
-
 import { AuthProvider, useAuth } from "@/app/providers/AuthProvider";
 import SignIn from "@/features/auth/SignIn";
 import Dashboard from "@/features/dashboard/Dashboard";
@@ -26,6 +20,8 @@ import Settings from "@/features/account/Settings";
 import PageHeader from "@/ui/PageHeader";
 import ViewToolbar from "@/ui/ViewToolbar";
 import GlassCard from "@/ui/GlassCard";
+import SignUp from "@/features/auth/SignUp";
+import AuthCallback from "@/features/auth/AuthCallback";
 
 console.log(
   "ENV:",
@@ -88,9 +84,14 @@ const Wip = ({ title }: { title: string }) => (
   </>
 );
 
-// ---- Router: single 'children' array ----
+// ---- Router: public vs protected ----
 const router = createBrowserRouter([
+  // Public pages
   { path: "/signin", element: <SignIn /> },
+  { path: "/register", element: <SignUp /> },          // ← now public
+  { path: "/auth/callback", element: <AuthCallback /> }, // ← now public
+
+  // Protected app shell
   {
     path: "/",
     element: (
@@ -99,7 +100,6 @@ const router = createBrowserRouter([
       </Protected>
     ),
     children: [
-      //Main feature views
       { index: true, element: <Dashboard /> },
       { path: "scheduling", element: <Scheduler /> },
       { path: "jobs", element: <Jobs /> },
@@ -109,8 +109,6 @@ const router = createBrowserRouter([
       { path: "inventory", element: <Inventory /> },
       { path: "account/profile", element: <Profile /> },
       { path: "account/preferences", element: <Preferences /> },
-      { path: "account/settings", element: <Settings /> },
-      // Settings hub
       { path: "account/settings", element: <Settings /> },
 
       // Company
@@ -288,7 +286,7 @@ const router = createBrowserRouter([
       },
 
       // Add-Ons
-      { path: "account/settings/addons", element: <Wip title="Add-Ons" /> },
+      { path: "*", element: <Navigate to="/signin" replace /> },
     ],
   },
 ]);
