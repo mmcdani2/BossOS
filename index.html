@@ -7,6 +7,27 @@
     <meta name="theme-color" content="#0b0f14" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Boss.OS</title>
+    <script>
+      (function () {
+        const saved = localStorage.getItem("theme"); // "light" | "dark" | null
+        const systemDark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
+        const theme = saved || (systemDark ? "dark" : "light");
+        document.documentElement.setAttribute("data-theme", theme);
+
+        // keep in sync if system changes and no manual override
+        if (!saved) {
+          const mq = window.matchMedia("(prefers-color-scheme: dark)");
+          mq.addEventListener("change", (e) => {
+            document.documentElement.setAttribute(
+              "data-theme",
+              e.matches ? "dark" : "light"
+            );
+          });
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

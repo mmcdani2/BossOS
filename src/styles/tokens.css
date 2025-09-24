@@ -1,0 +1,48 @@
+/* src/styles/tokens.css */
+:root {
+  /* semantic palette */
+  --bg: #0b1220;              /* dark by default; overridden by media query */
+  --surface-1: rgba(15, 23, 42, 0.6);
+  --surface-2: rgba(30, 41, 59, 0.5);
+  --text: #e5e7eb;
+  --muted: rgba(226, 232, 240, 0.7);
+  --border: rgba(148, 163, 184, 0.25);
+  --brand-start: #f97316;     /* orange-500 */
+  --brand-end: #ef4444;       /* red-500 */
+  --ring: rgba(249, 115, 22, 0.5);
+
+  --auth-card-radius: 16px;
+}
+
+/* Light tokens */
+@media (prefers-color-scheme: light) {
+  :root {
+    --bg: #f7f7fb;
+    --surface-1: rgba(255, 255, 255, 0.9);
+    --surface-2: rgba(248, 250, 252, 0.9);
+    --text: #0b1220;
+    --muted: rgba(15, 23, 42, 0.65);
+    --border: rgba(15, 23, 42, 0.12);
+    --ring: rgba(245, 158, 11, 0.35);
+  }
+}
+
+/* Manual override via data-theme on <html> or <body> */
+:root[data-theme="dark"] {
+  --bg: #0b1220;
+  --surface-1: rgba(15, 23, 42, 0.6);
+  --surface-2: rgba(30, 41, 59, 0.5);
+  --text: #e5e7eb;
+  --muted: rgba(226, 232, 240, 0.7);
+  --border: rgba(148, 163, 184, 0.25);
+  --ring: rgba(249, 115, 22, 0.5);
+}
+:root[data-theme="light"] {
+  --bg: #f7f7fb;
+  --surface-1: rgba(255, 255, 255, 0.9);
+  --surface-2: rgba(248, 250, 252, 0.9);
+  --text: #0b1220;
+  --muted: rgba(15, 23, 42, 0.65);
+  --border: rgba(15, 23, 42, 0.12);
+  --ring: rgba(245, 158, 11, 0.35);
+}
