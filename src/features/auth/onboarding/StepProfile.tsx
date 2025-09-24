@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { upsertProfile } from "@/lib/api/profiles";
 import { supabase } from "@/lib/supabase/client";
 
@@ -11,15 +11,26 @@ export default function StepProfile() {
 
   async function onNext(e: React.FormEvent) {
     e.preventDefault();
+    if (busy) return;
     setBusy(true);
     setErr(null);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { setErr("You must be signed in."); setBusy(false); return; }
 
-    const { error } = await upsertProfile(user.id, { full_name: name || undefined });
-    if (error) setErr(error.message);
-    else navigate("/onboarding/company");
-    setBusy(false);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      setErr("You must be signed in.");
+      setBusy(false);
+      return;
+    }
+
+    // Save profile name
+    const { error } = await upsertProfile(user.id, { full_name: name });
+    if (error) {
+      setErr(error.message);
+      setBusy(false);
+      return;
+    }
+
+    navigate("/onboarding/company"); // next step
   }
 
   return (
@@ -28,20 +39,27 @@ export default function StepProfile() {
 
       <div className="relative">
         <input
-          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white placeholder-slate-400 border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          className="auth-input auth-input--center"
           placeholder="Your name (optional)"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
+
       </div>
 
       <div className="auth-wizard-actions">
-        <button type="button" className="auth-btn-secondary" onClick={() => navigate("/onboarding/company")}>
-          Skip
-        </button>
         <button className="auth-btn-primary" disabled={busy}>
           {busy ? "Saving…" : "Continue"}
         </button>
+      </div>
+
+      <div className="auth-wizard-actions justify-center mt-3">
+        <Link
+          to="/onboarding/company"
+          className="auth-link inline-flex items-center justify-center"
+        >
+          Skip
+        </Link>
       </div>
     </form>
   );

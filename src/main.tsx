@@ -99,7 +99,11 @@ const router = createBrowserRouter([
   // Onboarding (user must be logged in, but not complete – we can add a light guard later)
   {
     path: "/onboarding",
-    element: <OnboardingShell />,
+    element: (
+      <Protected>
+        <OnboardingShell />
+      </Protected>
+    ),
     children: [
       { index: true, element: <StepProfile /> },
       { path: "company", element: <StepCompany /> },

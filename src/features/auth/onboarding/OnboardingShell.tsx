@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Logo from "@/ui/Logo";
 
+
 const steps = ["", "company", "preferences", "done"]; // '' = /onboarding (profile)
 
 export default function OnboardingShell() {

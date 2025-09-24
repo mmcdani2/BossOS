@@ -70,3 +70,87 @@
 .auth-button:hover { border-color: rgba(255,255,255,0.2); }
 .auth-link { text-decoration: underline; text-underline-offset: 2px; text-decoration-color: #fb923c; }
 .auth-switch { margin-top: 10px; opacity: .9; }
+
+/* --- Onboarding shared layout --- */
+.auth-wizard-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+
+/* --- Buttons to match Sign In/Up --- */
+.auth-btn-primary {
+  width: 100%;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,0.08);
+  background-image: linear-gradient(to right, #f97316, #ef4444); /* orange → red */
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.auth-btn-primary:hover {
+  box-shadow: 0 10px 28px rgba(249, 115, 22, 0.25);
+  transform: translateY(-1px);
+}
+.auth-btn-primary:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+.auth-btn-secondary {
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #e6e8ec;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  transition: background .15s ease, transform .15s ease;
+}
+.auth-btn-secondary:hover {
+  background: rgba(255,255,255,0.10);
+  transform: translateY(-1px);
+}
+
+/* --- Centered input text like Sign In --- */
+.auth-input--center {
+  text-align: center;
+  letter-spacing: .01em; /* subtle, like your email input */
+}
+
+/* Optional: match select look to inputs */
+.auth-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #e6e8ec;
+  outline: none;
+}
+.auth-select:focus { border-color: rgba(255,255,255,0.18); }
+
+.auth-select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #e6e8ec;
+  outline: none;
+}
+.auth-select:focus {
+  border-color: rgba(255,255,255,0.18);
+}
+.auth-wizard-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+}
+.auth-wizard-actions.justify-center {
+  justify-content: center;
+}
+

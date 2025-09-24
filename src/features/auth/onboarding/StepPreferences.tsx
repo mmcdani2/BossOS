@@ -66,7 +66,7 @@ export default function StepPreferences() {
         <select
           id="industry"
           name="industry"
-          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          className="auth-select"
           value={industry}
           onChange={(e) => setIndustry(e.target.value as Industry)}
         >
@@ -85,7 +85,7 @@ export default function StepPreferences() {
           id="currency"
           name="currency"
           autoComplete="currency"
-          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          className="auth-select"
           value={currency}
           onChange={(e) => setCurrency(e.target.value as Currency)}
         >
@@ -103,7 +103,7 @@ export default function StepPreferences() {
         <select
           id="units"
           name="units"
-          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          className="auth-select"
           value={units}
           onChange={(e) => setUnits(e.target.value as Units)}
         >
@@ -111,6 +111,7 @@ export default function StepPreferences() {
           <option value="metric">Metric</option>
         </select>
       </div>
+
 
       <div className="auth-wizard-actions">
         <button

@@ -8,11 +8,17 @@ export default function StepDone() {
       <p className="text-sm text-slate-300/80">
         Your workspace is ready. You can invite teammates later from Settings.
       </p>
-      <div className="auth-wizard-actions" style={{ justifyContent: "center" }}>
-        <button className="auth-btn-primary" onClick={() => navigate("/dashboard")}>
+      <div className="auth-wizard-actions justify-center">
+        <button
+          className="auth-btn-primary"
+          onClick={() => navigate("/dashboard")}
+        >
           Go to dashboard
         </button>
-        <Link to="/account/settings/company/people" className="auth-btn-secondary inline-flex items-center justify-center">
+        <Link
+          to="/account/settings/company/people"
+          className="auth-btn-secondary inline-flex items-center justify-center"
+        >
           Invite teammates
         </Link>
       </div>

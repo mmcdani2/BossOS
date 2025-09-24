@@ -53,14 +53,17 @@ export default function StepCompany() {
       )}
 
       <div className="relative">
-        <label htmlFor="org-name" className="block text-sm text-slate-300/80 mb-1">
+        <label
+          htmlFor="org-name"
+          className="block text-sm text-slate-300/80 mb-1"
+        >
           Company name
         </label>
         <input
           id="org-name"
           name="organization"
           autoComplete="organization"
-          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white placeholder-slate-400 border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          className="auth-input auth-input--center"
           placeholder="Acme Heating & Air"
           value={name}
           onChange={(e) => setName(e.target.value)}
