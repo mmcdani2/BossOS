@@ -28,111 +28,59 @@ export default function SignIn() {
     }
   }
 
-  return (
-    <div className="min-h-screen auth-bg flex items-center justify-center p-4">
-      {/* Subtle grid + blur like the snippet */}
-      <div className="absolute inset-0 auth-grid-overlay backdrop-blur-[2px] pointer-events-none [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)]" />
-      <div className="relative w-full max-w-md">
-        {/* Ambient blobs */}
-        {/*<div className="pointer-events-none absolute -bottom-48 -left-48 w-96 h-96 bg-orange-500/15 rounded-full blur-3xl" />
-      <div className="pointer-events-none absolute -top-48 -right-48 w-96 h-96 bg-red-500/15 rounded-full blur-3xl" />
+  // SignIn.tsx – replace the return JSX with this version
+return (
+  <div className="auth-center auth-bg">
+    <div className="auth-card glass-surface">
+      <div className="text-center mb-6 sm:mb-8">
+        <Logo />
+        <h1 className="auth-title">Run your business like a boss!</h1>
+        {!sent && (
+          <p className="auth-subtext">Sign in to access your dashboard</p>
+        )}
+      </div>
 
-      {/* Card */}
-        <div
-          className="
-        relative w-full max-w-md
-        bg-slate-800/50 backdrop-blur-xl rounded-2xl
-        border border-slate-700/50 shadow-2xl shadow-slate-900/50
-        p-6 sm:p-8
-      "
-        >
-          <div className="text-center mb-6 sm:mb-8">
-            {/* Brand tile */}
+      {sent ? (
+        <div className="space-y-3 text-center">
+          <h2 className="text-lg font-semibold" style={{ color: "var(--text)" }}>
+            Check your email
+          </h2>
+          <p className="auth-subtext">
+            We sent a link to <b style={{ color: "var(--text)" }}>{email}</b>. You can
+            close this tab after signing in.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={submit} className="auth-form">
+          {err && <div className="auth-banner-error">Error: {err}</div>}
 
-            {/* keep your Logo if you prefer it over text */}
-            <Logo />
-
-            <h1
-              className="
-            text-2xl font-extrabold tracking-tight
-            bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent
-          "
-            >
-              Run your business like a boss!
-            </h1>
-            {!sent && (
-              <p className="mt-1 text-sm text-slate-300/80">
-                Sign in to access your dashboard
-              </p>
-            )}
+          <div className="relative">
+            <input
+              className="auth-input auth-input--center"
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              placeholder="you@company.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
 
-          {/* Body */}
-          {sent ? (
-            <div className="space-y-3 text-center">
-              <h2 className="text-lg font-semibold text-white">
-                Check your email
-              </h2>
-              <p className="text-sm text-slate-300/80">
-                We sent a link to <b className="text-white">{email}</b>. You can
-                close this tab after signing in.
-              </p>
-            </div>
-          ) : (
-            <form onSubmit={submit} className="space-y-4 sm:space-y-6">
-              {err && (
-                <div className="text-sm text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-md px-3 py-2">
-                  Error: {err}
-                </div>
-              )}
+          <button type="submit" disabled={busy} className="auth-btn-primary">
+            {busy ? "Sending…" : "Send Verification Link"}
+          </button>
 
-              {/* Email input */}
-              <div className="relative">
-                <input
-                  className="
-      w-full rounded-xl px-4 py-3
-      bg-slate-800/30 text-white placeholder-slate-400
-      border border-slate-700/50
-      outline-none transition-all duration-300
-      focus:ring-2 focus:ring-orange-500/50 focus:border-transparent
-      text-center tracking-wide
-    "
-                  type="email"
-                  inputMode="email"
-                  autoComplete="email"
-                  placeholder="you@company.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* Orange gradient CTA */}
-              <button
-                type="submit"
-                disabled={busy}
-                className="
-                w-full rounded-xl py-3 font-semibold text-white
-                bg-gradient-to-r from-orange-500 to-red-500
-                hover:shadow-lg hover:shadow-orange-500/25
-                focus:outline-none focus:ring-2 focus:ring-orange-500/50
-                transition-all duration-300 transform hover:-translate-y-0.5
-                disabled:opacity-70 disabled:cursor-not-allowed
-              "
-              >
-                {busy ? "Sending…" : "Send Verification Link"}
-              </button>
-
-              <p className="auth-switch" style={{ textAlign: "center" }}>
-                Don’t have an account?{" "}
-                <Link to="/register" className="auth-link">
-                  Register now
-                </Link>
-              </p>
-            </form>
-          )}
-        </div>
-      </div>
+          <p className="auth-switch" style={{ textAlign: "center" }}>
+            Don’t have an account?{" "}
+            <Link to="/register" className="auth-link">
+              Register now
+            </Link>
+          </p>
+        </form>
+      )}
     </div>
-  );
+  </div>
+);
+
 }
