@@ -1,0 +1,36 @@
+.bg-surface     { background: var(--surface); }
+.bg-surface-1   { background: var(--surface-1); }
+.bg-surface-2   { background: var(--surface-2); }
+.bg-surface-3   { background: var(--surface-3); }
+
+.text-basecolor { color: var(--text); }
+.text-muted     { color: var(--text-muted); }
+.text-subtle    { color: var(--text-subtle); }
+
+.border-token   { border-color: var(--border); }
+.outline-token  { outline-color: var(--outline); }
+.divide-token > :not([hidden]) ~ :not([hidden]) { border-color: var(--divider); }
+
+.shadow-1       { box-shadow: var(--shadow-1); }
+.shadow-2       { box-shadow: var(--shadow-2); }
+.ring-token     { box-shadow: 0 0 0 2px var(--ring); }
+
+.hairline-top    { box-shadow: inset 0 1px 0 0 var(--divider); }
+.hairline-bottom { box-shadow: inset 0 -1px 0 0 var(--divider); }
+
+/* Light-mode utility overrides (scope under data-theme) */
+:root[data-theme="light"] .text-white       { color: var(--text) !important; }
+:root[data-theme="light"] .text-white\/90   { color: color-mix(in oklab, var(--text) 90%, transparent) !important; }
+:root[data-theme="light"] .text-white\/80   { color: color-mix(in oklab, var(--text) 80%, transparent) !important; }
+:root[data-theme="light"] .text-white\/70   { color: color-mix(in oklab, var(--text) 70%, transparent) !important; }
+:root[data-theme="light"] .text-white\/60   { color: color-mix(in oklab, var(--text) 60%, transparent) !important; }
+
+:root[data-theme="light"] .border-white\/10,
+:root[data-theme="light"] .border-white\/20 { border-color: var(--border) !important; }
+
+:root[data-theme="light"] .bg-white\/5      { background: rgba(0,0,0,0.03) !important; }
+:root[data-theme="light"] .hover\:bg-white\/10:hover { background: rgba(0,0,0,0.06) !important; }
+
+:root[data-theme="light"] .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--divider) !important;
+}

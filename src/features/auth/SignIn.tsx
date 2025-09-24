@@ -28,7 +28,7 @@ export default function SignIn() {
     }
   }
 
-  // SignIn.tsx – replace the return JSX with this version
+  
 return (
   <div className="auth-center auth-bg">
     <div className="auth-card glass-surface">

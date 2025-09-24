@@ -1,0 +1,23 @@
+.kpi-grid { display:grid; gap:12px; grid-template-columns: repeat(12,1fr); }
+
+.kpi-card {
+  grid-column: span 3;
+  border-radius: 14px;
+  padding: 14px;
+  min-height: 116px;                 /* keep that â€œcardâ€ height */
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 6px;
+  /* no background/border here (handled by .tile) */
+}
+
+@media (max-width:900px){ .kpi-grid { grid-template-columns: repeat(6,1fr); } }
+@media (max-width:520px){ .kpi-grid { grid-template-columns: repeat(1,1fr); } }
+
+/* KPI typography helpers */
+.kpi-title { color: var(--text-muted); font-weight: 600; font-size: 12px; letter-spacing:.02em; }
+.kpi-value { color: #fff; font-weight: 800; font-size: 28px; letter-spacing:-.02em; line-height:1.1; }
+.kpi-delta { font-size:12px; font-weight:600; border-radius:9999px; padding:4px 8px; }
+.kpi-delta--up   { color:#34d399; background:rgba(52,211,153,.12); border:1px solid rgba(52,211,153,.22); }
+.kpi-delta--down { color:#fb7185; background:rgba(251,113,133,.12); border:1px solid rgba(251,113,133,.22); }
+.kpi-delta--flat { color:#a1a1aa; background:rgba(161,161,170,.12); border:1px solid rgba(161,161,170,.22); }
+

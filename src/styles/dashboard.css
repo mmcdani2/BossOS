@@ -18,3 +18,14 @@
 .dash-toolbar {
   -ms-overflow-style: none;
 }
+
+/* keep: used by sticky math across pages */
+.dash-toolbar { --toolbar-h: 56px; }
+
+/* keep: fancy active chip look */
+.dt-btn--active{
+  color:#f3f4f6;
+  background:linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.12);
+}
