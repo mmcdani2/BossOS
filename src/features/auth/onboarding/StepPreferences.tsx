@@ -1,0 +1,130 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase/client";
+import { upsertProfile } from "@/lib/api/profiles";
+import { updateOrganization } from "@/lib/api/organizations";
+
+type Industry = "home-services" | "construction" | "field-services" | "other";
+type Currency = "USD" | "CAD" | "EUR" | "GBP";
+type Units = "imperial" | "metric";
+
+export default function StepPreferences() {
+  const [industry, setIndustry] = useState<Industry>("home-services");
+  const [currency, setCurrency] = useState<Currency>("USD");
+  const [units, setUnits] = useState<Units>("imperial");
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  async function onFinish(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (busy) return;
+    setBusy(true);
+    setErr(null);
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) { setErr("You must be signed in."); setBusy(false); return; }
+
+    // Grab the most recently created membership (assumes you created one in StepCompany)
+    const { data: ms, error: msErr } = await supabase
+      .from("memberships")
+      .select("org_id, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .limit(1);
+
+    if (msErr) { setErr(msErr.message); setBusy(false); return; }
+    const orgId = ms?.[0]?.org_id as string | undefined;
+
+    if (orgId) {
+      const { error: orgUpdateErr } = await updateOrganization(orgId, { industry, currency, units });
+      if (orgUpdateErr) { setErr(orgUpdateErr.message); setBusy(false); return; }
+    }
+
+    const { error } = await upsertProfile(user.id, { onboarding_complete: true });
+    if (error) { setErr(error.message); setBusy(false); return; }
+
+    navigate("/onboarding/done");
+  }
+
+  return (
+    <form onSubmit={onFinish} className="space-y-4 sm:space-y-6">
+      {err && (
+        <div
+          className="text-sm text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-md px-3 py-2"
+          role="alert"
+          aria-live="polite"
+        >
+          Error: {err}
+        </div>
+      )}
+
+      <div className="relative">
+        <label htmlFor="industry" className="block text-sm text-slate-300/80 mb-1">
+          Industry
+        </label>
+        <select
+          id="industry"
+          name="industry"
+          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          value={industry}
+          onChange={(e) => setIndustry(e.target.value as Industry)}
+        >
+          <option value="home-services">Home Services</option>
+          <option value="construction">Construction</option>
+          <option value="field-services">Field Services</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div className="relative">
+        <label htmlFor="currency" className="block text-sm text-slate-300/80 mb-1">
+          Currency
+        </label>
+        <select
+          id="currency"
+          name="currency"
+          autoComplete="currency"
+          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value as Currency)}
+        >
+          <option value="USD">USD</option>
+          <option value="CAD">CAD</option>
+          <option value="EUR">EUR</option>
+          <option value="GBP">GBP</option>
+        </select>
+      </div>
+
+      <div className="relative">
+        <label htmlFor="units" className="block text-sm text-slate-300/80 mb-1">
+          Units
+        </label>
+        <select
+          id="units"
+          name="units"
+          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          value={units}
+          onChange={(e) => setUnits(e.target.value as Units)}
+        >
+          <option value="imperial">Imperial</option>
+          <option value="metric">Metric</option>
+        </select>
+      </div>
+
+      <div className="auth-wizard-actions">
+        <button
+          type="button"
+          className="auth-btn-secondary"
+          onClick={() => navigate("/onboarding/done")}
+          disabled={busy}
+        >
+          Skip
+        </button>
+        <button className="auth-btn-primary" disabled={busy}>
+          {busy ? "Saving…" : "Finish"}
+        </button>
+      </div>
+    </form>
+  );
+}

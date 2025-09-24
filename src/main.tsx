@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {createBrowserRouter,RouterProvider,Navigate,Outlet,} from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate, Outlet, } from "react-router-dom";
 import { createPortal } from "react-dom";
 import { AuthProvider, useAuth } from "@/app/providers/AuthProvider";
 import SignIn from "@/features/auth/SignIn";
@@ -22,6 +22,11 @@ import ViewToolbar from "@/ui/ViewToolbar";
 import GlassCard from "@/ui/GlassCard";
 import SignUp from "@/features/auth/SignUp";
 import AuthCallback from "@/features/auth/AuthCallback";
+import OnboardingShell from "@/features/auth/onboarding/OnboardingShell";
+import StepProfile from "@/features/auth/onboarding/StepProfile";
+import StepCompany from "@/features/auth/onboarding/StepCompany";
+import StepPreferences from "@/features/auth/onboarding/StepPreferences";
+import StepDone from "@/features/auth/onboarding/StepDone";
 
 console.log(
   "ENV:",
@@ -70,9 +75,9 @@ const Wip = ({ title }: { title: string }) => (
     <PageHeader />
     <div className="shell page-viewport">
       <div
-            className="sticky-under-nav"
-            style={{ top: "calc(var(--nav-h) - 64px)" }}
-          >
+        className="sticky-under-nav"
+        style={{ top: "calc(var(--nav-h) - 64px)" }}
+      >
         <GlassCard className="p-3">
           <ViewToolbar label={title} />
         </GlassCard>
@@ -90,6 +95,18 @@ const router = createBrowserRouter([
   { path: "/signin", element: <SignIn /> },
   { path: "/register", element: <SignUp /> },          // ← now public
   { path: "/auth/callback", element: <AuthCallback /> }, // ← now public
+
+  // Onboarding (user must be logged in, but not complete – we can add a light guard later)
+  {
+    path: "/onboarding",
+    element: <OnboardingShell />,
+    children: [
+      { index: true, element: <StepProfile /> },
+      { path: "company", element: <StepCompany /> },
+      { path: "preferences", element: <StepPreferences /> },
+      { path: "done", element: <StepDone /> },
+    ],
+  },
 
   // Protected app shell
   {
@@ -112,6 +129,7 @@ const router = createBrowserRouter([
       { path: "account/settings", element: <Settings /> },
 
       // Company
+      { path: "*", element: <Navigate to="/signin" replace /> },
       {
         path: "account/settings/company/profile",
         element: <Wip title="Company Profile" />,

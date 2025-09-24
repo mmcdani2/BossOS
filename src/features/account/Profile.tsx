@@ -11,6 +11,7 @@ export default function Profile() {
   const [phone, setPhone] = useState("");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -37,9 +38,9 @@ export default function Profile() {
       <div className="shell page-viewport">
         {/* Toolbar */}
         <div
-            className="sticky-under-nav"
-            style={{ top: "calc(var(--nav-h) - 64px)" }}
-          >
+          className="sticky-under-nav"
+          style={{ top: "calc(var(--nav-h) - 64px)" }}
+        >
           <GlassCard className="p-3">
             <ViewToolbar
               label="Profile"
@@ -62,13 +63,28 @@ export default function Profile() {
           <GlassCard className="p-4">
             <div className="text-white/80 font-medium mb-3">Account</div>
             <label className="block text-sm text-white/70 mb-1">Email</label>
-            <input value={email} disabled className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white/80 mb-3" />
+            <input
+              value={email}
+              disabled
+              className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white/80 mb-3"
+              placeholder="Email"
+            />
 
             <label className="block text-sm text-white/70 mb-1">Full name</label>
-            <input value={name} onChange={e=>setName(e.target.value)} className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white mb-3" />
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white mb-3"
+              placeholder="Full name"
+            />
 
             <label className="block text-sm text-white/70 mb-1">Phone</label>
-            <input value={phone} onChange={e=>setPhone(e.target.value)} className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white" />
+            <input
+              value={phone}
+              onChange={e => setPhone(e.target.value)}
+              className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white"
+              placeholder="Phone"
+            />
           </GlassCard>
 
           {/* Right: avatar & password */}
@@ -97,24 +113,50 @@ function ChangePassword() {
   const [password, setPassword] = useState("");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
 
-  const onSave = async () => {
-    setSaving(true); setMsg(null);
-    const { error } = await supabase.auth.updateUser({ password });
-    setSaving(false);
-    setMsg(error ? error.message : "Password updated.");
-    setPassword("");
-  };
+  async function onSave() {
+    try {
+      setSaving(true);
+      setMsg(null);
+      setErr(null);
+
+      // Supabase: update password for the current signed-in user
+      const { error } = await supabase.auth.updateUser({ password });
+      if (error) throw error;
+
+      setMsg("Password updated");
+      setPassword("");
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Failed to update password");
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
     <div>
-      <label className="block text-sm text-white/70 mb-1">New password</label>
-      <input type="password" value={password} onChange={e=>setPassword(e.target.value)}
-             className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white mb-2" />
-      <button onClick={onSave} disabled={saving || !password}
-              className="px-3 py-1.5 rounded-[9px] border border-white/20 bg-white/10 text-slate-200 hover:bg-white/15">
+      <label htmlFor="new-password" className="block text-sm text-white/70 mb-1">
+        New password
+      </label>
+      <input
+        id="new-password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white mb-2"
+        placeholder="New password"
+        autoComplete="new-password"
+      />
+      <button
+        onClick={onSave}
+        disabled={saving || password.length < 8}
+        className="px-3 py-1.5 rounded-[9px] border border-white/20 bg-white/10 text-slate-200 hover:bg-white/15 disabled:opacity-60"
+      >
         {saving ? "Saving…" : "Update password"}
       </button>
+
+      {err && <div className="mt-2 text-sm text-rose-300">{err}</div>}
       {msg && <div className="mt-2 text-sm text-emerald-300">{msg}</div>}
     </div>
   );

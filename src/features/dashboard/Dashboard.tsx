@@ -103,8 +103,8 @@ function DashboardInner() {
     const klass = up
       ? "kpi-trend kpi-trend--up"
       : down
-      ? "kpi-trend kpi-trend--down"
-      : "kpi-trend kpi-trend--flat";
+        ? "kpi-trend kpi-trend--down"
+        : "kpi-trend kpi-trend--flat";
     const fmt =
       kind === "money"
         ? (n: number) => `$${Math.abs(n).toLocaleString()}`
@@ -135,23 +135,28 @@ function DashboardInner() {
                   className="dash-toolbar flex items-center gap-1 sm:gap-2 min-w-0"
                   style={{ whiteSpace: "nowrap", overflowX: "auto" }}
                 >
-                  {/* Preset group */}
-                  <div className="flex gap-1 sm:gap-1.5 rounded-2xl border border-token bg-surface-2 p-1 sm:p-1.5">
+                  {/* Preset group (single map, accessible radiogroup) */}
+                  <div
+                    role="radiogroup"
+                    aria-label="Date range"
+                    className="flex gap-1 sm:gap-1.5 rounded-2xl border border-token bg-surface-2 p-1 sm:p-1.5"
+                  >
                     {PRESETS.map((p) => {
-                      const isActive = preset === p.key;
+                      const checked = preset === p.key;
                       return (
                         <button
                           key={p.key}
+                          type="button"
+                          role="radio"
+                          aria-checked={checked}
                           onClick={() => setPreset(p.key)}
-                          aria-pressed={isActive}
                           className={[
                             "rounded-[9px] leading-none text-basecolor",
                             "px-2 py-1 text-[11px]",
                             "sm:px-2.5 sm:py-1.5 sm:text-xs",
                             "transition-colors active:translate-y-px focus-visible:outline-none focus-visible:ring-token",
-                            isActive
-                              ? // active token style (subtle fill + border)
-                                "border border-token [background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]"
+                            checked
+                              ? "border border-token [background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]"
                               : "border border-transparent bg-transparent hover:[background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]",
                           ].join(" ")}
                         >
@@ -160,6 +165,7 @@ function DashboardInner() {
                       );
                     })}
                   </div>
+
 
                   {/* Refresh */}
                   <button

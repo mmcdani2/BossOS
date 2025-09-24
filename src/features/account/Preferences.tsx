@@ -55,21 +55,21 @@ export default function Preferences() {
   }, [loading, prefs]);
 
   React.useEffect(() => {
-  const el = document.documentElement;
-  const media = window.matchMedia("(prefers-color-scheme: dark)");
-  const apply = (mode: "light" | "dark") => el.setAttribute("data-theme", mode);
+    const el = document.documentElement;
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    const apply = (mode: "light" | "dark") => el.setAttribute("data-theme", mode);
 
-  const resolve = () => {
-    const choice = (theme ?? "system") as "system" | "light" | "dark";
-    if (choice === "system") apply(media.matches ? "dark" : "light");
-    else apply(choice);
-  };
+    const resolve = () => {
+      const choice = (theme ?? "system") as "system" | "light" | "dark";
+      if (choice === "system") apply(media.matches ? "dark" : "light");
+      else apply(choice);
+    };
 
-  resolve();
-  const onChange = () => (theme === "system") && resolve();
-  media.addEventListener?.("change", onChange);
-  return () => media.removeEventListener?.("change", onChange);
-}, [theme]);
+    resolve();
+    const onChange = () => (theme === "system") && resolve();
+    media.addEventListener?.("change", onChange);
+    return () => media.removeEventListener?.("change", onChange);
+  }, [theme]);
 
   const onSave = async () => {
     await save({
@@ -124,6 +124,7 @@ export default function Preferences() {
               <div>
                 <div className="text-sm text-white/70 mb-1">Date format</div>
                 <input
+                  aria-label="Date Format"
                   value={dateFmt}
                   onChange={(e) => setDateFmt(e.target.value)}
                   className="w-full h-9 rounded-md bg-white/5 border border-white/10 px-3 text-white"
