@@ -146,7 +146,7 @@
   background-image: linear-gradient(to right, #f97316, #ef4444);
   transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
 }
-.auth-btn-primary:hover { box-shadow: 0 10px 28px rgba(249,115,22,.25); transform: translateY(-1px); }
+.auth-btn-primary:hover { box-shadow: 0 4px 8px rgba(249,115,22,.25); transform: translateY(-1px); }
 .auth-btn-primary:disabled { opacity: .7; cursor: not-allowed; }
 
 .auth-btn-secondary {
@@ -161,7 +161,13 @@
 
 /* Links & misc */
 .auth-link { text-decoration-color: var(--accent); }
+.auth-link:hover { color: #f97316; }
+.auth-link { transition: color .15s ease, text-decoration-color .15s ease; }
 .auth-switch { margin-top: 10px; opacity: .9; }
+
+.auth-wizard-links {
+  text-align: center;
+}
 
 /* Theme: light adjustments */
 @media (prefers-color-scheme: light) {

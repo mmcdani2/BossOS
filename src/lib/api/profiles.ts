@@ -1,13 +1,22 @@
-// lib/api/profiles.ts
 import { supabase } from "@/lib/supabase/client";
 
-export async function upsertProfile(
-  id: string,
-  patch: { full_name?: string; phone?: string; onboarding_complete?: boolean }
-) {
-  return supabase
+export type ProfileUpdate = {
+  full_name?: string | null;
+  onboarding_complete?: boolean;
+};
+
+export async function upsertProfile(userId: string, patch: ProfileUpdate) {
+  const payload = { id: userId, ...patch };
+  const { data, error } = await supabase
     .from("profiles")
-    .upsert({ id, ...patch, updated_at: new Date().toISOString() }, { onConflict: "id" })
+    .upsert(payload, { onConflict: "id" })
     .select()
     .single();
+  return { data, error };
+}
+
+export async function getMyProfile() {
+  const { data: { user }, error: uerr } = await supabase.auth.getUser();
+  if (uerr || !user) return { data: null, error: uerr ?? new Error("No user") };
+  return await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
 }

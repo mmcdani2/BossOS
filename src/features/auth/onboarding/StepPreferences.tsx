@@ -25,7 +25,6 @@ export default function StepPreferences() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { setErr("You must be signed in."); setBusy(false); return; }
 
-    // Grab the most recently created membership (assumes you created one in StepCompany)
     const { data: ms, error: msErr } = await supabase
       .from("memberships")
       .select("org_id, created_at")
@@ -48,21 +47,15 @@ export default function StepPreferences() {
   }
 
   return (
-    <form onSubmit={onFinish} className="space-y-4 sm:space-y-6">
+    <form onSubmit={onFinish} className="auth-form">
       {err && (
-        <div
-          className="text-sm text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-md px-3 py-2"
-          role="alert"
-          aria-live="polite"
-        >
+        <div className="auth-banner-error" role="alert" aria-live="polite">
           Error: {err}
         </div>
       )}
 
       <div className="relative">
-        <label htmlFor="industry" className="block text-sm text-slate-300/80 mb-1">
-          Industry
-        </label>
+        <label htmlFor="industry" className="sr-only">Industry</label>
         <select
           id="industry"
           name="industry"
@@ -78,9 +71,7 @@ export default function StepPreferences() {
       </div>
 
       <div className="relative">
-        <label htmlFor="currency" className="block text-sm text-slate-300/80 mb-1">
-          Currency
-        </label>
+        <label htmlFor="currency" className="sr-only">Currency</label>
         <select
           id="currency"
           name="currency"
@@ -97,9 +88,7 @@ export default function StepPreferences() {
       </div>
 
       <div className="relative">
-        <label htmlFor="units" className="block text-sm text-slate-300/80 mb-1">
-          Units
-        </label>
+        <label htmlFor="units" className="sr-only">Units</label>
         <select
           id="units"
           name="units"
@@ -111,7 +100,6 @@ export default function StepPreferences() {
           <option value="metric">Metric</option>
         </select>
       </div>
-
 
       <div className="auth-wizard-actions">
         <button

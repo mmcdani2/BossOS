@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL!;
@@ -10,3 +11,7 @@ console.log("Anon key prefix →", supabaseAnonKey?.slice(0, 8));
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: { persistSession: true, autoRefreshToken: true },
 });
+
+if (import.meta.env.DEV) {
+  (window as any).supabase = supabase;
+}

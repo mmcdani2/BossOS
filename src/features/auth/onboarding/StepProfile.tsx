@@ -15,27 +15,34 @@ export default function StepProfile() {
     setBusy(true);
     setErr(null);
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
+    const {
+      data: { user },
+      error: uerr,
+    } = await supabase.auth.getUser();
+    if (uerr || !user) {
       setErr("You must be signed in.");
       setBusy(false);
       return;
     }
 
-    // Save profile name
-    const { error } = await upsertProfile(user.id, { full_name: name });
+    const full_name = name.trim() || null;
+    const { error } = await upsertProfile(user.id, { full_name });
     if (error) {
       setErr(error.message);
       setBusy(false);
       return;
     }
 
-    navigate("/onboarding/company"); // next step
+    navigate("/onboarding/company");
   }
 
   return (
-    <form onSubmit={onNext} className="space-y-4 sm:space-y-6">
-      {err && <div className="text-sm text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-md px-3 py-2">Error: {err}</div>}
+    <form onSubmit={onNext} className="auth-form">
+      {err && (
+        <div className="auth-banner-error" role="alert" aria-live="polite">
+          Error: {err}
+        </div>
+      )}
 
       <div className="relative">
         <input
@@ -44,7 +51,6 @@ export default function StepProfile() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-
       </div>
 
       <div className="auth-wizard-actions">
@@ -53,11 +59,8 @@ export default function StepProfile() {
         </button>
       </div>
 
-      <div className="auth-wizard-actions justify-center mt-3">
-        <Link
-          to="/onboarding/company"
-          className="auth-link inline-flex items-center justify-center"
-        >
+      <div className="auth-wizard-links justify-center mt-3">
+        <Link to="/onboarding/company" className="auth-link">
           Skip
         </Link>
       </div>

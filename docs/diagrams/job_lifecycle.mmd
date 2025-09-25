@@ -1,0 +1,52 @@
+flowchart LR
+    %% Lanes
+    subgraph Dispatcher
+        A[Capture Lead → Draft]
+        B[Schedule Job & Assign Tech]
+        C[Confirm with Customer]
+    end
+
+    subgraph System
+        D[Send Confirmation - Scheduled]
+        E[Trigger En Route Notification - T-30]
+        F[Audit Log Status Changes]
+    end
+
+    subgraph Technician
+        G[Mark En Route]
+        H[Mark In Progress]
+        I[Complete Job - Notes + Photos]
+    end
+
+    subgraph Customer
+        J[Receive Confirmation]
+        K[Receive On-the-Way Notice]
+        L[Approve Completion / Sign Off]
+    end
+
+    %% Flow connections
+    A --> B --> C
+    C --> J
+    B --> D --> J
+    D -.-> J
+    E -.-> K
+    G --> H --> I --> L
+
+    %% Decisions
+    C --> M{Customer Available?}
+    M -->|Yes| H
+    M -->|No| N[Reschedule or Cancel]
+
+    A --> O{Qualified Lead?}
+    O -->|Yes| A
+    O -->|No| P[Stop]
+
+    %% Status transitions
+    Q[[Job Status Transitions]]
+    Q --> Draft
+    Q --> Scheduled
+    Q --> EnRoute[En Route]
+    Q --> InProgress[In Progress]
+    Q --> Complete
+    Q --> Canceled
+    Q --> Reopened

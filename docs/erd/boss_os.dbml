@@ -1,1 +1,79 @@
-/* placeholder*/
+Project BossOS {
+  database_type: 'PostgreSQL'
+  Note: 'Master ERD (v1.0) – trimmed to active tables only.'
+}
+
+/* ================
+   CORE: ORGANIZATION
+   ================ */
+Table organizations {
+  id uuid [pk]
+  name text
+  slug text [unique]
+  created_at timestamptz
+  Note: 'Tenant container'
+}
+
+Table profiles {
+  id uuid [pk] // maps to auth.users.id
+  org_id uuid [not null, ref: > organizations.id]
+  full_name text
+  phone text
+  role text                 // admin/dispatcher/tech/accountant
+  created_at timestamptz
+}
+
+Table user_orgs {
+  org_id uuid [not null, ref: > organizations.id]
+  user_id uuid [not null, ref: > profiles.id]
+  role text                 // role within org
+  created_at timestamptz
+  Indexes {
+    (org_id, user_id) [pk]
+  }
+}
+
+/* =========
+   CUSTOMERS
+   ========= */
+Table clients {
+  id uuid [pk]
+  org_id uuid [not null, ref: > organizations.id]
+  name text [not null]
+  phone text
+  email text
+  notes text
+  created_at timestamptz
+}
+
+Table addresses {
+  id uuid [pk]
+  org_id uuid [not null, ref: > organizations.id]
+  client_id uuid [ref: > clients.id]   // nullable if reused for org locations
+  line1 text [not null]
+  line2 text
+  city text
+  state text
+  zip text
+  lat double
+  lng double
+  is_primary boolean
+  created_at timestamptz
+}
+
+/* ===============
+   JOBS / SCHEDULING
+   =============== */
+Table jobs {
+  id uuid [pk]
+  org_id uuid [not null, ref: > organizations.id]
+  client_id uuid [not null, ref: > clients.id]
+  address_id uuid [ref: > addresses.id]
+  status text              // draft/scheduled/en_route/in_progress/complete/canceled
+  priority text            // low/normal/high
+  scheduled_start_ts timestamptz
+  scheduled_end_ts timestamptz
+  created_by uuid [ref: > profiles.id]
+  created_at timestamptz
+  Note: 'Core work order; billing/inventory come later'
+}

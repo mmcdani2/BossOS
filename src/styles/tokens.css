@@ -1,10 +1,3 @@
-/* styles/tokens.css
-   Source of truth for design tokens.
-   Light = :root, Dark = :root[data-theme="dark"].
-   Toggle by setting data-theme on <html> or <body>.
-   Example: <html data-theme="dark"> … </html>
-*/
-
 /* ---------------- Root (LIGHT defaults) ---------------- */
 :root {
   /* Layout */

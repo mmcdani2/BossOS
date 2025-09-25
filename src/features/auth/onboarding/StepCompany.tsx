@@ -12,16 +12,13 @@ export default function StepCompany() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    try {
-      setTz(Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC");
-    } catch {
-      setTz("UTC");
-    }
+    try { setTz(Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC"); }
+    catch { setTz("UTC"); }
   }, []);
 
   async function onNext(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!name.trim()) return; // guard double-submit
+    if (!name.trim() || busy) return;
     setBusy(true);
     setErr(null);
 
@@ -41,24 +38,15 @@ export default function StepCompany() {
   }
 
   return (
-    <form onSubmit={onNext} className="space-y-4 sm:space-y-6">
+    <form onSubmit={onNext} className="auth-form">
       {err && (
-        <div
-          className="text-sm text-rose-300 bg-rose-500/10 border border-rose-400/30 rounded-md px-3 py-2"
-          role="alert"
-          aria-live="polite"
-        >
+        <div className="auth-banner-error" role="alert" aria-live="polite">
           Error: {err}
         </div>
       )}
 
       <div className="relative">
-        <label
-          htmlFor="org-name"
-          className="block text-sm text-slate-300/80 mb-1"
-        >
-          Company name
-        </label>
+        <label htmlFor="org-name" className="sr-only">Company name</label>
         <input
           id="org-name"
           name="organization"
@@ -72,13 +60,11 @@ export default function StepCompany() {
       </div>
 
       <div className="relative">
-        <label htmlFor="tz" className="block text-sm text-slate-300/80 mb-1">
-          Timezone
-        </label>
+        <label htmlFor="tz" className="sr-only">Timezone</label>
         <select
           id="tz"
           name="timezone"
-          className="w-full rounded-xl px-4 py-3 bg-slate-800/30 text-white border border-slate-700/50 outline-none transition-all duration-300 focus:ring-2 focus:ring-orange-500/50 focus:border-transparent"
+          className="auth-select"
           value={tz}
           onChange={(e) => setTz(e.target.value)}
         >
