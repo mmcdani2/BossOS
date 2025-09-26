@@ -1,8 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase/client";
 import { upsertProfile } from "@/lib/api/profiles";
 import { updateOrganization } from "@/lib/api/organizations";
+import { GlassDropdown } from "@/ui/GlassDropdown";
 
 type Industry = "home-services" | "construction" | "field-services" | "other";
 type Currency = "USD" | "CAD" | "EUR" | "GBP";
@@ -56,63 +57,59 @@ export default function StepPreferences() {
 
       <div className="relative">
         <label htmlFor="industry" className="sr-only">Industry</label>
-        <select
+        <GlassDropdown
           id="industry"
           name="industry"
-          className="auth-select"
           value={industry}
-          onChange={(e) => setIndustry(e.target.value as Industry)}
-        >
-          <option value="home-services">Home Services</option>
-          <option value="construction">Construction</option>
-          <option value="field-services">Field Services</option>
-          <option value="other">Other</option>
-        </select>
+          onChange={(v) => setIndustry(v as Industry)}
+          options={[
+            { value: "home-services", label: "Home Services" },
+            { value: "construction", label: "Construction" },
+            { value: "field-services", label: "Field Services" },
+            { value: "other", label: "Other" },
+          ]}
+        />
       </div>
 
       <div className="relative">
         <label htmlFor="currency" className="sr-only">Currency</label>
-        <select
+        <GlassDropdown
           id="currency"
           name="currency"
-          autoComplete="currency"
-          className="auth-select"
           value={currency}
-          onChange={(e) => setCurrency(e.target.value as Currency)}
-        >
-          <option value="USD">USD</option>
-          <option value="CAD">CAD</option>
-          <option value="EUR">EUR</option>
-          <option value="GBP">GBP</option>
-        </select>
+          onChange={(v) => setCurrency(v as Currency)}
+          options={[
+            { value: "USD", label: "USD" },
+            { value: "CAD", label: "CAD" },
+            { value: "EUR", label: "EUR" },
+            { value: "GBP", label: "GBP" },
+          ]}
+        />
       </div>
 
       <div className="relative">
         <label htmlFor="units" className="sr-only">Units</label>
-        <select
+        <GlassDropdown
           id="units"
           name="units"
-          className="auth-select"
           value={units}
-          onChange={(e) => setUnits(e.target.value as Units)}
-        >
-          <option value="imperial">Imperial</option>
-          <option value="metric">Metric</option>
-        </select>
+          onChange={(v) => setUnits(v as Units)}
+          options={[
+            { value: "imperial", label: "Imperial" },
+            { value: "metric", label: "Metric" },
+          ]}
+        />
       </div>
 
       <div className="auth-wizard-actions">
-        <button
-          type="button"
-          className="auth-btn-secondary"
-          onClick={() => navigate("/onboarding/done")}
-          disabled={busy}
-        >
-          Skip
-        </button>
         <button className="auth-btn-primary" disabled={busy}>
           {busy ? "Saving…" : "Finish"}
         </button>
+      </div>
+      <div className="auth-wizard-links justify-center mt-3">
+        <Link to="/onboarding/DONE" className="auth-link">
+          Skip
+        </Link>
       </div>
     </form>
   );

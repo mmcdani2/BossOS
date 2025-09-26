@@ -12,9 +12,6 @@ export default function StepDone() {
         <button className="auth-btn-primary" onClick={() => navigate("/dashboard")}>
           Go to dashboard
         </button>
-        <Link to="/account/settings/company/people" className="auth-btn-secondary">
-          Invite teammates
-        </Link>
       </div>
     </div>
   );

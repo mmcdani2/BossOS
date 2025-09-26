@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState, useMemo } from "react";
 import { supabase } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import type { User, Session } from "@supabase/supabase-js";
 
 type AuthCtx = {
   user: User | null;
@@ -22,9 +22,7 @@ const Ctx = createContext<AuthCtx>({
 export const useAuth = () => useContext(Ctx);
 
 /**
- * tiny localStorage sync for orgId
- * - keyed by userId when available (so different users keep different org selections)
- * - hydrates once after auth resolves (userId becomes string|null instead of undefined)
+ * Keep orgId persisted per user (read-only hydration).
  */
 function useOrgPersistence(
   userId: string | null | undefined,
@@ -33,7 +31,7 @@ function useOrgPersistence(
 ) {
   const inited = useRef(false);
 
-  // hydrate once after auth resolves
+  // Hydrate once after auth resolves to string|null (not undefined)
   useEffect(() => {
     if (inited.current) return;
     if (userId === undefined) return;
@@ -42,23 +40,19 @@ function useOrgPersistence(
     try {
       const saved = localStorage.getItem(key);
       if (saved && saved !== orgId) setOrgId(saved);
-    } catch {
-      // ignore localStorage errors
-    }
+    } catch { /* ignore */ }
+
     inited.current = true;
   }, [userId, orgId, setOrgId]);
 
-  // persist on change
+  // Persist on change (when we know which user this is)
   useEffect(() => {
     if (userId === undefined) return;
-
     const key = userId ? `bossos.orgId.${userId}` : "bossos.orgId";
     try {
       if (orgId) localStorage.setItem(key, orgId);
       else localStorage.removeItem(key);
-    } catch {
-      // ignore localStorage errors
-    }
+    } catch { /* ignore */ }
   }, [orgId, userId]);
 }
 
@@ -67,28 +61,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [orgId, setOrgId] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
 
-  // keep orgId persisted in localStorage per-user
+  // Keep orgId persisted in localStorage per-user
   useOrgPersistence(user?.id ?? null, orgId, setOrgId);
 
-  // 1) Session boot + auth change (unchanged behavior, just grouped)
+  /**
+   * 1) Deterministic auth bootstrap:
+   *    - getSession() to seed (no redirect yet)
+   *    - onAuthStateChange to finalize and set initialized=true when the first event arrives
+   *      (prevents a brief user=null that can bounce you to /signin)
+   */
   useEffect(() => {
-    const init = async () => {
-      const { data } = await supabase.auth.getSession();
-      setUser(data.session?.user ?? null);
-      setInitialized(true);
-    };
-    init();
+    let firstEventSeen = false;
+    let cancelled = false;
 
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, sess) => {
-      setUser(sess?.user ?? null);
-    });
-    return () => sub.subscription.unsubscribe();
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (cancelled) return;
+      setUser(data.session?.user ?? null);
+
+      // Fallback: if no event arrives quickly (older SDKs), mark initialized shortly after seeding
+      const fallbackTimer = setTimeout(() => {
+        if (!firstEventSeen && !cancelled) setInitialized(true);
+      }, 200);
+
+      const { data: sub } = supabase.auth.onAuthStateChange((event, session: Session | null) => {
+        if (cancelled) return;
+
+        // Seed/refresh user from event session
+        setUser(session?.user ?? null);
+
+        // First event is our authoritative "boot finished" signal
+        if (!firstEventSeen) {
+          firstEventSeen = true;
+          clearTimeout(fallbackTimer);
+          setInitialized(true);
+        }
+      });
+
+      // Cleanup
+      return () => {
+        cancelled = true;
+        clearTimeout(fallbackTimer);
+        sub.subscription.unsubscribe();
+      };
+    })();
+
+    return () => { cancelled = true; };
   }, []);
 
-  // 2) Resolve org on user change with persistence + validation
+  /**
+   * 2) Resolve orgId (read-only). No inserts here.
+   *    Prefers a saved org if the user is still a member; else picks first membership.
+   */
   useEffect(() => {
-    type UserOrgRow = { org_id: string };
-    // no user -> no org
+    type Row = { org_id: string };
     if (!user) {
       setOrgId(null);
       return;
@@ -98,51 +124,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const uid = user.id;
       const key = `bossos.orgId.${uid}`;
 
-      // fetch all orgs the user belongs to
       const { data: memberships, error } = await supabase
         .from("user_orgs")
         .select("org_id")
         .eq("user_id", uid);
 
       if (error) {
-        console.warn("user_orgs fetch error:", error);
+        // Non-fatal: keep whatever orgId we had; guard/screens will still work
+        console.debug("[Auth] user_orgs read error:", error);
+        return;
       }
 
-      const mems = (memberships ?? []) as UserOrgRow[];
-      const allowed = new Set<string>(mems.map((m) => m.org_id));
+      const mems = (memberships ?? []) as Row[];
+      const allowed = new Set<string>(mems.map(m => m.org_id));
 
-      // try saved org first (only if user still has access)
       const saved = localStorage.getItem(key);
       if (saved && allowed.has(saved)) {
         setOrgId(saved);
         return;
       }
 
-      // otherwise fall back to your server default
-      const { data: ensured, error: rpcErr } = await supabase.rpc(
-        "ensure_user_org"
-      );
-      if (!rpcErr && ensured) {
-        const ensuredId = String(ensured);
-        setOrgId(ensuredId);
-        // persist the resolved org
-        localStorage.setItem(key, ensuredId);
-        return;
-      }
-
-      // last resort: if user has at least one org, pick the first and persist
-      const first = memberships?.[0]?.org_id as string | undefined;
-      if (first) {
-        setOrgId(first);
-        localStorage.setItem(key, first);
-      } else {
-        setOrgId(null);
-        localStorage.removeItem(key);
-      }
+      const first = mems[0]?.org_id ?? null;
+      setOrgId(first);
+      if (first) localStorage.setItem(key, first);
+      else localStorage.removeItem(key);
     })();
   }, [user]);
 
-  // 3) Persist any org change for this user
+  // Mirror orgId persistence (already handled in useOrgPersistence, but safe to keep)
   useEffect(() => {
     if (!user) return;
     const key = `bossos.orgId.${user.id}`;
@@ -150,41 +159,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     else localStorage.removeItem(key);
   }, [orgId, user]);
 
-  // When orgId changes, persist it to Supabase so the server remembers the preference
-  useEffect(() => {
-    if (!user || !orgId) return;
-    (async () => {
-      // Check if membership already exists
-      const { data } = await supabase
-        .from("memberships")
-        .select("org_id")
-        .eq("user_id", user.id)
-        .eq("org_id", orgId)
-        .maybeSingle();
-        
-      if (!data) {
-        // Insert membership if missing
-        const { error: insertErr } = await supabase.from("memberships").insert({
-          user_id: user.id,
-          org_id: orgId,
-          role: "owner", // or "member", depending on context
-        });
-        if (insertErr) {
-          console.debug("persist membership failed", insertErr);
-        }
-      }
-    })();
-  }, [user, orgId]);
-
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
     setOrgId(null);
+    // (Your router guard will handle redirecting to /signin)
   };
 
-  return (
-    <Ctx.Provider value={{ user, orgId, setOrgId, initialized, signOut }}>
-      {children}
-    </Ctx.Provider>
-  );
+  const value = useMemo<AuthCtx>(() => ({
+    user,
+    orgId,
+    setOrgId,
+    initialized,
+    signOut,
+  }), [user, orgId, initialized]);
+
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

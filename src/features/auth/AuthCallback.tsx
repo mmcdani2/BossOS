@@ -7,38 +7,34 @@ export default function AuthCallback() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let cancelled = false;
+
     (async () => {
+      // 1) Try to exchange the magic-link/OAuth code for a session (covers both SDK signatures)
+      const code = new URLSearchParams(window.location.search).get("code") ?? undefined;
       try {
-        // Ensure session is established after redirect
-        const { error: sessionErr } = await supabase.auth.getSession();
-        if (sessionErr) throw sessionErr;
-
-        // Must have a signed-in user here
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          navigate("/signin", { replace: true });
-          return;
+        // @ts-expect-error (newer supabase-js accepts no args)
+        await supabase.auth.exchangeCodeForSession();
+      } catch {
+        if (code) {
+          // @ts-expect-error (older supabase-js expects { authCode })
+          await supabase.auth.exchangeCodeForSession({ authCode: code });
         }
-
-        // Check if onboarding is complete
-        const { data: prof, error: profErr } = await supabase
-          .from("profiles")
-          .select("onboarding_complete")
-          .eq("id", user.id)
-          .maybeSingle();
-
-        if (profErr) {
-          // If we can't read profile for any reason, send to onboarding as a safe default
-          console.warn("Profile lookup error:", profErr.message);
-        }
-
-        const needsOnboarding = !(prof && prof.onboarding_complete === true);
-        navigate(needsOnboarding ? "/onboarding" : "/dashboard", { replace: true });
-      } catch (e) {
-        console.error("Auth callback error:", e);
-        navigate("/signin", { replace: true });
       }
+
+      // 2) Wait until the session is actually present (so the guard won't bounce us)
+      for (let i = 0; i < 20; i++) { // try for ~2s
+        const { data } = await supabase.auth.getSession();
+        if (data?.session?.user?.id) break;
+        await new Promise(r => setTimeout(r, 100));
+      }
+      if (cancelled) return;
+
+      // 3) Hard redirect to avoid any SPA ping-pong
+      window.location.replace("/onboarding");
     })();
+
+    return () => { cancelled = true; };
   }, [navigate]);
 
   return (
