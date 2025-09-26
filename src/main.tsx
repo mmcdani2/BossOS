@@ -1,14 +1,30 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider, Navigate, Outlet, } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+  Outlet,
+  useLocation,
+} from "react-router-dom";
 import { createPortal } from "react-dom";
 import { AuthProvider, useAuth } from "@/app/providers/AuthProvider";
+import { supabase } from "@/lib/supabase/client";
+
 import SignIn from "@/features/auth/SignIn";
+import SignUp from "@/features/auth/SignUp";
+import AuthCallback from "@/features/auth/AuthCallback";
+
+import OnboardingShell from "@/features/auth/onboarding/OnboardingShell";
+import StepProfile from "@/features/auth/onboarding/StepProfile";
+import StepCompany from "@/features/auth/onboarding/StepCompany";
+import StepPreferences from "@/features/auth/onboarding/StepPreferences";
+import StepDone from "@/features/auth/onboarding/StepDone";
+
 import Dashboard from "@/features/dashboard/Dashboard";
 import Scheduler from "@/features/scheduling/Scheduler";
-import BottomNav from "./ui/BottomNav";
-import "./index.css";
 import Jobs from "@/features/jobs/Jobs";
 import Estimates from "@/features/estimates/Estimates";
 import Billing from "@/features/billing/Billing";
@@ -17,16 +33,13 @@ import Inventory from "@/features/inventory/Inventory";
 import Profile from "@/features/account/Profile";
 import Preferences from "@/features/account/Preferences";
 import Settings from "@/features/account/Settings";
+
 import PageHeader from "@/ui/PageHeader";
 import ViewToolbar from "@/ui/ViewToolbar";
 import GlassCard from "@/ui/GlassCard";
-import SignUp from "@/features/auth/SignUp";
-import AuthCallback from "@/features/auth/AuthCallback";
-import OnboardingShell from "@/features/auth/onboarding/OnboardingShell";
-import StepProfile from "@/features/auth/onboarding/StepProfile";
-import StepCompany from "@/features/auth/onboarding/StepCompany";
-import StepPreferences from "@/features/auth/onboarding/StepPreferences";
-import StepDone from "@/features/auth/onboarding/StepDone";
+import BottomNav from "./ui/BottomNav";
+
+import "./index.css";
 
 console.log(
   "ENV:",
@@ -34,29 +47,69 @@ console.log(
   import.meta.env.VITE_SUPABASE_ANON_KEY?.slice(0, 8)
 );
 
-// ---- Auth guard (unchanged) ----
+/** ---------- Auth guard ---------- */
 function Protected({ children }: { children: React.ReactNode }) {
   const { user, initialized } = useAuth();
+  const location = useLocation();
+  const isAuthRoute = location.pathname.startsWith("/auth/");
+  const isOnboardingRoute = location.pathname.startsWith("/onboarding");
 
-  if (!initialized) {
-    return (
-      <div className="auth-center">
-        <div className="auth-card">Loading…</div>
-      </div>
-    );
+  // Hooks FIRST (no conditional hooks)
+  const [complete, setComplete] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    // reset while booting/unauthenticated
+    if (!user) {
+      setComplete(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("onboarding_complete")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      if (error) {
+        // Treat error as "unknown" so we don't misroute
+        setComplete(null);
+        return;
+      }
+      const v = data?.onboarding_complete;
+     setComplete(v === true ? true : v === false ? false : null);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id]);
+
+  // Now render decisions (no hooks below this line)
+  if (!initialized) return null;
+
+  if (!user) {
+    // allow /auth/* while unauthenticated
+    return isAuthRoute ? <>{children}</> : <Navigate to="/signin" replace />;
   }
-  if (!user) return <Navigate to="/signin" replace />;
+
+  if (complete === null) return null; // wait for profile read
+
+  if (complete === false && !isOnboardingRoute)
+    return <Navigate to="/onboarding" replace />;
+  if (complete === true && isOnboardingRoute)  
+    return <Navigate to="/" replace />;
+
   return <>{children}</>;
 }
 
-// ---- Bottom nav rendered inside Router context ----
+/** ---------- Bottom nav inside router ---------- */
 function BottomNavPortalInsideRouter() {
   return createPortal(<BottomNav />, document.body);
 }
 
-// ---- Layout that shows page content + bottom nav ----
+/** ---------- App chrome ---------- */
 function Chrome() {
-  React.useEffect(() => {
+  useEffect(() => {
     document.body.classList.add("with-bottomnav", "with-topnav");
     return () =>
       document.body.classList.remove("with-bottomnav", "with-topnav");
@@ -69,7 +122,7 @@ function Chrome() {
   );
 }
 
-// generic placeholder page
+/** ---------- Generic placeholder ---------- */
 const Wip = ({ title }: { title: string }) => (
   <>
     <PageHeader />
@@ -89,14 +142,14 @@ const Wip = ({ title }: { title: string }) => (
   </>
 );
 
-// ---- Router: public vs protected ----
+/** ---------- Router ---------- */
 const router = createBrowserRouter([
-  // Public pages
+  // Public
   { path: "/signin", element: <SignIn /> },
-  { path: "/register", element: <SignUp /> },          // ← now public
-  { path: "/auth/callback", element: <AuthCallback /> }, // ← now public
+  { path: "/register", element: <SignUp /> },
+  { path: "/auth/callback", element: <AuthCallback /> },
 
-  // Onboarding (user must be logged in, but not complete – we can add a light guard later)
+  // Onboarding (protected)
   {
     path: "/onboarding",
     element: (
@@ -112,7 +165,7 @@ const router = createBrowserRouter([
     ],
   },
 
-  // Protected app shell
+  // App (protected)
   {
     path: "/",
     element: (
@@ -132,8 +185,7 @@ const router = createBrowserRouter([
       { path: "account/preferences", element: <Preferences /> },
       { path: "account/settings", element: <Settings /> },
 
-      // Company
-      { path: "*", element: <Navigate to="/signin" replace /> },
+      // Company (WIP)
       {
         path: "account/settings/company/profile",
         element: <Wip title="Company Profile" />,
@@ -175,7 +227,7 @@ const router = createBrowserRouter([
         element: <Wip title="Commissions" />,
       },
 
-      // Products & Pricing
+      // Pricing
       {
         path: "account/settings/pricing/price-book",
         element: <Wip title="Price Book" />,
@@ -217,7 +269,7 @@ const router = createBrowserRouter([
         element: <Wip title="Automations" />,
       },
 
-      // Communications
+      // Comms
       {
         path: "account/settings/comms/channels",
         element: <Wip title="Channels" />,
@@ -275,7 +327,7 @@ const router = createBrowserRouter([
         element: <Wip title="Tax Rules" />,
       },
 
-      // Service Plans
+      // Plans
       {
         path: "account/settings/plans/catalog",
         element: <Wip title="Plan Catalog" />,
@@ -307,10 +359,13 @@ const router = createBrowserRouter([
         element: <Wip title="Job Usage Tracking" />,
       },
 
-      // Add-Ons
+      // Catch-all (protected area)
       { path: "*", element: <Navigate to="/signin" replace /> },
     ],
   },
+
+  // Fallback for any unknown public route
+  { path: "*", element: <Navigate to="/signin" replace /> },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

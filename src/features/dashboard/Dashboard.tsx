@@ -12,6 +12,83 @@ import { getARBalanceInRange } from "@/lib/api/invoices";
 import { getLeadsCountInRange } from "@/lib/api/leads";
 import { DashboardKpiCard } from "@/ui/DashboardKpiCard";
 
+function VerifyEmailBanner() {
+  const [show, setShow] = useState<boolean>(() => {
+    return localStorage.getItem("bossos.needsEmailVerify") === "1";
+  });
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const { data: userRes } = await supabase.auth.getUser();
+      const user = userRes?.user ?? null;
+      // If already verified, hide + clear flag
+      if (user?.email_confirmed_at) {
+        localStorage.removeItem("bossos.needsEmailVerify");
+        setShow(false);
+      } else if (!show) {
+        // If not verified and no flag, show once
+        setShow(true);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!show) return null;
+
+  const resend = async () => {
+    setBusy(true);
+    setMsg(null);
+    try {
+      const { data: userRes } = await supabase.auth.getUser();
+      const email = userRes?.user?.email;
+      if (!email) throw new Error("No email on session.");
+      // Supabase v2: resend confirmation (passwordless signup type)
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email,
+        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+      });
+      if (error) throw error;
+      setMsg("Verification email sent. Check your inbox.");
+    } catch (e: unknown) {
+      setMsg(e instanceof Error ? e.message : "Failed to resend verification.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="auth-banner-warning flex items-center justify-between gap-3">
+      <div>
+        Please verify your email to access all features.
+        {msg && <span className="ml-2 opacity-80">({msg})</span>}
+      </div>
+      <div className="flex items-center gap-2">
+        <button
+          className="auth-btn-secondary"
+          onClick={resend}
+          disabled={busy}
+          title="Resend verification link"
+        >
+          {busy ? "Sending…" : "Resend link"}
+        </button>
+        <button
+          className="auth-btn-tertiary"
+          onClick={() => {
+            localStorage.setItem("bossos.needsEmailVerify", "1"); // keep reminder
+            setShow(false);
+          }}
+          title="Dismiss"
+        >
+          Dismiss
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function DashboardInner() {
   const { fromUtc, toUtc, refreshToken } = useDashboardFilters();
 
@@ -31,10 +108,6 @@ function DashboardInner() {
     leadsThisWeekCount,
     error,
   } = useDashboardKPIs();
-
-  const fmtMoney = (v: number | null) =>
-    v !== null ? `$${v.toLocaleString()}` : "—";
-  const fmtCount = (v: number | null) => (v !== null ? v : "—");
 
   const [prevJobsCount, setPrevJobsCount] = useState<number | undefined>();
   const [prevLeadsCount, setPrevLeadsCount] = useState<number | undefined>();
@@ -91,36 +164,10 @@ function DashboardInner() {
     })();
   }, [fromUtc, toUtc, refreshToken]);
 
-  const renderTrend = (
-    current: number | null,
-    previous: number | undefined,
-    kind: "money" | "count"
-  ) => {
-    if (current == null || previous === undefined) return null;
-    const diff = current - previous;
-    const up = diff > 0;
-    const down = diff < 0;
-    const klass = up
-      ? "kpi-trend kpi-trend--up"
-      : down
-        ? "kpi-trend kpi-trend--down"
-        : "kpi-trend kpi-trend--flat";
-    const fmt =
-      kind === "money"
-        ? (n: number) => `$${Math.abs(n).toLocaleString()}`
-        : (n: number) => Math.abs(n).toLocaleString();
-    return (
-      <div className={klass}>
-        <span className="icon" aria-hidden>
-          {up ? "▲" : down ? "▼" : "◆"}
-        </span>
-        <span>{diff === 0 ? "No change" : fmt(diff)}</span>
-      </div>
-    );
-  };
-
   return (
     <div className="shell">
+      {/* Email verification reminder */}
+      <VerifyEmailBanner />
       {/* Sticky toolbar as a glass card */}
       <div className="sticky-under-nav">
         <GlassCard accent="teal" padding="sm" className="p-3">
@@ -165,7 +212,6 @@ function DashboardInner() {
                       );
                     })}
                   </div>
-
 
                   {/* Refresh */}
                   <button

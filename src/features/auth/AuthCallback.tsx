@@ -1,41 +1,59 @@
 // src/features/auth/AuthCallback.tsx
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { useNavigate } from "react-router-dom";
 
 export default function AuthCallback() {
-  const navigate = useNavigate();
-
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
-      // 1) Try to exchange the magic-link/OAuth code for a session (covers both SDK signatures)
-      const code = new URLSearchParams(window.location.search).get("code") ?? undefined;
+      // 1) Exchange magic-link / OAuth code for a session (supports both SDK signatures)
+      const code =
+        new URLSearchParams(window.location.search).get("code") ?? undefined;
       try {
-        // @ts-expect-error (newer supabase-js accepts no args)
+        // newer SDKs (no args)
+        // @ts-expect-error: some versions accept no arg
         await supabase.auth.exchangeCodeForSession();
       } catch {
         if (code) {
-          // @ts-expect-error (older supabase-js expects { authCode })
+          // older SDKs (expects { authCode })
+          // @ts-expect-error: legacy signature
           await supabase.auth.exchangeCodeForSession({ authCode: code });
         }
       }
 
-      // 2) Wait until the session is actually present (so the guard won't bounce us)
-      for (let i = 0; i < 20; i++) { // try for ~2s
+      // 2) Wait briefly for session to materialize
+      for (let i = 0; i < 20; i++) {
+        if (cancelled) return;
         const { data } = await supabase.auth.getSession();
         if (data?.session?.user?.id) break;
-        await new Promise(r => setTimeout(r, 100));
+        await new Promise((r) => setTimeout(r, 80));
       }
       if (cancelled) return;
 
-      // 3) Hard redirect to avoid any SPA ping-pong
-      window.location.replace("/onboarding");
-    })();
+      // 3) Decide destination by onboarding flag
+      const { data: userRes } = await supabase.auth.getUser();
+      const user = userRes?.user ?? null;
+      if (!user) {
+        if (!cancelled) window.location.replace("/signin");
+        return;
+      }
 
-    return () => { cancelled = true; };
-  }, [navigate]);
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("onboarding_complete")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (cancelled) return;
+
+      const done = prof?.onboarding_complete === true;
+      window.location.replace(done ? "/" : "/onboarding");
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="auth-center">

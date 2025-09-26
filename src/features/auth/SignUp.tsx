@@ -36,11 +36,17 @@ export default function SignUp() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          shouldCreateUser: true,
+          shouldCreateUser: true, // create if missing (passwordless)
           emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
-      if (error) throw error;
+      if (error) {
+        // friendlier messaging for common cases
+        const msg = /already registered/i.test(error.message)
+          ? "This email is already registered. Try signing in instead."
+          : error.message;
+        throw new Error(msg);
+      }
       setSent(true);
     } catch (e: unknown) {
       setErr(e instanceof Error ? e.message : "Something went wrong");
@@ -57,14 +63,17 @@ export default function SignUp() {
           <h1 className="auth-title">Create your account</h1>
           {!sent && (
             <p className="auth-subtext">
-              We’ll send a sign-in link to your email
+              We’ll send a verification link to your email.
             </p>
           )}
         </div>
 
         {sent ? (
           <div className="space-y-3 text-center">
-            <h2 className="text-lg font-semibold" style={{ color: "var(--text)" }}>
+            <h2
+              className="text-lg font-semibold"
+              style={{ color: "var(--text)" }}
+            >
               Check your email
             </h2>
             <p className="auth-subtext">
@@ -103,8 +112,13 @@ export default function SignUp() {
                 <input type="checkbox" disabled={busy} {...register("agree")} />
                 <span>
                   I agree to the{" "}
-                  <Link className="auth-link" to="/terms">Terms</Link> &{" "}
-                  <Link className="auth-link" to="/privacy">Privacy</Link>
+                  <Link className="auth-link" to="/terms">
+                    Terms
+                  </Link>{" "}
+                  &{" "}
+                  <Link className="auth-link" to="/privacy">
+                    Privacy
+                  </Link>
                 </span>
               </label>
             </div>

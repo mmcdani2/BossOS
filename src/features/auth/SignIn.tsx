@@ -11,76 +11,94 @@ export default function SignIn() {
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (!email) {
+      setErr("Please enter your email.");
+      return;
+    }
+
     setBusy(true);
     setErr(null);
+
     try {
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+        options: {
+          shouldCreateUser: false, // don’t auto-create new users
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
       });
-      if (error) throw error;
+
+      if (error) {
+        if (error.message.includes("Signups not allowed for otp")) {
+          throw new Error(
+            "No account found with that email. Please sign up first."
+          );
+        }
+        throw error;
+      }
       setSent(true);
     } catch (e: unknown) {
       if (e instanceof Error) setErr(e.message);
-      else setErr("Sign-in failed");
+      else setErr("We couldn’t sign you in. Please try again.");
     } finally {
       setBusy(false);
     }
   }
 
-  
-return (
-  <div className="auth-center auth-bg">
-    <div className="auth-card glass-surface">
-      <div className="text-center mb-6 sm:mb-8">
-        <Logo />
-        <h1 className="auth-title">Run your business like a boss!</h1>
-        {!sent && (
-          <p className="auth-subtext">Sign in to access your dashboard</p>
+  return (
+    <div className="auth-center auth-bg">
+      <div className="auth-card glass-surface">
+        <div className="text-center mb-6 sm:mb-8">
+          <Logo />
+          <h1 className="auth-title">Run your business like a boss!</h1>
+          {!sent && (
+            <p className="auth-subtext">Sign in to access your dashboard</p>
+          )}
+        </div>
+
+        {sent ? (
+          <div className="space-y-3 text-center">
+            <h2
+              className="text-lg font-semibold"
+              style={{ color: "var(--text)" }}
+            >
+              Check your email
+            </h2>
+            <p className="auth-subtext">
+              We sent a link to <b style={{ color: "var(--text)" }}>{email}</b>.
+              You can close this tab after signing in.
+            </p>
+          </div>
+        ) : (
+          <form onSubmit={submit} className="auth-form">
+            {err && <div className="auth-banner-error">Error: {err}</div>}
+
+            <div className="relative">
+              <input
+                className="auth-input auth-input--center"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder="you@company.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+
+            <button type="submit" disabled={busy} className="auth-btn-primary">
+              {busy ? "Sending…" : "Send Verification Link"}
+            </button>
+
+            <p className="auth-switch" style={{ textAlign: "center" }}>
+              Don’t have an account?{" "}
+              <Link to="/register" className="auth-link">
+                Register now
+              </Link>
+            </p>
+          </form>
         )}
       </div>
-
-      {sent ? (
-        <div className="space-y-3 text-center">
-          <h2 className="text-lg font-semibold" style={{ color: "var(--text)" }}>
-            Check your email
-          </h2>
-          <p className="auth-subtext">
-            We sent a link to <b style={{ color: "var(--text)" }}>{email}</b>. You can
-            close this tab after signing in.
-          </p>
-        </div>
-      ) : (
-        <form onSubmit={submit} className="auth-form">
-          {err && <div className="auth-banner-error">Error: {err}</div>}
-
-          <div className="relative">
-            <input
-              className="auth-input auth-input--center"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              placeholder="you@company.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-
-          <button type="submit" disabled={busy} className="auth-btn-primary">
-            {busy ? "Sending…" : "Send Verification Link"}
-          </button>
-
-          <p className="auth-switch" style={{ textAlign: "center" }}>
-            Don’t have an account?{" "}
-            <Link to="/register" className="auth-link">
-              Register now
-            </Link>
-          </p>
-        </form>
-      )}
     </div>
-  </div>
-);
-
+  );
 }
