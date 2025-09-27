@@ -77,7 +77,7 @@ function Protected({ children }: { children: React.ReactNode }) {
         return;
       }
       const v = data?.onboarding_complete;
-     setComplete(v === true ? true : v === false ? false : null);
+      setComplete(v === true ? true : v === false ? false : null);
     })();
     return () => {
       cancelled = true;
@@ -96,7 +96,7 @@ function Protected({ children }: { children: React.ReactNode }) {
 
   if (complete === false && !isOnboardingRoute)
     return <Navigate to="/onboarding" replace />;
-  if (complete === true && isOnboardingRoute)  
+  if (complete === true && isOnboardingRoute)
     return <Navigate to="/" replace />;
 
   return <>{children}</>;
@@ -370,8 +370,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <div className="auth-bg min-h-screen">
+           <AuthProvider>
+               <RouterProvider router={router} />
+             </AuthProvider>
+         </div>
   </React.StrictMode>
 );

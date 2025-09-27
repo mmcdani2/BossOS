@@ -32,6 +32,14 @@ body {
   padding-inline: clamp(12px, 3vw, 24px);
 }
 
+.app-bg {
+  background:
+    radial-gradient(600px 400px at 20% 15%, rgba(56,189,248,.25), transparent 70%),
+    linear-gradient(135deg, #0b121a 0%, #070c12 50%, #05080c 100%);
+  background-attachment: fixed;
+  background-size: cover;
+}
+
 /* View height area under top nav (your header adds top padding) */
 .page-viewport {
   min-height: calc(100vh - var(--nav-h, 64px));

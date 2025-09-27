@@ -1,5 +1,6 @@
 // src/features/auth/__tests__/SignIn.test.tsx
 import { render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { vi, beforeEach, describe, it, expect } from "vitest";
 import SignIn from "../SignIn";
@@ -11,8 +12,11 @@ beforeEach(() => vi.clearAllMocks());
 
 describe("SignIn", () => {
   it("does not submit with empty email", async () => {
-    render(<SignIn />);
-
+    render(
+      <MemoryRouter>
+        <SignIn />
+      </MemoryRouter>
+    );
     // Your button is "Send Verification Link"
     const submit = screen.getByRole("button", { name: /send verification link/i });
     await userEvent.click(submit);
@@ -22,7 +26,11 @@ describe("SignIn", () => {
   });
 
   it("submits with a valid email and calls Supabase", async () => {
-    render(<SignIn />);
+    render(
+      <MemoryRouter>
+        <SignIn />
+      </MemoryRouter>
+    );
 
     // No label in DOM; use the placeholder instead
     const email = screen.getByPlaceholderText(/you@company\.com/i);
@@ -45,7 +53,11 @@ describe("SignIn", () => {
       new Error("Invalid email")
     );
 
-    render(<SignIn />);
+    render(
+      <MemoryRouter>
+        <SignIn />
+      </MemoryRouter>
+    );
 
     const email = screen.getByPlaceholderText(/you@company\.com/i);
     await userEvent.type(email, "bad@example.com");

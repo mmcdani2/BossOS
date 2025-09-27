@@ -5,19 +5,22 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { vi, describe, it, beforeEach, expect } from "vitest";
 import Protected from "@/features/auth/Protected";
 import { supabase } from "@/lib/supabase/client";
+const db = (supabase as any).__chain; // chain handle
 
 // --- Supabase mock (configurable per test) ---
 vi.mock("@/lib/supabase/client", () => {
   const auth = {
+    exchangeCodeForSession: vi.fn(),
     getUser: vi.fn(),
-    getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
+    getSession: vi.fn().mockResolvedValue({ data: { session: { user: { id: "u1" } } } }),
   };
-  const from = vi.fn(() => ({
-    select: vi.fn().mockReturnThis(),
-    eq: vi.fn().mockReturnThis(),
-    maybeSingle: vi.fn(),
-  }));
-  return { supabase: { auth, from } };
+  const chain = {
+    select: vi.fn(() => chain),
+    eq: vi.fn(() => chain),
+    maybeSingle: vi.fn(), // set per test
+  };
+  const from = vi.fn(() => chain);
+  return { supabase: { auth, from, __chain: chain } };
 });
 
 const mocked = vi.mocked(supabase, true);
@@ -45,7 +48,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   // default signed out
   mocked.auth.getUser.mockResolvedValue({ data: { user: null } } as any);
-  (mocked.from as any)().maybeSingle.mockResolvedValue({ data: null });
+  db.maybeSingle.mockResolvedValue({ data: null });
 });
 
 describe("Protected guard", () => {
@@ -58,9 +61,7 @@ describe("Protected guard", () => {
     mocked.auth.getUser.mockResolvedValueOnce({
       data: { user: { id: "u1" } },
     } as any);
-    (mocked.from as any)().maybeSingle.mockResolvedValueOnce({
-      data: { onboarding_complete: false },
-    });
+    db.maybeSingle.mockResolvedValueOnce({ data: { onboarding_complete: false } });
 
     renderWithRouter();
 
@@ -71,9 +72,7 @@ describe("Protected guard", () => {
     mocked.auth.getUser.mockResolvedValueOnce({
       data: { user: { id: "u1" } },
     } as any);
-    (mocked.from as any)().maybeSingle.mockResolvedValueOnce({
-      data: { onboarding_complete: true },
-    });
+    db.maybeSingle.mockResolvedValueOnce({ data: { onboarding_complete: true } });
 
     renderWithRouter();
 
