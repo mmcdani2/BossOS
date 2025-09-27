@@ -16,12 +16,6 @@
   background: rgba(255,255,255,0.12); overflow:hidden; font-weight:700;
 }
 .um-avatar img{ width:100%; height:100%; object-fit:cover; display:block; }
-.um-trigger-text { display:none; line-height:1.05; }
-@media (min-width: 640px){ .um-trigger-text{ display:flex; flex-direction:column; } }
-.um-trigger-name{ font-size:13px; font-weight:600; }
-.um-trigger-email{ color:#9ca3af; font-size:11px; }
-.um-caret{ color:#9ca3af; transition: transform .15s ease; }
-.um-caret--open{ transform: rotate(180deg); }
 
 /* Panel */
 .um-panel{
@@ -57,7 +51,6 @@
   background: transparent; border: 0; color:#e5e7eb; text-align:left;
 }
 .um-item:hover{ background: rgba(255,255,255,0.06); }
-.um-item--active{ background: rgba(37,99,235,0.9); color:#fff; }
 .um-item--danger{ color:#fecaca; }
 .um-item--danger:hover{ background: rgba(239,68,68,0.12); }
 .um-item-text{ flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -68,15 +61,9 @@
   width:20px; height:20px; border-radius:9999px; border:1px solid rgba(255,255,255,0.18);
   display:grid; place-items:center; background: rgba(255,255,255,0.06);
 }
-.um-radio--on{ background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.28); }
-.um-radio--on::after{ content:"âœ“"; font-size:12px; }
 
 /* Support */
 .um-support{ padding: 8px 20px 16px; }
-.um-support-link{
-  display:block; padding:12px 14px; border-radius:12px; color:#e5e7eb; text-decoration:none;
-}
-.um-support-link:hover{ background: rgba(255,255,255,0.06); }
 .um-support-title{ margin-top:6px; color:#e5e7eb; font-weight:600; }
 .um-support-phone{
   display:inline-block; margin-top:6px; padding:10px 12px; border-radius:12px; color:#e5e7eb; text-decoration:none;
@@ -118,7 +105,6 @@
 .um-acc-header:hover { background: rgba(255,255,255,0.06); }
 .um-acc-title { font-weight: 600; letter-spacing: .01em; }
 .um-acc-caret { color: #9ca3af; transition: transform .15s ease; }
-.um-acc-caret--open { transform: rotate(180deg); }
 
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 .scrollbar-hide::-webkit-scrollbar { display: none; }

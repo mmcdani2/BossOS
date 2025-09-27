@@ -52,25 +52,12 @@ body {
   z-index: 10;
 }
 
-/* When bottom nav is present, keep enough breathing room */
-.with-bottomnav .page-viewport {
-  padding-bottom: calc(var(--bottomnav-h, 72px) + 12px);
-}
-
 /* Subtle tokenized border you can reuse */
 .border-token {
   border: 1px solid var(--border);
 }
 
-/* Surfaces */
-.bg-surface-1 { background: var(--surface-1); }
 .bg-surface-2 { background: var(--surface-2); }
-
-/* -------------- */
-/* Simple utility */
-/* -------------- */
-.hidden-scrollbar::-webkit-scrollbar { display: none; }
-.hidden-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
 
 /* Links (global default look—feature overrides can coexist) */
 a {
@@ -94,21 +81,12 @@ body {
 /* Container with safe max width */
 .shell { max-width: 1100px; margin: 24px auto; padding: 0 16px; }
 
-/* Brand accent used in PageHeader */
-.nav-brand {
-  font-weight: 800; letter-spacing: -0.02em;
-  background: linear-gradient(90deg,#f59e0b,#ef4444);
-  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-}
-
-
 .page-viewport {
   height: calc(100vh - var(--nav-h) - var(--bottom-nav-h));
   display: flex; flex-direction: column;
   overflow: hidden;
 }
 .sticky-under-nav { position: sticky; top: var(--nav-h); z-index: 40; }
-.sticky-band { position: sticky; top: calc(var(--nav-h) + var(--toolbar-h)); z-index: 50; }
 .min-h-0 { min-height: 0; }
 
 :root[data-theme="dark"] body {

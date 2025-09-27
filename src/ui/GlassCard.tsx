@@ -21,7 +21,7 @@ function GlassCardInner<T extends React.ElementType = "div">(
     as,
     className,
     children,
-    padding = "md",
+    padding = "sm",
     elevated = true,
     interactive = false,
     divided = false,
@@ -41,7 +41,6 @@ function GlassCardInner<T extends React.ElementType = "div">(
     <As
       ref={ref}
       className={cn(
-        // base glass pulls from tokens (light) + dark override in CSS
         "glass text-basecolor rounded-2xl",
         pad,
         elevated && "shadow-1",

@@ -1,6 +1,4 @@
-﻿/* ================= AUTH: unified, de-duped ================= */
-
-/* Stage */
+﻿/* Stage */
 .auth-center {
   min-height: 100dvh;
   display: grid;
@@ -81,6 +79,7 @@
   -webkit-backdrop-filter: saturate(140%) blur(12px);
   background: color-mix(in oklab, var(--panel) 70%, transparent);
 }
+
 @media (prefers-color-scheme: light) {
   .glass-surface {
     background: rgba(255,255,255,.85);
@@ -94,9 +93,6 @@
 /* Typography */
 .auth-title { font-size: 1.5rem; font-weight: 700; margin: 8px 0 12px; }
 .auth-subtext { opacity: .8; margin-bottom: 16px; }
-.auth-heading { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; text-align: center; }
-.auth-subheading { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: -4px; }
-.auth-helper { font-size: 12px; color: var(--text-muted); text-align: center; }
 
 /* Form */
 .auth-form { display: grid; gap: 10px; margin-top: 10px; }
@@ -122,33 +118,6 @@
   box-shadow: 0 0 0 2px var(--ring);
 }
 .auth-input--center { text-align: center; letter-spacing: .01em; }
-
-/* Select (optional, style once) */
-.auth-select {
-  text-align: center;
-  text-align-last: center;
-  appearance: none;
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: var(--surface-2);
-  color: var(--text);
-  border: 1px solid var(--border);
-  outline: none;
-  transition: box-shadow .15s ease, border-color .15s ease, background .15s ease;
-}
-
-.auth-select option {
-  background-color: #1e1e24; /* dark background for the list */
-  color: #f5f5f5;            /* light text */
-  border-radius: 20px;        /* soften corners of options */
-}
-
-.auth-select:focus { border-color: rgba(255,255,255,.18); }
-
-.auth-card,
-.auth-form,
-.glass-surface { overflow: visible; }
 
 /* Buttons */
 .auth-btn-primary {
