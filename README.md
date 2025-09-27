@@ -5,113 +5,140 @@ Vite + React + TypeScript + Supabase CRM application.
 Dark, iPhone-esque glassmorphism UI with role-based access (RLS) scoped to each organization.  
 Domain-driven structure: `features/`, `ui/`, `lib/`.
 
----
-
 ## Quickstart
 
 ### 1. Clone and Install
-git clone <your-repo-url>
+```sh
+git clone 
 cd bossos
 pnpm install
+```
 
 ### 2. Configure Environment
 Create `.env` at the project root:
 
+```env
 VITE_SUPABASE_URL=https://<your-project>.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOi...
+```
 
 ### 3. Run Development Server
+```sh
 pnpm dev
+```
 
 Open [http://localhost:5173](http://localhost:5173).
 
----
+## Dependencies
+
+Install core libraries and tools with pnpm:
+
+### Core
+```sh
+pnpm add react react-dom react-router-dom
+pnpm add -D vite @vitejs/plugin-react typescript @types/react @types/react-dom
+```
+
+### Styling & UI
+```sh
+pnpm add -D tailwindcss postcss autoprefixer
+pnpm add class-variance-authority tailwind-variants
+pnpm add lucide-react framer-motion
+pnpm add @radix-ui/react-icons @radix-ui/react-dialog @radix-ui/react-tooltip
+```
+
+### Backend & Data
+```sh
+pnpm add @supabase/supabase-js
+pnpm add zod date-fns
+```
+
+### Utilities
+```sh
+pnpm add clsx
+pnpm add -D dotenv
+```
+
+### Testing & Linting
+```sh
+pnpm add -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event
+pnpm add -D eslint prettier eslint-config-prettier eslint-plugin-react eslint-plugin-react-hooks
+```
+
+## Scripts
+
+- `pnpm dev` → start development server  
+- `pnpm build` → build for production  
+- `pnpm preview` → preview production build  
+- `pnpm test` → run tests  
+- `pnpm lint` → run lint checks  
 
 ## Features
 
-- Supabase Auth (magic link sign-in/out)
-- Auto-provision organization + owner on first login
-- RLS: all queries scoped to the logged-in user’s org
+- Supabase Auth (magic link sign-in/out)  
+- Auto-provision organization + owner on first login  
+- RLS: all queries scoped to the logged-in user’s org  
 - Dashboard KPIs:
-  - Open Estimates (total $ value)
-  - Jobs Today (count)
-  - AR Balance (total $ open/overdue)
-  - Leads This Week (count)
-
----
+  - Open Estimates (total $ value)  
+  - Jobs Today (count)  
+  - AR Balance (total $ open/overdue)  
+  - Leads This Week (count)  
 
 ## Repo Structure
+```
 src/
   features/   # Domain-specific features (dashboard, clients, estimates, etc.)
   ui/         # Shared UI components, glassmorphism styling
   lib/        # Supabase client, API wrappers, utilities
-
----
+```
 
 ## Development Notes
 
-- Commit style: feat:, fix:, chore:, docs:
-- Seed data available via SQL scripts for testing KPI cards
-- Supabase RLS policies enforce org-level isolation
-- Use pnpm build before pushing to ensure clean build
+- Commit style: feat:, fix:, chore:, docs:  
+- Seed data available via SQL scripts for testing KPI cards  
+- Supabase RLS policies enforce org-level isolation  
+- Run `pnpm build` before pushing to ensure clean build  
 
----
-
-## License
-See [LICENSE](./LICENSE).
-
-============================================================
-# src/README.md
-
-## BossOS CRM (Frontend)
+## Frontend
 
 Vite + React + TypeScript app for BossOS CRM.  
 Structured for scalability:
 
-- features/ → domain-driven slices (dashboard, clients, jobs, invoices, etc.)
-- ui/       → shared presentation components
-- lib/      → API + utilities
+- `features/` → domain-driven slices (dashboard, clients, jobs, invoices, etc.)  
+- `ui/`       → shared presentation components  
+- `lib/`      → API + utilities  
 
 Auth: Supabase magic link + RLS.  
 Default UI: dark iPhone-esque glassmorphism.
 
-============================================================
-# src/features/README.md
-
-## Features
+## Features (Code Organization)
 
 This folder contains domain-specific features of BossOS CRM.  
 Each feature is self-contained with its own components, hooks, and API access.
 
 Examples:
-- dashboard/ → KPI cards, charts, and dashboard UI
-- clients/   → client management screens
-- estimates/ → estimates listing and create/edit flows
+- `dashboard/` → KPI cards, charts, and dashboard UI  
+- `clients/`   → client management screens  
+- `estimates/` → estimates listing and create/edit flows  
 
-============================================================
-# src/ui/README.md
-
-## UI
+## UI Layer
 
 This folder holds shared UI components and styles.  
 Think buttons, forms, layout shells, and other reusable presentation pieces.
 
-- Global CSS classes (dark, glassmorphism, etc.)
-- Nav, Sidebar, Modal, etc.
+- Global CSS classes (dark, glassmorphism, etc.)  
+- Nav, Sidebar, Modal, etc.  
 
-============================================================
-# src/lib/README.md
-
-## Lib
+## Lib Layer
 
 This folder contains shared library code (non-UI).  
-Examples:
-- supabase/ → client setup
-- api/      → data-access functions wrapping Supabase queries
-- auth/     → helpers for user/org provisioning and RLS-safe calls
 
-============================================================
-# LICENSE
+Examples:
+- `supabase/` → client setup  
+- `api/`      → data-access functions wrapping Supabase queries  
+- `auth/`     → helpers for user/org provisioning and RLS-safe calls  
+
+## License
 
 Copyright (c) 2025 BossOS.
 
