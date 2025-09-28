@@ -3,7 +3,7 @@ import { supabase } from "@/lib/supabase/client";
 
 /** The statuses that count as "open" for estimates. */
 export const OPEN_ESTIMATE_STATUSES = ["sent", "draft"] as const;
-export type OpenEstimateStatus = (typeof OPEN_ESTIMATE_STATUSES)[number];
+type OpenEstimateStatus = (typeof OPEN_ESTIMATE_STATUSES)[number];
 
 type EstimateRow = {
   total: string | number | null; // Supabase often returns numerics as strings
@@ -43,3 +43,4 @@ export async function getOpenEstimatesValueInRange(
   const rows = (data ?? []) as EstimateRow[];
   return rows.reduce((sum, row) => sum + toNumber(row.total), 0);
 }
+

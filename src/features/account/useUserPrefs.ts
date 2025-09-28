@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-
-export type UserPrefs = {
+type UserPrefs = {
   timezone?: string | null;
   date_format?: string | null;
   first_day_of_week?: number | null; // 0 or 1
@@ -49,3 +48,4 @@ export function useUserPrefs() {
 
   return { prefs, setPrefs, save, loading, saving, error };
 }
+

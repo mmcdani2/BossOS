@@ -1,6 +1,5 @@
 import { supabase } from "@/lib/supabase/client";
-
-export type ProfileUpdate = {
+type ProfileUpdate = {
   full_name?: string | null;
   onboarding_complete?: boolean;
   phone?: string | null;            // uses existing 'phone' column
@@ -26,3 +25,4 @@ export async function getMyProfile() {
   if (uerr || !user) return { data: null, error: uerr ?? new Error("No user") };
   return await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
 }
+

@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { createPortal } from "react-dom";
-
-export type UiOption = { label: string; value: string };
+type UiOption = { label: string; value: string };
 
 export default function UiSelect({
   value,
@@ -164,3 +163,4 @@ export default function UiSelect({
     </div>
   );
 }
+
