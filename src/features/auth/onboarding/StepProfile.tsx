@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { upsertProfile } from "@/lib/api/profiles";
 import { supabase } from "@/lib/supabase/client";
-import { GlassDropdown } from "@/ui/GlassDropdown";
+import GlassDropdown from "@/ui/GlassDropdown";
 
 const ALLOWED_ROLES = ["owner", "admin"] as const;
 type AllowedRole = (typeof ALLOWED_ROLES)[number];

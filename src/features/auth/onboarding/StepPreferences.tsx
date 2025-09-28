@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/lib/supabase/client";
 import { upsertProfile } from "@/lib/api/profiles";
 import { updateOrganization } from "@/lib/api/organizations";
-import { GlassDropdown } from "@/ui/GlassDropdown";
+import GlassDropdown from "@/ui/GlassDropdown";
 
 type Industry = "home-services" | "construction" | "field-services" | "other";
 type Currency = "USD" | "CAD" | "EUR" | "GBP";

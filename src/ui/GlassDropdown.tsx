@@ -1,8 +1,9 @@
+// src/ui/GlassDropdown.tsx
 import { useEffect, useRef, useState } from "react";
 
-type Option = { value: string; label: string };
+export type Option = { value: string; label: string };
 
-export function GlassDropdown({
+export default function GlassDropdown({
     id,
     name,
     value,
@@ -18,7 +19,6 @@ export function GlassDropdown({
     const [open, setOpen] = useState(false);
     const wrapRef = useRef<HTMLDivElement | null>(null);
 
-    // close on outside click
     useEffect(() => {
         const onDoc = (e: MouseEvent) => {
             if (!wrapRef.current?.contains(e.target as Node)) setOpen(false);
@@ -27,19 +27,12 @@ export function GlassDropdown({
         return () => document.removeEventListener("click", onDoc);
     }, []);
 
+    const label = options.find(o => o.value === value)?.label ?? "Select…";
+
     return (
         <div ref={wrapRef} className="relative w-full">
-            {/* hidden select for form compatibility */}
-            <select id={id}
-                name={name}
-                defaultValue={value}           // ← use defaultValue
-                hidden
-                aria-hidden="true"
-                tabIndex={-1}
-            >
-                {options.map(o => (
-                    <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
+            <select id={id} name={name} defaultValue={value} hidden aria-hidden="true" tabIndex={-1}>
+                {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
             </select>
 
             <button
@@ -50,7 +43,7 @@ export function GlassDropdown({
                 onClick={() => setOpen(v => !v)}
                 className="form-input form-input--center w-full relative cursor-pointer"
             >
-                <span className="block w-full text-center">{options.find(o => o.value === value)?.label}</span>
+                <span className="block w-full text-center">{label}</span>
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70">▾</span>
             </button>
 

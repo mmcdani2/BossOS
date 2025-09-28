@@ -110,7 +110,7 @@ export default function SignUp() {
             <button className="btn-primary" disabled={busy}>
               {busy ? "Sending…" : "Send Verification Link"}
             </button>
-              <div style={{ textAlign: "center" }}>
+              <div className="text-center">
                 <label className="auth-checkbox">
                   <input type="checkbox" disabled={busy} {...register("agree")} />
                   <span>
@@ -126,7 +126,7 @@ export default function SignUp() {
                 </label>
               </div>
               {errors.agree && (
-                <p className="auth-error">{errors.agree.message}</p>
+                <p className="auth-error text-center">{errors.agree.message}</p>
               )}
             <p className="auth-switch" style={{ textAlign: "center" }}>
               Already have an account?{" "}
