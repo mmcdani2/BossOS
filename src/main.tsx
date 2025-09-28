@@ -127,14 +127,9 @@ const Wip = ({ title }: { title: string }) => (
   <>
     <PageHeader />
     <div className="shell page-viewport">
-      <div
-        className="sticky-under-nav"
-        style={{ top: "calc(var(--nav-h) - 64px)" }}
-      >
         <GlassCard className="p-3">
           <ViewToolbar label={title} />
         </GlassCard>
-      </div>
       <div className="mt-4">
         <GlassCard className="p-6 text-white/70">Coming soon.</GlassCard>
       </div>

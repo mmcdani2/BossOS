@@ -120,15 +120,10 @@ export default function Settings() {
 
       {/* Page shell locked between header & bottom nav */}
       <div className="shell page-viewport" style={{ display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        {/* Sticky toolbar right under PageHeader */}
-        <div
-          className="sticky-under-nav"
-          style={{ top: "calc(var(--nav-h) - 64px)" }}
-        >
-          <GlassCard className="p-3">
-            <ViewToolbar label="Settings" />
-          </GlassCard>
-        </div>
+
+        <GlassCard className="p-3">
+          <ViewToolbar label="Settings" />
+        </GlassCard>
 
         {/* Two-pane layout (stacks on mobile) */}
         <div style={{ flex: 1, minHeight: 0 }}>
@@ -167,7 +162,7 @@ export default function Settings() {
 
             {/* RIGHT: selected group items */}
             <GlassCard className="p-0 overflow-hidden min-h-0">
-              <div className="overflow-auto scrollbar-hide" style={{ maxHeight: "100%" }}>
+              <div className="overflow-auto scrollbar-hidden" style={{ maxHeight: "100%" }}>
                 <div className="divide-y divide-white/10">
                   {selGroup.items.map((it) => (
                     <Link key={it.to} to={it.to} className="group block px-4 py-3">

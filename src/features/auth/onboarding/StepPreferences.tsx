@@ -48,9 +48,9 @@ export default function StepPreferences() {
   }
 
   return (
-    <form onSubmit={onFinish} className="auth-form">
+    <form onSubmit={onFinish} className="form">
       {err && (
-        <div className="auth-banner-error" role="alert" aria-live="polite">
+        <div className="form-banner--error" role="alert" aria-live="polite">
           Error: {err}
         </div>
       )}
@@ -102,12 +102,12 @@ export default function StepPreferences() {
       </div>
 
       <div className="auth-wizard-actions">
-        <button className="auth-btn-primary" disabled={busy}>
+        <button className="btn-primary" disabled={busy}>
           {busy ? "Saving…" : "Finish"}
         </button>
       </div>
-      <div className="auth-wizard-links justify-center mt-3">
-        <Link to="/onboarding/DONE" className="auth-link">
+      <div className="link text-center mt-3">
+        <Link to="/onboarding/DONE" className="link">
           Skip
         </Link>
       </div>

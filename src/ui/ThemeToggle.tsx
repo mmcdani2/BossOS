@@ -7,7 +7,7 @@ export default function ThemeToggle() {
     localStorage.setItem("theme", next);
   };
   return (
-    <button onClick={cycle} className="auth-btn-secondary" aria-label="Toggle theme">
+    <button onClick={cycle} className="btn-secondary" aria-label="Toggle theme">
       Toggle theme
     </button>
   );

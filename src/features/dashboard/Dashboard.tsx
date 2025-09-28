@@ -10,7 +10,7 @@ import { getOpenEstimatesValueInRange } from "@/lib/api/estimates";
 import { getJobsCountInRange } from "@/lib/api/jobs";
 import { getARBalanceInRange } from "@/lib/api/invoices";
 import { getLeadsCountInRange } from "@/lib/api/leads";
-import { DashboardKpiCard } from "@/ui/DashboardKpiCard";
+import { DashboardKpiCard } from "@/features/dashboard/DashboardKpiCard";
 
 function DashboardInner() {
   const { fromUtc, toUtc, refreshToken } = useDashboardFilters();
@@ -89,118 +89,115 @@ function DashboardInner() {
 
   return (
     <div className="shell">
-      {/* Sticky toolbar as a glass card */}
-      <div className="sticky-under-nav">
-        <div
-          className={[
-            "glass-panel",     
-            "relative",        
-            "text-basecolor",  
-            "rounded-2xl",     
-            "p-3 sm:p-4",           
-          ].join(" ")}
-        >
-          <ViewToolbar
-            label="Dashboard"
-            right={
-              <>
-                {/* hide horizontal scrollbar for the actions row */}
-                <style>{`.dash-toolbar::-webkit-scrollbar{display:none}`}</style>
+      <div
+        className={[
+          "glass-panel",
+          "relative",
+          "text-basecolor",
+          "rounded-2xl",
+          "p-3 sm:p-4",
+        ].join(" ")}
+      >
+        <ViewToolbar
+          label="Dashboard"
+          right={
+            <>
+              {/* hide horizontal scrollbar for the actions row */}
+              <style>{`.toolbar::-webkit-scrollbar{display:none}`}</style>
 
+              <div
+                className="toolbar flex items-center gap-1 sm:gap-2 min-w-0"
+                style={{ whiteSpace: "nowrap", overflowX: "auto" }}
+              >
+                {/* Preset group (single map, accessible radiogroup) */}
                 <div
-                  className="dash-toolbar flex items-center gap-1 sm:gap-2 min-w-0"
-                  style={{ whiteSpace: "nowrap", overflowX: "auto" }}
+                  role="radiogroup"
+                  aria-label="Date range"
+                  className="flex gap-1 sm:gap-1.5 rounded-2xl border border-token bg-surface-2 p-1 sm:p-1.5"
                 >
-                  {/* Preset group (single map, accessible radiogroup) */}
-                  <div
-                    role="radiogroup"
-                    aria-label="Date range"
-                    className="flex gap-1 sm:gap-1.5 rounded-2xl border border-token bg-surface-2 p-1 sm:p-1.5"
-                  >
-                    {PRESETS.map((p) => {
-                      const checked = preset === p.key;
-                      return (
-                        <button
-                          key={p.key}
-                          type="button"
-                          role="radio"
-                          aria-checked={checked}
-                          onClick={() => setPreset(p.key)}
-                          className={[
-                            "rounded-[9px] leading-none text-basecolor",
-                            "px-2 py-1 text-[11px]",
-                            "sm:px-2.5 sm:py-1.5 sm:text-xs",
-                            "transition-colors active:translate-y-px focus-visible:outline-none focus-visible:ring-token",
-                            checked
-                              ? "border border-token [background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]"
-                              : "border border-transparent bg-transparent hover:[background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]",
-                          ].join(" ")}
-                        >
-                          {p.label}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  {PRESETS.map((p) => {
+                    const checked = preset === p.key;
+                    return (
+                      <button
+                        key={p.key}
+                        type="button"
+                        role="radio"
+                        aria-checked={checked}
+                        onClick={() => setPreset(p.key)}
+                        className={[
+                          "rounded-[9px] leading-none text-basecolor",
+                          "px-2 py-1 text-[11px]",
+                          "sm:px-2.5 sm:py-1.5 sm:text-xs",
+                          "transition-colors active:translate-y-px focus-visible:outline-none focus-visible:ring-token",
+                          checked
+                            ? "border border-token [background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]"
+                            : "border border-transparent bg-transparent hover:[background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]",
+                        ].join(" ")}
+                      >
+                        {p.label}
+                      </button>
+                    );
+                  })}
+                </div>
 
-                  {/* Refresh */}
-                  <button
-                    onClick={refresh}
-                    title="Manual refresh"
-                    className="inline-flex items-center gap-1.5 sm:gap-2 rounded-[9px] leading-none
+                {/* Refresh */}
+                <button
+                  onClick={refresh}
+                  title="Manual refresh"
+                  className="inline-flex items-center gap-1.5 sm:gap-2 rounded-[9px] leading-none
                     px-2 py-1 text-[11px] sm:px-2.5 sm:py-1.5 sm:text-xs
                     text-basecolor border border-token bg-surface-2
                     hover:[background:color-mix(in_srgb,var(--surface-3)_92%,transparent)]
                     active:translate-y-px focus-visible:outline-none focus-visible:ring-token"
-                  >
-                    Refresh
-                  </button>
-                </div>
-              </>
-            }
+                >
+                  Refresh
+                </button>
+              </div>
+            </>
+          }
+        />
+
+        {/* small breathing room below the toolbar card */}
+        <div className="h-3" />
+
+        {error && <div className="dashboard-alert">{error}</div>}
+
+        <div className="grid">
+          <DashboardKpiCard
+            className="stat-card card--tile tile--a"
+            tone="a"
+            title="Open Estimates"
+            value={openEstimatesValue ?? 0}
+            previous={prevOpenEstimates}
+            format={(v) => `$${v.toLocaleString()}`}
           />
 
-          {/* small breathing room below the toolbar card */}
-          <div className="h-3" />
+          <DashboardKpiCard
+            className="stat-card card--tile tile--b"
+            tone="b"
+            title="Jobs"
+            value={jobsTodayCount ?? 0}
+            previous={prevJobsCount}
+          />
 
-          {error && <div className="dashboard-alert">{error}</div>}
+          <DashboardKpiCard
+            className="stat-card card--tile tile--c"
+            tone="c"
+            title="Invoices"
+            value={arBalance ?? 0}
+            previous={prevArBalance}
+            format={(v) => `$${v.toLocaleString()}`}
+          />
 
-          <div className="kpi-grid">
-            <DashboardKpiCard
-              className="kpi-card tile tile--a"
-              tone="a"
-              title="Open Estimates"
-              value={openEstimatesValue ?? 0}
-              previous={prevOpenEstimates}
-              format={(v) => `$${v.toLocaleString()}`}
-            />
+          <DashboardKpiCard
+            className="stat-card card--tile tile--d"
+            tone="d"
+            title="Leads"
+            value={leadsThisWeekCount ?? 0}
+            previous={prevLeadsCount}
+          />
+        </div>
 
-            <DashboardKpiCard
-              className="kpi-card tile tile--b"
-              tone="b"
-              title="Jobs"
-              value={jobsTodayCount ?? 0}
-              previous={prevJobsCount}
-            />
-
-            <DashboardKpiCard
-              className="kpi-card tile tile--c"
-              tone="c"
-              title="Invoices"
-              value={arBalance ?? 0}
-              previous={prevArBalance}
-              format={(v) => `$${v.toLocaleString()}`}
-            />
-
-            <DashboardKpiCard
-              className="kpi-card tile tile--d"
-              tone="d"
-              title="Leads"
-              value={leadsThisWeekCount ?? 0}
-              previous={prevLeadsCount}
-            />
-          </div>
-
-          </div>
       </div>
     </div>
   );

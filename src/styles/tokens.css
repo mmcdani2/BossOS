@@ -6,46 +6,23 @@
   --bottom-nav-h: 120px;
 
   /* Brand / accents */
-  --brand: #6366f1;                 /* primary brand (indigo-500) */
-  --brand-start: #f97316;           /* your gradient start (orange-500) */
-  --brand-end:   #ef4444;           /* your gradient end (red-500) */
-  --accent: #fb923c;                /* link/underline accent (orange-400) */
+  --brand: #6366f1; /* primary brand (indigo-500) */
+  --brand-start: #f97316; /* your gradient start (orange-500) */
+  --brand-end: #ef4444; /* your gradient end (red-500) */
+  --accent: #fb923c; /* link/underline accent (orange-400) */
 
   /* Core semantic palette (LIGHT) */
-  --bg: #ffffff;                    /* page canvas */
+  --bg: #ffffff; /* page canvas */
   --surface-1: rgba(246, 248, 252, 0.88);
   --surface-2: rgba(240, 244, 248, 0.88);
   --surface-3: #ffffff;
-  --panel: var(--surface-2);        /* card surface alias */
-  --text: #0b1220;                  /* near-black text */
-  --muted: rgba(11, 18, 32, 0.68);  /* subdued text */
+  --text: #0b1220; /* near-black text */
+  --muted: rgba(11, 18, 32, 0.68); /* subdued text */
 
   /* Separators / focus */
-  --border: rgba(11, 18, 32, 0.10);
-  --divider: rgba(11, 18, 32, 0.10);
-  --outline: rgba(11, 18, 32, 0.18);
+  --border: rgba(11, 18, 32, 0.1);
+  --divider: rgba(11, 18, 32, 0.1);
   --ring: rgba(20, 115, 230, 0.28); /* cool focus ring hint */
-
-  /* Glass defaults (light) */
-  --glass-bg: linear-gradient(
-    to bottom,
-    color-mix(in srgb, var(--surface-3) 92%, transparent) 0%,
-    color-mix(in srgb, var(--surface-3) 86%, transparent) 100%
-  );
-  --glass-stroke: color-mix(in srgb, #000 14%, transparent);
-  --glass-highlight: rgba(255, 255, 255, 0.65);
-  --glass-shadow: rgba(2, 10, 24, 0.10);
-
-  /* Shadows (light) */
-  --shadow-1: 0 8px 30px rgba(2, 10, 24, 0.08);
-  --shadow-2: 0 12px 40px rgba(2, 10, 24, 0.12);
-
-  /* Misc component tokens */
-  --auth-card-radius: 16px;
-
-  /* Optional FX (used by backgrounds) */
-  --fx-teal: rgba(34, 197, 194, 0.10);
-  --fx-navy: rgba(15, 23, 42, 0.10);
 
   /* UA hint */
   color-scheme: light;
@@ -55,18 +32,22 @@
 :root[data-theme="dark"] {
   /* Core palette (DARK) */
   --bg: #0b1220;
-  --surface-1: rgba(15, 23, 42, 0.60);
-  --surface-2: rgba(30, 41, 59, 0.50);
-  --surface-3: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-  --panel: #0a0f14;                  /* dark card base */
+  --surface-1: rgba(15, 23, 42, 0.6);
+  --surface-2: rgba(30, 41, 59, 0.5);
+  --surface-3: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.03)
+  );
+  --panel: #0a0f14; /* dark card base */
   --text: #e5e7eb;
-  --muted: rgba(226, 232, 240, 0.70);
+  --muted: rgba(226, 232, 240, 0.7);
 
   /* Separators / focus */
   --border: rgba(148, 163, 184, 0.25);
-  --divider: rgba(255,255,255,0.08);
-  --outline: rgba(255,255,255,0.16);
-  --ring: rgba(249, 115, 22, 0.50);   /* your warm ring in dark */
+  --divider: rgba(255, 255, 255, 0.08);
+  --outline: rgba(255, 255, 255, 0.16);
+  --ring: rgba(249, 115, 22, 0.5); /* your warm ring in dark */
 
   /* Glass (dark) */
   --glass-bg: color-mix(in srgb, var(--surface-3) 72%, transparent);
@@ -75,13 +56,8 @@
   --glass-shadow: rgba(0, 0, 0, 0.35);
 
   /* Shadows (dark) */
-  --shadow-1: 0 10px 30px rgba(0,0,0,0.35);
-  --shadow-2: 0 18px 50px rgba(0,0,0,0.45);
-
-  /* Additional accents used by tiles/glass */
-  --accent-teal: #38bdf8;
-  --accent-teal-glow: rgba(56, 189, 248, 0.35);
+  --shadow-1: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-2: 0 18px 50px rgba(0, 0, 0, 0.45);
 
   color-scheme: dark;
 }
-

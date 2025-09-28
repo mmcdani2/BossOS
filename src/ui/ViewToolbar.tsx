@@ -10,7 +10,7 @@ export default function ViewToolbar({
 }) {
   return (
     <div
-      className="dash-toolbar min-h-12"
+      className="toolbar min-h-12"
       style={{
         display: "grid",
         gridTemplateColumns: "minmax(0,1fr) auto",
@@ -47,7 +47,7 @@ export default function ViewToolbar({
         }}
       >
         {/* hide webkit scrollbar */}
-        <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
+        <style>{`.toolbar > div::-webkit-scrollbar{display:none}`}</style>
         {right}
       </div>
     </div>

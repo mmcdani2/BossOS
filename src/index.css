@@ -1,34 +1,24 @@
-﻿/* src/index.css â€” BossOS core */
-@import "tailwindcss";
-/* ---------------- Core ---------------- */
-@import "./tokens.css";
-@import "./base.css";
-@import "./layout.css";
+﻿@import "tailwindcss";
 
-/* ---------------- Components ---------------- */
-@import "./buttons.css";
-@import "./forms.css";
-@import "./tables.css";
-@import "./cards.css";
-@import "./nav.css";
-@import "./toolbar.css";
-@import "./overlays.css";
-@import "./banners-toasts.css";
-@import "./charts.css";
-@import "./calendars-pickers.css";
+/* Core */
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/typography.css";
 
-/* ---------------- Feature / Utility ---------------- */
-@import "./glass.css";
-@import "./auth.css";
-@import "./user-menu.css";
-@import "./utilities.css";
+/* New Components & Layout */
+@import "./styles/skins.css";
+@import "./styles/theming.css";  
+@import "./styles/layout.css";
+@import "./styles/buttons.css";
+@import "./styles/forms.css";
+@import "./styles/tables.css";
+@import "./styles/cards.css";
+@import "./styles/nav.css";
+@import "./styles/toolbar.css";
+@import "./styles/overlays.css";
+@import "./styles/banners-toasts.css";
+@import "./styles/charts.css";
+@import "./styles/calendars-pickers.css";
 
-/* ---------------- Optional Layers ---------------- */
-@import "./pwa.css";
-@import "./print.css";
-@import "./accessibility.css";
-@import "./theming.css";
-@import "./animations.css";
-@import "./vendor-overrides.css";
-
-
+/* Feature / Utility */
+@import "./styles/utilities.css";

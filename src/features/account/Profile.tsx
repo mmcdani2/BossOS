@@ -37,10 +37,7 @@ export default function Profile() {
       <PageHeader />
       <div className="shell page-viewport">
         {/* Toolbar */}
-        <div
-          className="sticky-under-nav"
-          style={{ top: "calc(var(--nav-h) - 64px)" }}
-        >
+
           <GlassCard className="p-3">
             <ViewToolbar
               label="Profile"
@@ -55,7 +52,6 @@ export default function Profile() {
               }
             />
           </GlassCard>
-        </div>
 
         {/* Form */}
         <div className="mt-4 grid gap-4 md:grid-cols-2">

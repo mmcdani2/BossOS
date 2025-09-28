@@ -184,8 +184,8 @@ export default function UserMenu() {
   const getItems = () =>
     panelRef.current
       ? Array.from(
-          panelRef.current.querySelectorAll<HTMLElement>('[data-mi="1"]')
-        )
+        panelRef.current.querySelectorAll<HTMLElement>('[data-mi="1"]')
+      )
       : [];
 
   const onPanelKeyDown = (e: React.KeyboardEvent) => {
@@ -235,7 +235,7 @@ export default function UserMenu() {
       {/* Avatar-only trigger (circle) */}
       <button
         type="button"
-        className="um-trigger um-trigger--icon"
+        className="avatar-btn avatar-btn--icon"
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
@@ -243,7 +243,7 @@ export default function UserMenu() {
         aria-label={open ? "Close account menu" : "Open account menu"}
         ref={triggerRef}
       >
-        <span className="um-avatar">
+        <span className="avatar">
           {avatarUrl ? <img src={avatarUrl} alt="" /> : initials}
         </span>
       </button>
@@ -254,21 +254,21 @@ export default function UserMenu() {
             id="account-menu"
             ref={panelRef}
             role="menu"
-            className="um-panel"
+            className="popover-panel"
             onKeyDown={onPanelKeyDown}
           >
             {/* Header */}
-            <div className="um-header">
-              <span className="um-avatar um-avatar--lg">
+            <div className="menu-header">
+              <span className="avatar avatar--lg">
                 {avatarUrl ? <img src={avatarUrl} alt="" /> : initials}
               </span>
-              <div className="um-header-text">
-                <div className="um-header-name">{displayName}</div>
-                <div className="um-header-email">{email}</div>
+              <div className="menu-header-text">
+                <div className="menu-header-name">{displayName}</div>
+                <div className="menu-header-email">{email}</div>
               </div>
               <button
                 aria-label="Close"
-                className="um-close"
+                className="menu-close"
                 onClick={() => setOpen(false)}
                 data-mi="1"
               >
@@ -279,17 +279,16 @@ export default function UserMenu() {
             {/* Organizations (if more than 1) */}
             {orgs.length > 1 && (
               <>
-                <div className="um-section-label">Organizations</div>
-                <div className="um-list">
+                <div className="menu-section-label-label">Organizations</div>
+                <div className="menu">
                   {orgs.map((o) => {
                     const name = o.organizations?.[0]?.name ?? o.org_id;
                     const selected = orgId === o.org_id;
                     return (
                       <button
                         key={o.org_id}
-                        className={`um-item ${
-                          selected ? "um-item--active" : ""
-                        }`}
+                        className={`menu-item ${selected ? "menu-item--active" : ""
+                          }`}
                         role="menuitemradio"
                         aria-checked={selected}
                         onClick={() => {
@@ -299,26 +298,25 @@ export default function UserMenu() {
                         data-mi="1"
                       >
                         <span
-                          className={`um-radio ${
-                            selected ? "um-radio--on" : ""
-                          }`}
+                          className={`menu-radio ${selected ? "menu-radio--on" : ""
+                            }`}
                           aria-hidden
                         />
-                        <span className="um-item-text">{name}</span>
-                        <span className="um-item-caret">›</span>
+                        <span className="menu-item-text">{name}</span>
+                        <span className="menu-item-caret">›</span>
                       </button>
                     );
                   })}
                 </div>
-                <hr className="um-sep" />
+                <hr className="menu-separator" />
               </>
             )}
 
             {/* ===== Accordion Sections (single-open) ===== */}
-            <div className="um-accordion">
+            <div className="menu-accordion">
               {/* Account */}
               <button
-                className="um-acc-header"
+                className="menu-acc-header"
                 aria-controls="acc-account"
                 aria-expanded={sections.account}
                 onClick={() => onToggle("account")}
@@ -327,48 +325,47 @@ export default function UserMenu() {
                 data-acc-key="account"
                 role="menuitem"
               >
-                <span className="um-acc-title">Account</span>
+                <span className="menu-acc-title">Account</span>
                 <span
-                  className={`um-acc-caret ${
-                    sections.account ? "um-acc-caret--open" : ""
-                  }`}
+                  className={`menu-acc-caret ${sections.account ? "menu-acc-caret--open" : ""
+                    }`}
                 >
                   ▾
                 </span>
               </button>
               <div id="acc-account" role="group" hidden={!sections.account}>
-                <div className="um-list">
+                <div className="menu">
                   <Link
                     to="/account/profile"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                     onClick={() => setOpen(false)} // remove preventDefault
                   >
-                    <span className="um-item-text">Profile</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">Profile</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                   <Link
                     to="/account/preferences"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                     onClick={() => setOpen(false)} // remove preventDefault
                   >
-                    <span className="um-item-text">Preferences</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">Preferences</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                   <Link
                     to="/account/settings"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     onClick={() => setOpen(false)}
                   >
-                    <span className="um-item-text">Settings</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">Settings</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                   <button
-                    className="um-item um-item--danger"
+                    className="menu-item menu-item--danger"
                     onClick={() => {
                       setOpen(false);
                       void signOut();
@@ -376,15 +373,15 @@ export default function UserMenu() {
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">Sign out</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">Sign out</span>
+                    <span className="menu-item-caret">›</span>
                   </button>
                 </div>
               </div>
 
               {/* Work */}
               <button
-                className="um-acc-header"
+                className="menu-acc-header"
                 aria-controls="acc-work"
                 aria-expanded={sections.work}
                 onClick={() => onToggle("work")}
@@ -393,43 +390,42 @@ export default function UserMenu() {
                 data-acc-key="work"
                 role="menuitem"
               >
-                <span className="um-acc-title">Work</span>
+                <span className="menu-acc-title">Work</span>
                 <span
-                  className={`um-acc-caret ${
-                    sections.work ? "um-acc-caret--open" : ""
-                  }`}
+                  className={`menu-acc-caret ${sections.work ? "menu-acc-caret--open" : ""
+                    }`}
                 >
                   ▾
                 </span>
               </button>
               <div id="acc-work" role="group" hidden={!sections.work}>
-                <div className="um-list">
+                <div className="menu">
                   <Link
                     to="/jobs"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">My Jobs</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">My Jobs</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                   <Link
                     to="/tasks"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">My Tasks</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">My Tasks</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                   <Link
                     to="/activity"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">Activity Feed</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">Activity Feed</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                 </div>
               </div>
@@ -438,7 +434,7 @@ export default function UserMenu() {
               {isAdmin && (
                 <>
                   <button
-                    className="um-acc-header"
+                    className="menu-acc-header"
                     aria-controls="acc-company"
                     aria-expanded={sections.company}
                     onClick={() => onToggle("company")}
@@ -447,43 +443,42 @@ export default function UserMenu() {
                     data-acc-key="company"
                     role="menuitem"
                   >
-                    <span className="um-acc-title">Company</span>
+                    <span className="menu-acc-title">Company</span>
                     <span
-                      className={`um-acc-caret ${
-                        sections.company ? "um-acc-caret--open" : ""
-                      }`}
+                      className={`menu-acc-caret ${sections.company ? "menu-acc-caret--open" : ""
+                        }`}
                     >
                       ▾
                     </span>
                   </button>
                   <div id="acc-company" role="group" hidden={!sections.company}>
-                    <div className="um-list">
+                    <div className="menu">
                       <Link
                         to="/admin/team"
-                        className="um-item"
+                        className="menu-item"
                         role="menuitem"
                         data-mi="1"
                       >
-                        <span className="um-item-text">Team Management</span>
-                        <span className="um-item-caret">›</span>
+                        <span className="menu-item-text">Team Management</span>
+                        <span className="menu-item-caret">›</span>
                       </Link>
                       <Link
                         to="/admin/settings"
-                        className="um-item"
+                        className="menu-item"
                         role="menuitem"
                         data-mi="1"
                       >
-                        <span className="um-item-text">Company Settings</span>
-                        <span className="um-item-caret">›</span>
+                        <span className="menu-item-text">Company Settings</span>
+                        <span className="menu-item-caret">›</span>
                       </Link>
                       <Link
                         to="/admin/integrations"
-                        className="um-item"
+                        className="menu-item"
                         role="menuitem"
                         data-mi="1"
                       >
-                        <span className="um-item-text">Integrations</span>
-                        <span className="um-item-caret">›</span>
+                        <span className="menu-item-text">Integrations</span>
+                        <span className="menu-item-caret">›</span>
                       </Link>
                     </div>
                   </div>
@@ -492,7 +487,7 @@ export default function UserMenu() {
 
               {/* Support */}
               <button
-                className="um-acc-header"
+                className="menu-acc-header"
                 aria-controls="acc-support"
                 aria-expanded={sections.support}
                 onClick={() => onToggle("support")}
@@ -501,41 +496,40 @@ export default function UserMenu() {
                 data-acc-key="support"
                 role="menuitem"
               >
-                <span className="um-acc-title">Support</span>
+                <span className="menu-acc-title">Support</span>
                 <span
-                  className={`um-acc-caret ${
-                    sections.support ? "um-acc-caret--open" : ""
-                  }`}
+                  className={`menu-acc-caret ${sections.support ? "menu-acc-caret--open" : ""
+                    }`}
                 >
                   ▾
                 </span>
               </button>
               <div id="acc-support" role="group" hidden={!sections.support}>
-                <div className="um-list">
+                <div className="menu">
                   <Link
                     to="/help"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">Help</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">Help</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                   <Link
                     to="/whats-new"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">What’s New</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">What’s New</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                 </div>
               </div>
 
               {/* Growth */}
               <button
-                className="um-acc-header"
+                className="menu-acc-header"
                 aria-controls="acc-growth"
                 aria-expanded={sections.growth}
                 onClick={() => onToggle("growth")}
@@ -544,55 +538,54 @@ export default function UserMenu() {
                 data-acc-key="growth"
                 role="menuitem"
               >
-                <span className="um-acc-title">Growth</span>
+                <span className="menu-acc-title">Growth</span>
                 <span
-                  className={`um-acc-caret ${
-                    sections.growth ? "um-acc-caret--open" : ""
-                  }`}
+                  className={`menu-acc-caret ${sections.growth ? "menu-acc-caret--open" : ""
+                    }`}
                 >
                   ▾
                 </span>
               </button>
               <div id="acc-growth" role="group" hidden={!sections.growth}>
-                <div className="um-list">
+                <div className="menu">
                   <Link
                     to="/billing"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">
+                    <span className="menu-item-text">
                       Billing & Subscriptions
                     </span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                   <Link
                     to="/refer"
-                    className="um-item"
+                    className="menu-item"
                     role="menuitem"
                     data-mi="1"
                   >
-                    <span className="um-item-text">Refer a Friend</span>
-                    <span className="um-item-caret">›</span>
+                    <span className="menu-item-text">Refer a Friend</span>
+                    <span className="menu-item-caret">›</span>
                   </Link>
                 </div>
               </div>
             </div>
 
             {/* Support contact pinned at bottom */}
-            <div className="um-support">
-              <div className="um-support-title">Customer Support</div>
-              <div className="um-support-contacts">
+            <div className="menu-support">
+              <div className="menu-support-title">Customer Support</div>
+              <div className="menu-support-contacts">
                 <a
                   href="tel:+18776710153"
-                  className="um-support-phone"
+                  className="menu-support-phone"
                   data-mi="1"
                 >
                   (877) 671-0153
                 </a>
                 <a
                   href="mailto:support@bossos.app"
-                  className="um-support-email"
+                  className="menu-support-email"
                   data-mi="1"
                 >
                   support@bossos.app

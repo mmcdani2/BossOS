@@ -31,28 +31,22 @@ export default function Inventory() {
 
       <section className="w-full">
         <div className="shell page-viewport">
-          {/* Toolbar #1 — glass, sticky under PageHeader */}
-          <div
-            className="sticky-under-nav"
-            style={{ top: "calc(var(--nav-h) - 64px)" }}
-          >
-            <GlassCard className="p-3">
-              <ViewToolbar
-                label="Inventory"
-                right={
-                  <button
-                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
+          <GlassCard className="p-3">
+            <ViewToolbar
+              label="Inventory"
+              right={
+                <button
+                  className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
                                border border-white/20 bg-white/10 hover:bg-white/15 hover:border-white/30
                                active:translate-y-px inline-flex items-center gap-2"
-                    title="Add Item"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span className="sr-only">Add Item</span>
-                  </button>
-                }
-              />
-            </GlassCard>
-          </div>
+                  title="Add Item"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">Add Item</span>
+                </button>
+              }
+            />
+          </GlassCard>
 
           {/* Toolbar #2 — search + filters, sticky below toolbar #1 */}
           <div
@@ -77,7 +71,7 @@ export default function Inventory() {
                   }
                   right={
                     <>
-                      <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
+                      <style>{`.toolbar > div::-webkit-scrollbar{display:none}`}</style>
                       <div
                         className="flex items-center gap-2 min-w-0 justify-end"
                         style={{ whiteSpace: "nowrap", overflowX: "auto" }}
@@ -173,12 +167,12 @@ export default function Inventory() {
 
           {/* Inventory list — reuse Jobs' chrome for rounded bottom + hidden scrollbar */}
           <div
-            className="jobs-container mt-8"
+            className="panel mt-8"
             style={{ flex: 1, minHeight: 0 }}
           >
-            <div className="jobs-scroll">
+            <div className="panel-scroll">
               {/* Sticky header inside the scroller */}
-              <div className="jobs-header hidden md:grid grid-cols-[1fr_160px_120px_160px]">
+              <div className="panel-header panel-header--frost hidden md:grid grid-cols-[1fr_160px_120px_160px]">
                 <div className="px-4 py-2 text-white/60">Item</div>
                 <div className="px-4 py-2 text-white/60">SKU</div>
                 <div className="px-4 py-2 text-white/60">On Hand</div>

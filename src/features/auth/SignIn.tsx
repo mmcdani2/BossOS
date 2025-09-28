@@ -46,13 +46,13 @@ export default function SignIn() {
   }
 
   return (
-    <div className="auth-center app-bg app-ambient">
-      <div className="auth-card glass-panel">
+    <div className="page-center app-bg app-ambient">
+      <div className="card card--compact-xs glass-panel">
         <div className="text-center mb-6 sm:mb-8">
           <Logo />
-          <h1 className="auth-title">Run your business like a boss!</h1>
+          <h1 className="title">Run your business like a boss!</h1>
           {!sent && (
-            <p className="auth-subtext">Sign in to access your dashboard</p>
+            <p className="subtext">Sign in to access your dashboard</p>
           )}
         </div>
 
@@ -64,18 +64,18 @@ export default function SignIn() {
             >
               Check your email
             </h2>
-            <p className="auth-subtext">
+            <p className="subtext">
               We sent a link to <b style={{ color: "var(--text)" }}>{email}</b>.
               You can close this tab after signing in.
             </p>
           </div>
         ) : (
-          <form onSubmit={submit} className="auth-form">
-            {err && <div className="auth-banner-error">Error: {err}</div>}
+          <form onSubmit={submit} className="form">
+            {err && <div className="form-banner--error">Error: {err}</div>}
 
             <div className="relative">
               <input
-                className="auth-input auth-input--center"
+                className="form-input form-input--center"
                 type="email"
                 inputMode="email"
                 autoComplete="email"
@@ -86,13 +86,13 @@ export default function SignIn() {
               />
             </div>
 
-            <button type="submit" disabled={busy} className="auth-btn-primary">
+            <button type="submit" disabled={busy} className="btn-primary">
               {busy ? "Sending…" : "Send Verification Link"}
             </button>
 
-            <p className="auth-switch" style={{ textAlign: "center" }}>
+              <p className="text-muted text-center mt-[10px]">
               Don’t have an account?{" "}
-              <Link to="/register" className="auth-link">
+              <Link to="/register" className="link">
                 Register now
               </Link>
             </p>

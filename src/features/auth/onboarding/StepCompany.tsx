@@ -174,7 +174,7 @@ export default function StepCompany() {
           aria-controls={`${id}-listbox`}
           onClick={() => setOpen((v) => !v)}
           onKeyDown={onKeyDown}
-          className="auth-input auth-input--center w-full relative cursor-pointer"
+          className="form-input form-input--center w-full relative cursor-pointer"
         >
           <span className="block w-full text-center">{label}</span>
           <span className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70" aria-hidden>▾</span>
@@ -212,9 +212,9 @@ export default function StepCompany() {
 
 
   return (
-    <form onSubmit={handleSubmit} className="auth-form" noValidate>
+    <form onSubmit={handleSubmit} className="form" noValidate>
       {err && (
-        <div className="auth-banner-error" role="alert" aria-live="polite">
+        <div className="form-banner--error" role="alert" aria-live="polite">
           {err}
         </div>
       )}
@@ -224,7 +224,7 @@ export default function StepCompany() {
           id="org-name"
           name="organization"
           autoComplete="organization"
-          className="auth-input auth-input--center"
+          className="form-input form-input--center"
           placeholder="Enter Your Company Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -246,12 +246,12 @@ export default function StepCompany() {
       </div>
 
       <div className="auth-wizard-actions mt-6">
-        <button className="auth-btn-primary" disabled={busy || !name.trim()}>
+        <button className="btn-primary" disabled={busy || !name.trim()}>
           {busy ? "Creating…" : "Continue"}
         </button>
       </div>
-      <div className="auth-wizard-links justify-center mt-3">
-        <Link to="/onboarding/preferences" className="auth-link">
+      <div className="link text-center mt-3">
+        <Link to="/onboarding/preferences" className="link">
           Skip
         </Link>
       </div>

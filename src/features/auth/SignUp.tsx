@@ -56,13 +56,13 @@ export default function SignUp() {
   }
 
   return (
-    <div className="auth-center app-bg app-ambient">
-      <div className="auth-card glass-surface">
+    <div className="page-center app-bg app-ambient">
+      <div className="card card--compact-xs glass-panel">
         <div className="text-center mb-6 sm:mb-8">
           <Logo />
-          <h1 className="auth-title">Create your account</h1>
+          <h1 className="title">Create your account</h1>
           {!sent && (
-            <p className="auth-subtext">
+            <p className="subtext">
               We’ll send a verification link to your email.
             </p>
           )}
@@ -76,19 +76,19 @@ export default function SignUp() {
             >
               Check your email
             </h2>
-            <p className="auth-subtext">
+            <p className="subtext">
               We’ve sent a magic link to complete your sign up.
             </p>
             <p className="auth-switch" style={{ textAlign: "center" }}>
               Already have an account?{" "}
-              <Link className="auth-link" to="/signin">
+              <Link className="link" to="/signin">
                 Back to sign in
               </Link>
             </p>
           </div>
         ) : (
-          <form className="auth-form" onSubmit={handleSubmit(onSubmit)}>
-            {err && <div className="auth-banner-error">Error: {err}</div>}
+          <form className="form" onSubmit={handleSubmit(onSubmit)}>
+            {err && <div className="form-banner--error">Error: {err}</div>}
 
             <div className="relative">
               <input
@@ -97,7 +97,7 @@ export default function SignUp() {
                 placeholder="you@company.com"
                 disabled={busy}
                 {...register("email")}
-                className="auth-input auth-input--center"
+                className="form-input form-input--center"
                 autoComplete="email"
                 inputMode="email"
                 required
@@ -107,32 +107,30 @@ export default function SignUp() {
               )}
             </div>
 
-            <div style={{ textAlign: "center" }}>
-              <label className="auth-checkbox">
-                <input type="checkbox" disabled={busy} {...register("agree")} />
-                <span>
-                  I agree to the{" "}
-                  <Link className="auth-link" to="/terms">
-                    Terms
-                  </Link>{" "}
-                  &{" "}
-                  <Link className="auth-link" to="/privacy">
-                    Privacy
-                  </Link>
-                </span>
-              </label>
-            </div>
-            {errors.agree && (
-              <p className="auth-error">{errors.agree.message}</p>
-            )}
-
-            <button className="auth-btn-primary" disabled={busy}>
+            <button className="btn-primary" disabled={busy}>
               {busy ? "Sending…" : "Send Verification Link"}
             </button>
-
+              <div style={{ textAlign: "center" }}>
+                <label className="auth-checkbox">
+                  <input type="checkbox" disabled={busy} {...register("agree")} />
+                  <span>
+                    I agree to the{" "}
+                    <Link className="link" to="/terms">
+                      Terms
+                    </Link>{" "}
+                    &{" "}
+                    <Link className="link" to="/privacy">
+                      Privacy
+                    </Link>
+                  </span>
+                </label>
+              </div>
+              {errors.agree && (
+                <p className="auth-error">{errors.agree.message}</p>
+              )}
             <p className="auth-switch" style={{ textAlign: "center" }}>
               Already have an account?{" "}
-              <Link className="auth-link" to="/signin">
+              <Link className="link" to="/signin">
                 Sign in
               </Link>
             </p>

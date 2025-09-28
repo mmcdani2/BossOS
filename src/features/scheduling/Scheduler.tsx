@@ -105,65 +105,59 @@ export default function Scheduler() {
       <PageHeader />
 
       <div className="shell page-viewport">
-        {/* === Toolbar as a GlassCard (sticky under PageHeader) === */}
-        <div
-          className="sticky-under-nav"
-          style={{ top: "calc(var(--nav-h) - 64px)" }} // pull it up by 24px
-        >
-          <GlassCard accent="teal" padding="sm" className="p-3">
-            <ViewToolbar
-              label="Scheduler"
-              right={
-                <div className="flex items-center gap-2">
-                  {/* Prev/Next buttons grouped */}
-                  <div className="flex gap-1.5 rounded-2xl border border-white/20 bg-white/5 p-1.5">
-                    <button
-                      aria-label="Previous week"
-                      onClick={() => setAnchor(addDays(anchor, -7))}
-                      className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-300
-                               hover:bg-white/5 hover:text-slate-200 active:translate-y-px"
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </button>
-                    <button
-                      aria-label="Next week"
-                      onClick={() => setAnchor(addDays(anchor, 7))}
-                      className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-300
-                               hover:bg-white/5 hover:text-slate-200 active:translate-y-px"
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </button>
-                  </div>
-
-                  {/* Date range */}
-                  <div className="text-sm text-white/80 tabular-nums">
-                    {format(days[0], "MMM d")} –{" "}
-                    {format(days[6], "MMM d, yyyy")}
-                  </div>
-
-                  {/* New Job button */}
+        <GlassCard accent="teal" padding="sm" className="p-3">
+          <ViewToolbar
+            label="Scheduler"
+            right={
+              <div className="flex items-center gap-2">
+                {/* Prev/Next buttons grouped */}
+                <div className="flex gap-1.5 rounded-2xl border border-white/20 bg-white/5 p-1.5">
                   <button
-                    onClick={() =>
-                      createQuick(new Date(), new Date().getHours())
-                    }
-                    title="New Job"
-                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
-                             border border-white/20 bg-white/10 hover:bg-white/15 hover:border-white/30
-                             active:translate-y-px"
+                    aria-label="Previous week"
+                    onClick={() => setAnchor(addDays(anchor, -7))}
+                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-300
+                               hover:bg-white/5 hover:text-slate-200 active:translate-y-px"
                   >
-                    <Plus className="h-4 w-4" />
-                    <span className="sr-only">New Job</span>
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <button
+                    aria-label="Next week"
+                    onClick={() => setAnchor(addDays(anchor, 7))}
+                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-300
+                               hover:bg-white/5 hover:text-slate-200 active:translate-y-px"
+                  >
+                    <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
-              }
-            />
-          </GlassCard>
-        </div>
+
+                {/* Date range */}
+                <div className="text-sm text-white/80 tabular-nums">
+                  {format(days[0], "MMM d")} –{" "}
+                  {format(days[6], "MMM d, yyyy")}
+                </div>
+
+                {/* New Job button */}
+                <button
+                  onClick={() =>
+                    createQuick(new Date(), new Date().getHours())
+                  }
+                  title="New Job"
+                  className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
+                             border border-white/20 bg-white/10 hover:bg-white/15 hover:border-white/30
+                             active:translate-y-px"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">New Job</span>
+                </button>
+              </div>
+            }
+          />
+        </GlassCard>
 
         {/* === Schedule grid as a SEPARATE CARD === */}
-        <div className="schedule-container min-h-0 mt-4" style={{ flex: 1 }}>
+        <div className="panel mt-4" style={{ flex: 1 }}>
           <div
-            className="schedule-header grid"
+            className="panel-header panel-header--frost grid"
             style={{ gridTemplateColumns: COLS }}
           >
             <div className="px-3 py-2 text-xs text-white/60 border-b border-white/10">
@@ -181,7 +175,7 @@ export default function Scheduler() {
           </div>
 
           <div
-            className="schedule-scroll grid"
+            className="panel-scroll grid"
             style={{ gridTemplateColumns: COLS }}
           >
             {HOURS.map((h) => (

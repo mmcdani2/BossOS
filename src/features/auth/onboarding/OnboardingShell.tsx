@@ -11,13 +11,13 @@ export default function OnboardingShell() {
   );
 
   return (
-    <div className="auth-center app-bg app-ambient">
-      <div className="auth-card glass-surface">
+    <div className="page-center app-bg app-ambient">
+      <div className="card card--compact-xs glass-panel">
         {!isDone && (
           <div className="text-center mb-6 sm:mb-8">
             <Logo />
-            <h1 className="auth-title">Let’s get you set up</h1>
-            <p className="auth-subtext">A few quick steps to personalize your workspace.</p>
+            <h1 className="title">Let’s get you set up</h1>
+            <p className="subtext">A few quick steps to personalize your workspace.</p>
           </div>
         )}
 

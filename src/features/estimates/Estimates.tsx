@@ -18,10 +18,10 @@ export default function Estimates() {
     status: (i % 4 === 0
       ? "Draft"
       : i % 4 === 1
-      ? "Sent"
-      : i % 4 === 2
-      ? "Accepted"
-      : "Declined") as EstimateStatus,
+        ? "Sent"
+        : i % 4 === 2
+          ? "Accepted"
+          : "Declined") as EstimateStatus,
   }));
 
   const fmtMoney = (n: number) => `$${n.toLocaleString()}`;
@@ -33,28 +33,23 @@ export default function Estimates() {
 
       <section className="w-full">
         <div className="shell page-viewport">
-          {/* Toolbar #1 — glass look, sticky under header */}
-          <div
-            className="sticky-under-nav"
-            style={{ top: "calc(var(--nav-h) - 64px)" }}
-          >
-            <GlassCard className="p-3">
-              <ViewToolbar
-                label="Estimates"
-                right={
-                  <button
-                    title="New Estimate"
-                    className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
+
+          <GlassCard className="p-3">
+            <ViewToolbar
+              label="Estimates"
+              right={
+                <button
+                  title="New Estimate"
+                  className="px-2.5 py-1.5 text-xs leading-none rounded-[9px] text-slate-200
                                border border-white/20 bg-white/10 hover:bg-white/15 hover:border-white/30
                                active:translate-y-px inline-flex items-center gap-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    <span className="sr-only">New Estimate</span>
-                  </button>
-                }
-              />
-            </GlassCard>
-          </div>
+                >
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">New Estimate</span>
+                </button>
+              }
+            />
+          </GlassCard>
 
           {/* Toolbar #2 — Search + Filters (glass). Sticky under toolbar #1 */}
           <div
@@ -80,7 +75,7 @@ export default function Estimates() {
                   }
                   right={
                     <>
-                      <style>{`.dash-toolbar > div::-webkit-scrollbar{display:none}`}</style>
+                      <style>{`.toolbar > div::-webkit-scrollbar{display:none}`}</style>
                       <div
                         className="flex items-center gap-2 min-w-0 justify-end"
                         style={{ whiteSpace: "nowrap", overflowX: "auto" }}
@@ -145,12 +140,12 @@ export default function Estimates() {
 
           {/* Estimates list (reuse Jobs’ scroll chrome) */}
           <div
-            className="jobs-container mt-8"
+            className="panel mt-8"
             style={{ flex: 1, minHeight: 0 }}
           >
-            <div className="jobs-scroll">
+            <div className="panel-scroll">
               {/* Sticky header INSIDE the scroller, like Jobs */}
-              <div className="jobs-header hidden md:grid grid-cols-[1fr_140px_160px_160px_120px]">
+              <div className="panel-header panel-header--frost hidden md:grid grid-cols-[1fr_140px_160px_160px_120px]">
                 <div className="px-4 py-2 text-white/60">Estimate</div>
                 <div className="px-4 py-2 text-white/60">Date</div>
                 <div className="px-4 py-2 text-white/60">Amount</div>
@@ -168,15 +163,14 @@ export default function Estimates() {
                         <div className="truncate text-white">{r.title}</div>
                       </div>
                       <span
-                        className={`ml-auto shrink-0 inline-flex items-center rounded-md px-2 py-0.5 text-[11px] border ${
-                          r.status === "Accepted"
-                            ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
-                            : r.status === "Declined"
+                        className={`ml-auto shrink-0 inline-flex items-center rounded-md px-2 py-0.5 text-[11px] border ${r.status === "Accepted"
+                          ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+                          : r.status === "Declined"
                             ? "border-rose-400/40 bg-rose-400/10 text-rose-200"
                             : r.status === "Sent"
-                            ? "border-sky-400/40 bg-sky-400/10 text-sky-200"
-                            : "border-zinc-400/40 bg-zinc-400/10 text-zinc-200"
-                        }`}
+                              ? "border-sky-400/40 bg-sky-400/10 text-sky-200"
+                              : "border-zinc-400/40 bg-zinc-400/10 text-zinc-200"
+                          }`}
                       >
                         {r.status}
                       </span>
@@ -211,15 +205,14 @@ export default function Estimates() {
                     </div>
                     <div className="px-4 py-3 border-b border-white/10">
                       <span
-                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs border ${
-                          r.status === "Accepted"
-                            ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
-                            : r.status === "Declined"
+                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-xs border ${r.status === "Accepted"
+                          ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-200"
+                          : r.status === "Declined"
                             ? "border-rose-400/40 bg-rose-400/10 text-rose-200"
                             : r.status === "Sent"
-                            ? "border-sky-400/40 bg-sky-400/10 text-sky-200"
-                            : "border-zinc-400/40 bg-zinc-400/10 text-zinc-200"
-                        }`}
+                              ? "border-sky-400/40 bg-sky-400/10 text-sky-200"
+                              : "border-zinc-400/40 bg-zinc-400/10 text-zinc-200"
+                          }`}
                       >
                         {r.status}
                       </span>

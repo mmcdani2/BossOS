@@ -48,7 +48,7 @@ export function GlassDropdown({
                 aria-expanded={open}
                 aria-controls={`${id}-listbox`}
                 onClick={() => setOpen(v => !v)}
-                className="auth-input auth-input--center w-full relative cursor-pointer"
+                className="form-input form-input--center w-full relative cursor-pointer"
             >
                 <span className="block w-full text-center">{options.find(o => o.value === value)?.label}</span>
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 opacity-70">▾</span>

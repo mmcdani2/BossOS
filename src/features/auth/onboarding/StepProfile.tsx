@@ -60,9 +60,9 @@ export default function StepProfile() {
   }
 
   return (
-    <form onSubmit={onNext} className="auth-form">
+    <form onSubmit={onNext} className="form">
       {err && (
-        <div className="auth-banner-error" role="alert" aria-live="polite">
+        <div className="form-banner--error" role="alert" aria-live="polite">
           Error: {err}
         </div>
       )}
@@ -70,7 +70,7 @@ export default function StepProfile() {
       {/* Name (optional) */}
       <div className="relative">
         <input
-          className="auth-input auth-input--center"
+          className="form-input form-input--center"
           placeholder="Your name (optional)"
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -96,7 +96,7 @@ export default function StepProfile() {
       {/* Phone (optional) */}
       <div className="relative mt-3">
         <input
-          className="auth-input auth-input--center"
+          className="form-input form-input--center"
           placeholder="Phone (optional)"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -106,13 +106,13 @@ export default function StepProfile() {
       </div>
 
       <div className="auth-wizard-actions mt-4">
-        <button className="auth-btn-primary" disabled={busy}>
+        <button className="btn-primary" disabled={busy}>
           {busy ? "Saving…" : "Continue"}
         </button>
       </div>
 
-      <div className="auth-wizard-links justify-center mt-3">
-        <Link to="/onboarding/company" className="auth-link">
+      <div className="link text-center mt-3">
+        <Link to="/onboarding/company" className="link">
           Skip
         </Link>
       </div>

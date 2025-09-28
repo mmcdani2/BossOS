@@ -5,7 +5,7 @@ type DashboardKpiCardProps = {
   value: number;
   previous?: number; // optional for growth indicator
   format?: (val: number) => string;
-  tone?: "a" | "b" | "c" | "d"; 
+  tone?: "a" | "b" | "c" | "d";
   className?: string;
 };
 
@@ -25,14 +25,14 @@ export function DashboardKpiCard({
   const growthColor = up
     ? "var(--positive, #16a34a)"
     : down
-    ? "var(--negative, #dc2626)"
-    : "var(--text-muted)";
+      ? "var(--negative, #dc2626)"
+      : "var(--muted)";
 
   return (
     <div
       className={[
-        "tile rounded-xl p-5 sm:p-6 text-center text-basecolor transition-colors",
-        `tile--${tone}`,    // apply angle variant
+        "card--tile rounded-xl p-5 sm:p-6 text-center text-basecolor transition-colors",
+        `card--tile--${tone}`,    // apply angle variant
         className,
       ].join(" ")}
     >

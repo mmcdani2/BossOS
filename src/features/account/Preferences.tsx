@@ -86,10 +86,6 @@ export default function Preferences() {
       <PageHeader />
       <div className="shell page-viewport">
         {/* Toolbar */}
-        <div
-          className="sticky-under-nav"
-          style={{ top: "calc(var(--nav-h) - 64px)" }}
-        >
           <GlassCard className="p-3">
             <ViewToolbar
               label="Preferences"
@@ -104,7 +100,6 @@ export default function Preferences() {
               }
             />
           </GlassCard>
-        </div>
 
         {/* Groups */}
         <div className="mt-4 grid gap-4 md:grid-cols-2">
