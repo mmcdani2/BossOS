@@ -41,7 +41,7 @@ function GlassCardInner<T extends React.ElementType = "div">(
     <As
       ref={ref}
       className={cn(
-        "glass text-basecolor rounded-2xl",
+        "glass-panel text-basecolor rounded-2xl",
         pad,
         elevated && "shadow-1",
         divided && "divide-y divide-token",

@@ -7,40 +7,6 @@
   position: relative;
 }
 
-/* Background */
-.auth-bg {
-  background:
-    radial-gradient(600px 400px at 20% 15%, rgba(56,189,248,.25), transparent 70%),
-    linear-gradient(135deg, #0b121a 0%, #070c12 50%, #05080c 100%);
-  background-attachment: fixed;
-  position: relative;
-  overflow: hidden;
-}
-.auth-bg::after {
-  content: "";
-  position: absolute; inset: 0; pointer-events: none; opacity: .25;
-  background-image:
-    repeating-linear-gradient(120deg, rgba(56,189,248,.12) 0 2px, transparent 2px 80px),
-    repeating-linear-gradient(-120deg, rgba(249,115,22,.10) 0 2px, transparent 2px 100px);
-  background-size: 200px 200px, 240px 240px;
-}
-
-/* Ambient overlay (theme-aware) */
-:root[data-theme="dark"] .auth-center::before {
-  content: "";
-  position: fixed; inset: 0; pointer-events: none; opacity: .9;
-  background:
-    radial-gradient(1100px 800px at 16% -6%, rgba(56,189,248,.22) 0%, rgba(56,189,248,.08) 26%, transparent 55%),
-    radial-gradient(120% 110% at 60% 90%, rgba(0,0,0,.35) 0%, rgba(0,0,0,.6) 60%, rgba(0,0,0,.78) 100%);
-}
-:root[data-theme="light"] .auth-center::before {
-  content: "";
-  position: fixed; inset: 0; pointer-events: none; opacity: .5;
-  background:
-    radial-gradient(900px 600px at 12% -8%, color-mix(in srgb, var(--brand) 18%, transparent), transparent 60%),
-    linear-gradient(180deg, var(--surface-1), var(--surface-2));
-}
-
 /* Card (glassy) */
 .auth-card {
   width: 100%;
@@ -49,45 +15,11 @@
   overflow: hidden;
   position: relative;
   padding: 22px;
-  background:
-    radial-gradient(520px 360px at 9% 8%, rgba(56,189,248,.16) 0%, rgba(56,189,248,.08) 28%, transparent 58%) padding-box,
-    linear-gradient(180deg, #0b1218 0%, #070c12 55%, #06090f 100%) padding-box,
-    linear-gradient(145deg, rgba(56,189,248,.45) 0%, rgba(56,189,248,.18) 35%, rgba(56,189,248,0) 100%) border-box;
-  border: 1px solid transparent;
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.10),
-    inset 0 -12px 24px rgba(0,0,0,.30),
-    0 14px 44px rgba(0,0,0,.45);
-  color: var(--text);
 }
+
 .auth-card::after {
   content: "";
   position: absolute; inset: 1px; border-radius: 20px; pointer-events: none;
-  background:
-    radial-gradient(800px 520px at 10% -12%, rgba(56,189,248,.16) 0%, transparent 60%),
-    radial-gradient(700px 480px at 100% 110%, rgba(56,189,248,.10) 0%, transparent 65%);
-  mix-blend-mode: screen;
-  opacity: .45;
-}
-
-/* Glass surface helper (shared) */
-.glass-surface {
-  border: 1px solid var(--border);
-  backdrop-filter: saturate(140%) blur(12px);
-  -webkit-backdrop-filter: saturate(140%) blur(12px);
-  background: color-mix(in oklab, var(--panel) 70%, transparent);
-}
-
-@media (prefers-color-scheme: light) {
-  .glass-surface {
-    background: rgba(255,255,255,.85);
-    border: 1px solid rgba(15,23,42,.08);
-    box-shadow:
-      0 4px 20px rgba(0,0,0,.05),
-      0 1px 2px rgba(0,0,0,.04);
-  }
 }
 
 /* Typography */
@@ -155,13 +87,6 @@
 
 /* Theme: light adjustments */
 @media (prefers-color-scheme: light) {
-  .auth-bg { background: var(--bg); }
-  .auth-bg::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background-image:
-      linear-gradient(120deg, rgba(20,115,230,.05) 0%, transparent 60%),
-      linear-gradient(-120deg, rgba(34,197,194,.04) 10%, transparent 70%);
-  }
   .auth-input {
     background: rgba(255,255,255,.9);
     border: 1px solid var(--border);
@@ -187,15 +112,6 @@
 /* Compact on tiny devices */
 @media (max-width: 380px) {
   .auth-card { max-width: 100%; border-radius: 18px; padding: 18px; }
-}
-
-/* Soft pulse (reduced motion aware) */
-@keyframes pulse-soft {
-  0%,100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(99,102,241,0.35); }
-  50%     { transform: scale(1.03); box-shadow: 0 0 24px 2px rgba(99,102,241,0.25); }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .animate-pulse-soft { animation: pulse-soft 1.8s ease-in-out infinite; }
 }
 
 /* Branded background: subtle particles + gradients using your tokens */

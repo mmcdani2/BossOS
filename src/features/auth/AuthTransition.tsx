@@ -36,7 +36,7 @@ export default function AuthTransition({
       className={`fixed inset-0 z-50 transition-opacity duration-300 ${show ? "opacity-100" : "opacity-0 pointer-events-none"}`}
     >
       {/* Subtle branded background glow / particles */}
-      <div className="absolute inset-0 -z-10 auth-transition-bg" />
+      <div className="absolute inset-0 -z-10 transition-bg" />
 
       {/* Center content */}
       <div className="grid h-full place-items-center">
@@ -44,7 +44,7 @@ export default function AuthTransition({
           {/* Logo / mark circle */}
           <div className="size-16 rounded-full grid place-items-center animate-pulse-soft bg-[color:var(--surface-2)]/40 backdrop-blur-md border border-white/10 shadow-lg">
             {/* Replace with your SVG if you want */}
-            <div className="size-8 rounded-xl bg-[color:var(--brand)]/90 auth-logo-glow" />
+            <div className="size-8 rounded-xl bg-[color:var(--brand)]/90 logo-glow" />
           </div>
 
           {/* Status text */}

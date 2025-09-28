@@ -91,7 +91,15 @@ function DashboardInner() {
     <div className="shell">
       {/* Sticky toolbar as a glass card */}
       <div className="sticky-under-nav">
-        <GlassCard>
+        <div
+          className={[
+            "glass-panel",     
+            "relative",        
+            "text-basecolor",  
+            "rounded-2xl",     
+            "p-3 sm:p-4",           
+          ].join(" ")}
+        >
           <ViewToolbar
             label="Dashboard"
             right={
@@ -191,7 +199,8 @@ function DashboardInner() {
               previous={prevLeadsCount}
             />
           </div>
-        </GlassCard>
+
+          </div>
       </div>
     </div>
   );

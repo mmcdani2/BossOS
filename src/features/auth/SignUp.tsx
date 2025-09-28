@@ -56,7 +56,7 @@ export default function SignUp() {
   }
 
   return (
-    <div className="auth-center auth-bg">
+    <div className="auth-center app-bg app-ambient">
       <div className="auth-card glass-surface">
         <div className="text-center mb-6 sm:mb-8">
           <Logo />

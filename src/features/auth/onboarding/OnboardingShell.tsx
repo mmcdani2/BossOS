@@ -11,7 +11,7 @@ export default function OnboardingShell() {
   );
 
   return (
-    <div className="auth-center auth-bg">
+    <div className="auth-center app-bg app-ambient">
       <div className="auth-card glass-surface">
         {!isDone && (
           <div className="text-center mb-6 sm:mb-8">
