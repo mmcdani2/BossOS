@@ -21,3 +21,11 @@ body {
   display: flex; flex-direction: column;
   overflow: hidden;
 }
+
+/* Full-viewport center helper */
+.center-screen {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  position: relative; /* for absolutely positioned children */
+}

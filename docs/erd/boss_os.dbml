@@ -1,79 +1,364 @@
 Project BossOS {
-  database_type: 'PostgreSQL'
-  Note: 'Master ERD (v1.0) – trimmed to active tables only.'
+  database_type: "PostgreSQL"
 }
 
-/* ================
-   CORE: ORGANIZATION
-   ================ */
+//// CORE ORG & USERS ////
 Table organizations {
   id uuid [pk]
   name text
-  slug text [unique]
+  plan_tier text
+  stripe_customer_id text
+  subscription_status text
+  invoice_metadata jsonb
+  settings jsonb
+  industry text
+  region text
+  headcount int
+  status text // enum: active, suspended, canceled
+  owner_id uuid
+  last_active_at timestamptz
+  tags text[]
+  mrr numeric
   created_at timestamptz
-  Note: 'Tenant container'
 }
 
-Table profiles {
-  id uuid [pk] // maps to auth.users.id
-  org_id uuid [not null, ref: > organizations.id]
-  full_name text
-  phone text
-  role text                 // admin/dispatcher/tech/accountant
-  created_at timestamptz
-}
-
-Table user_orgs {
-  org_id uuid [not null, ref: > organizations.id]
-  user_id uuid [not null, ref: > profiles.id]
-  role text                 // role within org
-  created_at timestamptz
-  Indexes {
-    (org_id, user_id) [pk]
-  }
-}
-
-/* =========
-   CUSTOMERS
-   ========= */
-Table clients {
+Table locations {
   id uuid [pk]
-  org_id uuid [not null, ref: > organizations.id]
-  name text [not null]
+  org_id uuid [ref: > organizations.id]
+  name text
+  address jsonb
+  latitude numeric(9,6)
+  longitude numeric(9,6)
+  time_zone text
+  business_hours jsonb
+  is_default boolean
+  manager_user_id uuid [ref: > users.id]
   phone text
-  email text
+  email citext
+  status text // enum: active, inactive, archived
+  tags text[]
+  last_audit_at timestamptz
+  created_at timestamptz
+}
+
+Table roles {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  name text
+  permissions jsonb
+  is_system boolean
+  is_editable boolean
+  scope text // enum: org, location, mixed
+  priority int
+  description text
+  created_by uuid [ref: > users.id]
+  created_at timestamptz
+}
+
+Table users {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  email citext [unique]
+  name text
+  primary_role_id uuid [ref: > roles.id]
+  home_location_id uuid [ref: > locations.id]
+  is_org_owner boolean
+  phone text
+  avatar_url text
+  status text // enum: active, suspended, invited, terminated
+  hire_date date
+  termination_date date
+  certifications jsonb
+  hourly_rate numeric(10,2)
+  employment_type text // enum: w2, 1099, contractor, customer
+  last_login_at timestamptz
+  last_active_at timestamptz
+  tags text[]
   notes text
   created_at timestamptz
 }
 
-Table addresses {
-  id uuid [pk]
-  org_id uuid [not null, ref: > organizations.id]
-  client_id uuid [ref: > clients.id]   // nullable if reused for org locations
-  line1 text [not null]
-  line2 text
-  city text
-  state text
-  zip text
-  lat double
-  lng double
-  is_primary boolean
+Table user_roles {
+  user_id uuid [ref: > users.id]
+  role_id uuid [ref: > roles.id]
+  scope_location_id uuid [ref: > locations.id]
   created_at timestamptz
 }
 
-/* ===============
-   JOBS / SCHEDULING
-   =============== */
+//// CUSTOMERS ////
+Table customers {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  name text
+  email citext
+  phone text
+  jobs_count int
+  total_revenue numeric(12,2)
+  clv_score numeric(10,2)
+  source text
+  campaign text
+  first_contacted_at timestamptz
+  status text // enum: lead, active, inactive
+  tags text[]
+  notes text
+  created_at timestamptz
+}
+
+Table customer_contacts {
+  id uuid [pk]
+  customer_id uuid [ref: > customers.id]
+  name text
+  email citext
+  phone text
+  role text
+  created_at timestamptz
+}
+
+Table customer_addresses {
+  id uuid [pk]
+  customer_id uuid [ref: > customers.id]
+  label text
+  address jsonb
+  latitude numeric(9,6)
+  longitude numeric(9,6)
+  is_default boolean
+  created_at timestamptz
+}
+
+//// JOBS + CHECKLISTS ////
 Table jobs {
   id uuid [pk]
-  org_id uuid [not null, ref: > organizations.id]
-  client_id uuid [not null, ref: > clients.id]
-  address_id uuid [ref: > addresses.id]
-  status text              // draft/scheduled/en_route/in_progress/complete/canceled
-  priority text            // low/normal/high
-  scheduled_start_ts timestamptz
-  scheduled_end_ts timestamptz
-  created_by uuid [ref: > profiles.id]
+  org_id uuid [ref: > organizations.id]
+  customer_id uuid [ref: > customers.id]
+  location_id uuid [ref: > locations.id]
+  description text
+  service_address_id uuid [ref: > customer_addresses.id]
+  job_type text
+  category text
+  priority text
+  scheduled_by uuid [ref: > users.id]
+  dispatched_by uuid [ref: > users.id]
+  dispatch_time timestamptz
+  status text // enum: scheduled, in_progress, completed, closed, canceled
+  start_time timestamptz
+  end_time timestamptz
+  actual_hours numeric(6,2)
+  rrule text
+  parent_job_id uuid [ref: > jobs.id]
+  tags text[]
   created_at timestamptz
-  Note: 'Core work order; billing/inventory come later'
+  last_updated timestamptz
+}
+
+Table job_techs {
+  job_id uuid [ref: > jobs.id]
+  tech_id uuid [ref: > users.id]
+  role text
+  assigned_at timestamptz
+}
+
+Table checklists {
+  id uuid [pk]
+  job_id uuid [ref: > jobs.id]
+  template_id uuid [ref: > checklist_templates.id]
+  name text
+  version int
+  status text // enum: not_started, in_progress, completed, signed_off
+  completed_by uuid [ref: > users.id]
+  supervisor_id uuid [ref: > users.id]
+  signed_at timestamptz
+  created_at timestamptz
+}
+
+Table checklist_items {
+  id uuid [pk]
+  checklist_id uuid [ref: > checklists.id]
+  template_item_id uuid [ref: > checklist_template_items.id]
+  description text
+  status text // enum: pending, completed, skipped, failed
+  completed_by uuid [ref: > users.id]
+  completed_at timestamptz
+  notes text
+  attachment_url text
+}
+
+//// ESTIMATES + INVOICES + PAYMENTS ////
+Table estimates {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  customer_id uuid [ref: > customers.id]
+  job_id uuid [ref: > jobs.id]
+  status text
+  total numeric(12,2)
+  version int
+  parent_estimate_id uuid [ref: > estimates.id]
+  valid_until timestamptz
+  approved_by uuid [ref: > users.id]
+  approved_at timestamptz
+  signature_url text
+  line_items jsonb
+  notes text
+  created_at timestamptz
+}
+
+Table invoices {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  customer_id uuid [ref: > customers.id]
+  job_id uuid [ref: > jobs.id]
+  estimate_id uuid [ref: > estimates.id]
+  status text // enum: draft, sent, paid, overdue, void
+  invoice_number text
+  issue_date date
+  due_date date
+  total numeric(12,2)
+  balance_due numeric(12,2)
+  tax_amount numeric(12,2)
+  discount_amount numeric(12,2)
+  currency text
+  delivered_at timestamptz
+  viewed_at timestamptz
+  voided_at timestamptz
+  void_reason text
+  created_at timestamptz
+}
+
+Table payments {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  invoice_id uuid [ref: > invoices.id]
+  customer_id uuid [ref: > customers.id]
+  amount numeric(12,2)
+  method text // enum: cash, check, card, ach, financing
+  status text // enum: pending, succeeded, failed, refunded, disputed
+  reference text
+  processed_by uuid [ref: > users.id]
+  received_at timestamptz
+  gateway text
+  gateway_payment_id text
+  net_amount numeric(12,2)
+  created_at timestamptz
+}
+
+Table refunds {
+  id uuid [pk]
+  payment_id uuid [ref: > payments.id]
+  amount numeric(12,2)
+  reason text
+  status text // enum: pending, processed, failed
+  processed_at timestamptz
+}
+
+Table credit_memos {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  customer_id uuid [ref: > customers.id]
+  invoice_id uuid [ref: > invoices.id]
+  amount numeric(12,2)
+  reason text
+  status text // enum: draft, issued, applied, void
+  applied_to_invoice_id uuid [ref: > invoices.id]
+  created_at timestamptz
+}
+
+//// SERVICE PLANS ////
+Table service_plans {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  name text
+  description text
+  plan_type text
+  billing_cycle text
+  price numeric(10,2)
+  auto_renew boolean
+  coverage jsonb
+  created_at timestamptz
+}
+
+Table service_plan_subscriptions {
+  id uuid [pk]
+  service_plan_id uuid [ref: > service_plans.id]
+  customer_id uuid [ref: > customers.id]
+  start_date date
+  end_date date
+  status text // enum: active, paused, canceled, expired
+  renewal_date date
+  invoice_id uuid [ref: > invoices.id]
+  created_at timestamptz
+}
+
+//// INVENTORY + SUPPLIERS ////
+Table inventory_items {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  sku text
+  name text
+  description text
+  unit_of_measure text
+  cost numeric(12,2)
+  price numeric(12,2)
+  track_serial boolean
+  track_lot boolean
+}
+
+Table warehouses {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  location_id uuid [ref: > locations.id]
+  name text
+  type text
+}
+
+Table inventory_stock {
+  id uuid [pk]
+  warehouse_id uuid [ref: > warehouses.id]
+  item_id uuid [ref: > inventory_items.id]
+  quantity_on_hand numeric
+  reorder_point numeric
+  reorder_qty numeric
+}
+
+Table inventory_transactions {
+  id uuid [pk]
+  item_id uuid [ref: > inventory_items.id]
+  warehouse_id uuid [ref: > warehouses.id]
+  job_id uuid [ref: > jobs.id]
+  type text
+  quantity numeric
+  unit_cost numeric
+  created_at timestamptz
+  created_by uuid [ref: > users.id]
+}
+
+Table suppliers {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  name text
+  phone text
+  email citext
+  address jsonb
+}
+
+//// MESSAGING ////
+Table message_threads {
+  id uuid [pk]
+  org_id uuid [ref: > organizations.id]
+  job_id uuid [ref: > jobs.id]
+  customer_id uuid [ref: > customers.id]
+  channel text
+  subject text
+  created_at timestamptz
+}
+
+Table messages {
+  id uuid [pk]
+  thread_id uuid [ref: > message_threads.id]
+  sender_id uuid [ref: > users.id]
+  channel text
+  direction text
+  body text
+  attachments jsonb
+  status text
+  visibility text
+  created_at timestamptz
 }

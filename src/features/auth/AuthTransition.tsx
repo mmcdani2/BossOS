@@ -36,7 +36,7 @@ export default function AuthTransition({
       className={`fixed inset-0 z-50 transition-opacity duration-300 ${show ? "opacity-100" : "opacity-0 pointer-events-none"}`}
     >
       {/* Subtle branded background glow / particles */}
-      <div className="absolute inset-0 -z-10 transition-bg" />
+      <div className="center-screen inset-0 -z-10 transition-bg" />
 
       {/* Center content */}
       <div className="grid h-full place-items-center">

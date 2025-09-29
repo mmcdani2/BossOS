@@ -3,6 +3,7 @@
 /* Core */
 @import "./styles/tokens.css";
 @import "./styles/base.css";
+@import "./styles/utilities.css";
 @import "./styles/typography.css";
 
 /* New Components & Layout */
@@ -21,4 +22,3 @@
 @import "./styles/calendars-pickers.css";
 
 /* Feature / Utility */
-@import "./styles/utilities.css";
