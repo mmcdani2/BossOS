@@ -1,0 +1,16 @@
+/* Horizontal actions row (reusable everywhere) */
+.toolbar {
+  --toolbar-h: 56px;
+  white-space: nowrap;
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;  
+  min-height: var(--toolbar-h);
+  padding-inline: 8px;
+}
+
+/* Visually hide the horizontal scrollbar but keep scrolling */
+.toolbar::-webkit-scrollbar { display: none; }  /* Chrome/Safari */
+.toolbar { scrollbar-width: none; }            /* Firefox */
+.toolbar { -ms-overflow-style: none; }         /* Legacy Edge/IE */

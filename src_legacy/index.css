@@ -1,0 +1,24 @@
+﻿@import "tailwindcss";
+
+/* Core */
+@import "./styles/tokens.css";
+@import "./styles/base.css";
+@import "./styles/utilities.css";
+@import "./styles/typography.css";
+
+/* New Components & Layout */
+@import "./styles/skins.css";
+@import "./styles/theming.css";  
+@import "./styles/layout.css";
+@import "./styles/buttons.css";
+@import "./styles/forms.css";
+@import "./styles/tables.css";
+@import "./styles/cards.css";
+@import "./styles/nav.css";
+@import "./styles/toolbar.css";
+@import "./styles/overlays.css";
+@import "./styles/banners-toasts.css";
+@import "./styles/charts.css";
+@import "./styles/calendars-pickers.css";
+
+/* Feature / Utility */

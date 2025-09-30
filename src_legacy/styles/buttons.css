@@ -1,0 +1,33 @@
+/* Primary button */
+.btn-primary {
+  width: 100%;
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #fff;
+  font-weight: 600;
+  border: 1px solid rgba(255,255,255,.08);
+  background-image: linear-gradient(to right, #f97316, #ef4444);
+  transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+}
+.btn-primary:hover { box-shadow: 0 4px 8px rgba(249,115,22,.25); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: .7; cursor: not-allowed; }
+
+/* Secondary/ghost */
+.btn-secondary {
+  border-radius: 12px;
+  padding: 12px 14px;
+  color: #e6e8ec;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  transition: background .15s ease, transform .15s ease;
+}
+.btn-secondary:hover { background: rgba(255,255,255,.10); transform: translateY(-1px); }
+
+/* Light-theme adjustments for primary (uses your brand tokens) */
+@media (prefers-color-scheme: light) {
+  .btn-primary {
+    background-image: linear-gradient(90deg, var(--brand-start), var(--brand-end));
+    box-shadow: 0 8px 18px rgba(249,115,22,.22), 0 1px 0 rgba(255,255,255,.35) inset;
+    border: 1px solid color-mix(in srgb, var(--brand-end) 28%, transparent);
+  }
+}

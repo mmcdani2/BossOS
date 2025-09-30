@@ -1,0 +1,64 @@
+.bg-surface     { background: var(--surface); }
+.bg-surface-2   { background: var(--surface-2); }
+.bg-surface-3   { background: var(--surface-3); }
+
+.text-basecolor { color: var(--text); }
+.text-muted     { color: var(--text-muted); }
+.text-subtle    { color: var(--text-subtle); }
+
+.border-token   { border-color: var(--border); }
+
+/* Link treatment (global, reusable) */
+.link {
+  text-decoration-color: var(--accent);
+  transition: color .15s ease, text-decoration-color .15s ease;
+}
+.link:hover { color: #f97316; }
+
+@media (prefers-color-scheme: light) {
+  .link {
+    color: color-mix(in srgb, var(--text) 88%, #0ea5e9);
+    text-decoration-color: #0ea5e9;
+    text-underline-offset: 3px;
+  }
+  .link:hover { color: #0ea5e9; }
+}
+
+/* Text alignment helper */
+.text-center { text-align: center; }
+
+/* Branded background (generic, reusable) */
+.bg-transition {
+  background:
+    radial-gradient(700px 400px at 15% 20%, color-mix(in oklab, var(--brand) 26%, transparent), transparent 70%),
+    radial-gradient(600px 380px at 85% 75%, color-mix(in oklab, #f59e0b 20%, transparent), transparent 70%),
+    radial-gradient(500px 320px at 70% 15%, color-mix(in oklab, #14b8a6 18%, transparent), transparent 70%),
+    repeating-radial-gradient(circle at 20% 80%, rgba(255,255,255,.08) 0 1px, transparent 1px 6px),
+    linear-gradient(135deg, var(--surface-1), var(--surface));
+  filter: saturate(110%);
+}
+
+/* Logo glow */
+.logo-glow {
+  box-shadow:
+    0 0 24px 6px color-mix(in oklab, var(--brand) 40%, transparent),
+    inset 0 0 12px 2px color-mix(in oklab, var(--brand) 30%, transparent);
+}
+
+
+/* Light-mode utility overrides (scope under data-theme) */
+:root[data-theme="light"] .text-white       { color: var(--text) !important; }
+:root[data-theme="light"] .text-white\/90   { color: color-mix(in oklab, var(--text) 90%, transparent) !important; }
+:root[data-theme="light"] .text-white\/80   { color: color-mix(in oklab, var(--text) 80%, transparent) !important; }
+:root[data-theme="light"] .text-white\/70   { color: color-mix(in oklab, var(--text) 70%, transparent) !important; }
+:root[data-theme="light"] .text-white\/60   { color: color-mix(in oklab, var(--text) 60%, transparent) !important; }
+
+:root[data-theme="light"] .border-white\/10,
+:root[data-theme="light"] .border-white\/20 { border-color: var(--border) !important; }
+
+:root[data-theme="light"] .bg-white\/5      { background: rgba(0,0,0,0.03) !important; }
+:root[data-theme="light"] .hover\:bg-white\/10:hover { background: rgba(0,0,0,0.06) !important; }
+
+:root[data-theme="light"] .divide-white\/10 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--divider) !important;
+}

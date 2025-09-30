@@ -1,0 +1,67 @@
+/* ---------------- User Menu (glass, fixed, a11y) ---------------- */
+.popover {
+  position: relative;
+  z-index: 10000;
+}
+
+.popover-panel {
+  position: fixed;
+  top: 56px;
+  right: 16px;
+  width: 420px;
+  max-width: min(92vw, 420px);
+  max-height: 80vh;
+  overflow: auto;
+
+  background: rgba(17, 24, 39, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 12px 45px rgba(0, 0, 0, 0.5);
+  z-index: 10001;
+}
+.menu-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.avatar--lg {
+  width: 48px;
+  height: 48px;
+}
+.menu-header-text {
+  min-width: 0;
+}
+.menu-header-name {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.menu-header-email {
+  color: #cbd5e1;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.menu-close {
+  margin-left: auto;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e5e7eb;
+  cursor: pointer;
+}
+.menu-close:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
