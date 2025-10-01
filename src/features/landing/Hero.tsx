@@ -9,7 +9,7 @@ export default function Hero() {
                     <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-yellow-400">
                         The Operating System for Service Businesses
                     </h1>
-                    <p className="mt-6 text-lg text-gray-300">
+                    <p className="mt-6 text-lg text-gray-700 dark:text-gray-300">
                         Run HVAC, Spray Foam, Plumbing, and more—smarter, faster, with total control.
                     </p>
                 </div>
@@ -19,14 +19,18 @@ export default function Hero() {
                     <button className="rounded-xl px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold shadow-lg">
                         Get Started Free
                     </button>
-                    <button className="rounded-xl px-6 py-3 bg-white/10 border border-white/15 hover:bg-white/20 text-gray-200">
+                    <button className="rounded-xl px-6 py-3 border font-semibold
+                             bg-white text-gray-700 border-gray-300 hover:bg-gray-100
+                             dark:bg-white/10 dark:border-white/15 dark:text-gray-200 dark:hover:bg-white/20">
                         See BossOS in Action
                     </button>
                 </div>
 
                 {/* Visual placeholder */}
                 <div className="mt-12 w-full max-w-5xl mx-auto">
-                    <div className="aspect-video rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 shadow-2xl flex items-center justify-center text-gray-500">
+                    <div className="aspect-video rounded-2xl shadow-2xl flex items-center justify-center
+                          bg-gray-200 text-gray-500
+                          dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900">
                         Dashboard Mockup Placeholder
                     </div>
                 </div>
@@ -34,3 +38,4 @@ export default function Hero() {
         </section>
     )
 }
+
