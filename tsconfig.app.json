@@ -18,5 +18,5 @@
     "test": "vitest",
     "test:watch": "vitest watch"
   },
-  "include": ["src"]
+  "include": ["src", "src/main.tsx"]
 }

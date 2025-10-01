@@ -1,23 +1,23 @@
-/* eslint-disable react-refresh/only-export-components */
+// src/main.tsx
+// Entry point that mounts React app into index.html
+
+import "./styles/tailwind.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import { AuthProvider } from "@/app/providers/AuthProvider";
-import { router } from "@/app/router";
-import "./index.css";
+import { HeroUIProvider } from "@heroui/react";
+import { AuthProvider } from "./app/providers/AuthProvider";
+import AppRouter from "./app/router"; // import the router we built
 
-console.log(
-  "ENV:",
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY?.slice(0, 8)
-);
+// Find the #root element in index.html
+const rootElement = document.getElementById("root") as HTMLElement;
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <div className="app-bg app-ambient min-h-screen">
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </div>
-  </React.StrictMode>
+// Mount React app into root
+ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+        <HeroUIProvider>
+            <AuthProvider>
+                <AppRouter />
+            </AuthProvider>
+        </HeroUIProvider>
+    </React.StrictMode>
 );

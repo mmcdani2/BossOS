@@ -1,36 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="http://localhost:8097"></script>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="theme-color" content="#0b0f14" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Boss.OS</title>
-    <script>
-      (function () {
-        const saved = localStorage.getItem("theme"); // "light" | "dark" | null
-        const systemDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        const theme = saved || (systemDark ? "dark" : "light");
-        document.documentElement.setAttribute("data-theme", theme);
 
-        // keep in sync if system changes and no manual override
-        if (!saved) {
-          const mq = window.matchMedia("(prefers-color-scheme: dark)");
-          mq.addEventListener("change", (e) => {
-            document.documentElement.setAttribute(
-              "data-theme",
-              e.matches ? "dark" : "light"
-            );
-          });
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b0f14" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <title>BossOS</title>
+  <script>
+    (function () {
+      const storageKey = "theme";
+      const root = document.documentElement;
+      if (!root) return;
+
+      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+      const savedTheme = localStorage.getItem(storageKey);
+
+      const applyTheme = (theme) => {
+        root.classList.toggle("dark", theme === "dark");
+        root.dataset.theme = theme;
+      };
+
+      const resolveTheme = () => {
+        if (savedTheme === "light" || savedTheme === "dark") {
+          return savedTheme;
         }
-      })();
-    </script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+        return mediaQuery.matches ? "dark" : "light";
+      };
+
+      applyTheme(resolveTheme());
+
+      if (!savedTheme) {
+        mediaQuery.addEventListener("change", (event) => {
+          applyTheme(event.matches ? "dark" : "light");
+        });
+      }
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- React mounts here -->
+  <div id="root"></div>
+  <!-- Vite entry point -->
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
