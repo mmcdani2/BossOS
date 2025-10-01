@@ -1,39 +1,67 @@
 // src/features/landing/Hero.tsx
 
+import { Button, Card, Chip } from "@heroui/react";
+
 export default function Hero() {
     return (
         <section className="relative isolate overflow-hidden">
-            <div className="mx-auto max-w-7xl px-6 pt-24 pb-16 sm:pt-32 sm:pb-20 lg:px-8">
+            {/* Soft atmospheric glow that adapts to both themes */}
+            <div
+                aria-hidden="true"
+                className="absolute inset-0 -z-10 bg-gradient-to-b from-primary/15 via-background/60 to-background dark:from-primary/30 dark:via-background/30 dark:to-background"
+            />
+
+            <div className="mx-auto max-w-7xl px-6 pt-24 pb-20 sm:pt-32 lg:px-8">
                 {/* Text block */}
-                <div className="mx-auto max-w-3xl text-center">
-                    <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-red-500 to-yellow-400">
-                        The Operating System for Service Businesses
+                <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+                    <Chip
+                        className="mb-6 border border-secondary/40 bg-secondary/10 text-secondary-700 shadow-sm dark:border-secondary/25 dark:bg-secondary/15 dark:text-secondary-200"
+                        radius="full"
+                        size="lg"
+                        variant="flat"
+                    >
+                        Built for modern field service teams
+                    </Chip>
+
+                    <h1 className="text-balance text-4xl font-extrabold tracking-tight sm:text-6xl">
+                        <span className="bg-gradient-to-r from-primary via-primary/70 to-secondary bg-clip-text text-transparent">
+                            The Operating System for Service Businesses
+                        </span>
                     </h1>
-                    <p className="mt-6 text-lg text-gray-700 dark:text-gray-300">
-                        Run HVAC, Spray Foam, Plumbing, and more—smarter, faster, with total control.
+                    <p className="mt-6 max-w-2xl text-lg text-default-500">
+                        Run HVAC, spray foam, plumbing, and more—smarter, faster, and with total control across every job,
+                        crew, and customer touchpoint.
                     </p>
                 </div>
 
                 {/* Call-to-actions */}
-                <div className="mt-8 flex items-center justify-center gap-4">
-                    <button className="rounded-xl px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-semibold shadow-lg">
+                <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
+                    <Button
+                        className="px-8 shadow-lg shadow-primary/30"
+                        color="primary"
+                        radius="full"
+                        size="lg"
+                        variant="solid"
+                    >
                         Get Started Free
-                    </button>
-                    <button className="rounded-xl px-6 py-3 border font-semibold
-                             bg-white text-gray-700 border-gray-300 hover:bg-gray-100
-                             dark:bg-white/10 dark:border-white/15 dark:text-gray-200 dark:hover:bg-white/20">
+                    </Button>
+                    <Button
+                        className="px-8"
+                        color="secondary"
+                        radius="full"
+                        size="lg"
+                        variant="bordered"
+                    >
                         See BossOS in Action
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Visual placeholder */}
-                <div className="mt-12 w-full max-w-5xl mx-auto">
-                    <div className="aspect-video rounded-2xl shadow-2xl flex items-center justify-center
-                          bg-gray-200 text-gray-500
-                          dark:bg-gradient-to-br dark:from-gray-800 dark:to-gray-900">
+                <Card className="mx-auto mt-12 w-full max-w-5xl border border-default-200/60 bg-default-50/80 backdrop-blur-md dark:border-default-200/30 dark:bg-default-50/10" radius="lg">
+                    <div className="flex aspect-video w-full items-center justify-center text-base font-medium text-default-500">
                         Dashboard Mockup Placeholder
                     </div>
-                </div>
+                </Card>
             </div>
         </section>
     )

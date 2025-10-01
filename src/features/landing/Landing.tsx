@@ -4,7 +4,7 @@ import Hero from "./Hero"
 
 export default function Landing() {
     return (
-        <div className="flex flex-col min-h-screen bg-gray-950 text-gray-50">
+        <div className="flex min-h-screen flex-col bg-background text-foreground transition-colors duration-300">
             {/* Hero Section */}
             <Hero />
 
