@@ -1,6 +1,4 @@
-// tailwind-heroui-theme.ts (or tailwind.config.ts if you inline it)
-// ESM config, HeroUI + Tailwind v3/v4 compatible plugin usage.
-
+// tailwind.config.mjs
 import { heroui } from "@heroui/react";
 import { createRequire } from "module";
 import path from "path";
@@ -8,218 +6,131 @@ import path from "path";
 const require = createRequire(import.meta.url);
 const herouiThemeDist = path.join(
   path.dirname(require.resolve("@heroui/theme/package.json")),
-  "dist",
+  "dist"
 );
-// Ensure Tailwind scans HeroUI's generated classes
 const heroUiContentGlob = `${herouiThemeDist.replace(/\\/g, "/")}/**/*.{js,ts,jsx,tsx,mjs}`;
 
-// ---------- Brand Themes ----------
+// ---------------------- Themes ----------------------
+// All colors defined in OKLCH with <alpha-value> for opacity support
 
-// Light theme aligned with mockup (cyan/blue primary, neutral slate, subtle gold accent)
 const bossLight = {
   extend: "light",
-  layout: {
-    radius: {
-      small: "0.6rem",
-      medium: "0.85rem",
-      large: "1.25rem",
-    },
-    borderWidth: {
-      small: "1px",
-      medium: "1.5px",
-      large: "2px",
-    },
-    fontSize: {
-      tiny: "0.75rem",
-      small: "0.875rem",
-      medium: "1rem",
-      large: "1.125rem",
-      huge: "3.5rem",
-    },
-    disabledOpacity: 0.45,
-  },
   colors: {
-    background: "#f8fafc", // slate-50 vibe
-    foreground: "#0f172a", // slate-900
-    focus: "#0ea5e9",      // cyan-500 for focus rings
-    border: "#e5e7eb",
-    divider: "#e5e7eb",
+    background: "oklch(100% 0 0 / <alpha-value>)",
+    foreground: "oklch(29% 0 0 / <alpha-value>)",
 
-    // Primary = cyan/blue (CTA, active states)
-    primary: {
-      50:  "#ecfeff",
-      100: "#cffafe",
-      200: "#a5f3fc",
-      300: "#67e8f9",
-      400: "#22d3ee",
-      500: "#0ea5e9",
-      600: "#0284c7", // darker on hover/press
-      700: "#0369a1",
-      800: "#075985",
-      900: "#0c4a6e",
-      DEFAULT: "#0ea5e9",
-      foreground: "#06202b",
-    },
-
-    // Secondary = cool slate for subtle accents
-    secondary: {
-      50:  "#f1f5f9",
-      100: "#e2e8f0",
-      200: "#cbd5e1",
-      300: "#94a3b8",
-      400: "#64748b",
-      500: "#475569",
-      600: "#334155",
-      700: "#1f2937",
-      800: "#0f172a",
-      900: "#0b1220",
-      DEFAULT: "#475569",
-      foreground: "#0f172a",
-    },
-
-    // Neutral ramp powering cards/tables/forms
     default: {
-      50:  "#f8fafc",
-      100: "#f1f5f9",
-      200: "#e2e8f0",
-      300: "#cbd5e1", // fixed typo from #cbd5f5
-      400: "#94a3b8",
-      500: "#64748b",
-      600: "#475569",
-      700: "#334155",
-      800: "#1e293b",
-      900: "#0f172a",
-      foreground: "#0f172a",
+      50: "oklch(96% 0 0 / <alpha-value>)",
+      100: "oklch(87% 0 0 / <alpha-value>)",
+      200: "oklch(78% 0 0 / <alpha-value>)",
+      300: "oklch(68% 0 0 / <alpha-value>)",
+      400: "oklch(60% 0 0 / <alpha-value>)",
+      500: "oklch(55% 0 0 / <alpha-value>)",
+      600: "oklch(46% 0 0 / <alpha-value>)",
+      700: "oklch(36% 0 0 / <alpha-value>)",
+      800: "oklch(28% 0 0 / <alpha-value>)",
+      900: "oklch(18% 0 0 / <alpha-value>)",
+      DEFAULT: "oklch(55% 0 0 / <alpha-value>)",
+      foreground: "oklch(0% 0 0 / <alpha-value>)",
     },
 
-    // Status colors (WCAG-friendly ramps; hover = darker)
+    primary: {
+      50: "oklch(91% 0 0 / <alpha-value>)",
+      100: "oklch(74% 0 0 / <alpha-value>)",
+      200: "oklch(60% 0 0 / <alpha-value>)",
+      300: "oklch(45% 0 0 / <alpha-value>)",
+      400: "oklch(28% 0 0 / <alpha-value>)",
+      500: "oklch(0% 0 0 / <alpha-value>)",
+      600: "oklch(0% 0 0 / <alpha-value>)",
+      700: "oklch(0% 0 0 / <alpha-value>)",
+      800: "oklch(0% 0 0 / <alpha-value>)",
+      900: "oklch(0% 0 0 / <alpha-value>)",
+      DEFAULT: "oklch(0% 0 0 / <alpha-value>)",
+      foreground: "oklch(100% 0 0 / <alpha-value>)",
+    },
+
+    secondary: {
+      50: "oklch(98% 0.02 300 / <alpha-value>)",
+      100: "oklch(95% 0.03 300 / <alpha-value>)",
+      200: "oklch(92% 0.04 300 / <alpha-value>)",
+      300: "oklch(89% 0.05 300 / <alpha-value>)",
+      400: "oklch(86% 0.06 300 / <alpha-value>)",
+      500: "oklch(82% 0.07 300 / <alpha-value>)",
+      600: "oklch(69% 0.06 300 / <alpha-value>)",
+      700: "oklch(55% 0.05 300 / <alpha-value>)",
+      800: "oklch(40% 0.04 300 / <alpha-value>)",
+      900: "oklch(25% 0.03 300 / <alpha-value>)",
+      DEFAULT: "oklch(82% 0.07 300 / <alpha-value>)",
+      foreground: "oklch(0% 0 0 / <alpha-value>)",
+    },
+
     success: {
-      500: "#22c55e",
-      600: "#16a34a",
-      foreground: "#052e16",
+      50: "oklch(96% 0.02 145 / <alpha-value>)",
+      100: "oklch(88% 0.04 145 / <alpha-value>)",
+      200: "oklch(80% 0.06 145 / <alpha-value>)",
+      300: "oklch(72% 0.08 145 / <alpha-value>)",
+      400: "oklch(64% 0.1 145 / <alpha-value>)",
+      500: "oklch(56% 0.12 145 / <alpha-value>)",
+      600: "oklch(46% 0.1 145 / <alpha-value>)",
+      700: "oklch(36% 0.08 145 / <alpha-value>)",
+      800: "oklch(26% 0.06 145 / <alpha-value>)",
+      900: "oklch(16% 0.04 145 / <alpha-value>)",
+      DEFAULT: "oklch(56% 0.12 145 / <alpha-value>)",
+      foreground: "oklch(0% 0 0 / <alpha-value>)",
     },
+
     warning: {
-      500: "#f59e0b",
-      600: "#d97706",
-      foreground: "#2a1602",
+      50: "oklch(97% 0.03 80 / <alpha-value>)",
+      100: "oklch(92% 0.06 80 / <alpha-value>)",
+      200: "oklch(87% 0.09 80 / <alpha-value>)",
+      300: "oklch(82% 0.12 80 / <alpha-value>)",
+      400: "oklch(77% 0.15 80 / <alpha-value>)",
+      500: "oklch(72% 0.18 80 / <alpha-value>)",
+      600: "oklch(62% 0.15 80 / <alpha-value>)",
+      700: "oklch(50% 0.12 80 / <alpha-value>)",
+      800: "oklch(38% 0.09 80 / <alpha-value>)",
+      900: "oklch(26% 0.06 80 / <alpha-value>)",
+      DEFAULT: "oklch(72% 0.18 80 / <alpha-value>)",
+      foreground: "oklch(0% 0 0 / <alpha-value>)",
     },
+
     danger: {
-      500: "#ef4444",
-      600: "#dc2626",
-      foreground: "#3f0a0a",
+      50: "oklch(97% 0.03 30 / <alpha-value>)",
+      100: "oklch(90% 0.06 30 / <alpha-value>)",
+      200: "oklch(83% 0.09 30 / <alpha-value>)",
+      300: "oklch(76% 0.12 30 / <alpha-value>)",
+      400: "oklch(69% 0.15 30 / <alpha-value>)",
+      500: "oklch(62% 0.18 30 / <alpha-value>)",
+      600: "oklch(52% 0.15 30 / <alpha-value>)",
+      700: "oklch(42% 0.12 30 / <alpha-value>)",
+      800: "oklch(32% 0.09 30 / <alpha-value>)",
+      900: "oklch(22% 0.06 30 / <alpha-value>)",
+      DEFAULT: "oklch(62% 0.18 30 / <alpha-value>)",
+      foreground: "oklch(100% 0 0 / <alpha-value>)",
     },
 
-    // Optional gold accent (limited use: highlights, not primary)
-    accent: {
-      DEFAULT: "#facc15",
-      foreground: "#1f1300",
-    },
+    content1: { DEFAULT: "oklch(94% 0 0 / <alpha-value>)", foreground: "oklch(0% 0 0 / <alpha-value>)" },
+    content2: { DEFAULT: "oklch(90% 0 0 / <alpha-value>)", foreground: "oklch(0% 0 0 / <alpha-value>)" },
+    content3: { DEFAULT: "oklch(86% 0 0 / <alpha-value>)", foreground: "oklch(0% 0 0 / <alpha-value>)" },
+    content4: { DEFAULT: "oklch(82% 0 0 / <alpha-value>)", foreground: "oklch(0% 0 0 / <alpha-value>)" },
+
+    focus: "oklch(72% 0.2 50 / <alpha-value>)",
+    overlay: "oklch(0% 0 0 / <alpha-value>)",
   },
 };
 
-// ————— in your theme config file: replace bossDark with this —————
-const bossDark = {
-  extend: "dark",
-  layout: bossLight.layout,
-  colors: {
-    // Warm charcoal shell + soft white text
-    background: "#0a0c0f",
-    foreground: "#f5f7fa",
+// Dark theme just extends light with palette inversion (we can expand if needed)
+const bossDark = { extend: "dark", colors: bossLight.colors };
 
-    // Focus ring = premium gold
-    focus: "#d8a800",
-
-    // Warm graphite separators (no blue tint)
-    border:  "#23262d",
-    divider: "#23262d",
-
-    // PRIMARY = BossOS red for actions (hover goes darker)
-    primary: {
-      50:  "#2b0b0b",
-      100: "#3d1111",
-      200: "#5a1616",
-      300: "#7a1a1a",
-      400: "#a11f1f",
-      500: "#ef4444",   // DEFAULT
-      600: "#dc2626",   // hover/press (darker)
-      700: "#b91c1c",
-      800: "#991b1b",
-      900: "#7f1d1d",
-      DEFAULT: "#ef4444",
-      foreground: "#fff7f7",
-    },
-
-    // SECONDARY = deeper gold (not lemon), for tasteful accents
-    secondary: {
-      50:  "#2a2207",
-      100: "#3a2e09",
-      200: "#5a430c",
-      300: "#7a590e",
-      400: "#9b6f10",
-      500: "#d8a800",   // DEFAULT accent
-      600: "#c39600",
-      700: "#9d7a00",
-      800: "#7a5f00",
-      900: "#5c4800",
-      DEFAULT: "#d8a800",
-      foreground: "#140e00",
-    },
-
-    // NEUTRALS = warm charcoal ramp powering glass surfaces
-    // 500 is the card base; pair with /10–/20 + blur for glass feel
-    default: {
-      50:  "#0e1114",
-      100: "#13171c",
-      200: "#171c22",
-      300: "#1d232b",
-      400: "#242b35",
-      500: "#2b343f",   // card base glass
-      600: "#333e4a",
-      700: "#3f4b58",
-      800: "#536371",
-      900: "#6c7d8c",
-      foreground: "#f5f7fa",
-    },
-
-    // Status ramps (hover = darker)
-    success: { 500: "#22c55e", 600: "#16a34a", foreground: "#06240f" },
-    warning: { 500: "#f97316", 600: "#ea580c", foreground: "#431407" },
-    danger:  { 500: "#ef4444", 600: "#dc2626", foreground: "#450a0a" },
-  },
-};
-
-
-
-// ---------- Tailwind Export ----------
+// ---------------------- Tailwind Export ----------------------
 
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-    heroUiContentGlob,
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}", heroUiContentGlob],
   darkMode: "class",
-  theme: {
-    extend: {
-      fontFamily: {
-        sans: [
-          "'Inter'",
-          "var(--font-sans, ui-sans-serif)",
-          "system-ui",
-          "-apple-system",
-          "BlinkMacSystemFont",
-          "'Segoe UI'",
-          "sans-serif",
-        ],
-      },
-    },
-  },
+  theme: { extend: {} },
   plugins: [
     heroui({
-      themes: {
-        light: bossLight,
-        dark: bossDark,
-      },
+      themes: { light: bossLight, dark: bossDark },
     }),
   ],
 };

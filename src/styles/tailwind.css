@@ -1,25 +1,102 @@
 @import "tailwindcss";
 @config "../../tailwind.config.mjs";
 
+@theme {
+  --color-background: theme(colors.background);
+  --color-foreground: theme(colors.foreground);
+
+  --color-default-50: theme(colors.default.50);
+  --color-default-100: theme(colors.default.100);
+  --color-default-200: theme(colors.default.200);
+  --color-default-300: theme(colors.default.300);
+  --color-default-400: theme(colors.default.400);
+  --color-default-500: theme(colors.default.500);
+  --color-default-600: theme(colors.default.600);
+  --color-default-700: theme(colors.default.700);
+  --color-default-800: theme(colors.default.800);
+  --color-default-900: theme(colors.default.900);
+  --color-default-foreground: theme(colors.default.foreground);
+
+  --color-primary-50: theme(colors.primary.50);
+  --color-primary-100: theme(colors.primary.100);
+  --color-primary-200: theme(colors.primary.200);
+  --color-primary-300: theme(colors.primary.300);
+  --color-primary-400: theme(colors.primary.400);
+  --color-primary-500: theme(colors.primary.500);
+  --color-primary-600: theme(colors.primary.600);
+  --color-primary-700: theme(colors.primary.700);
+  --color-primary-800: theme(colors.primary.800);
+  --color-primary-900: theme(colors.primary.900);
+  --color-primary-foreground: theme(colors.primary.foreground);
+
+  --color-secondary-50: theme(colors.secondary.50);
+  --color-secondary-100: theme(colors.secondary.100);
+  --color-secondary-200: theme(colors.secondary.200);
+  --color-secondary-300: theme(colors.secondary.300);
+  --color-secondary-400: theme(colors.secondary.400);
+  --color-secondary-500: theme(colors.secondary.500);
+  --color-secondary-600: theme(colors.secondary.600);
+  --color-secondary-700: theme(colors.secondary.700);
+  --color-secondary-800: theme(colors.secondary.800);
+  --color-secondary-900: theme(colors.secondary.900);
+  --color-secondary-foreground: theme(colors.secondary.foreground);
+
+  --color-success-50: theme(colors.success.50);
+  --color-success-100: theme(colors.success.100);
+  --color-success-200: theme(colors.success.200);
+  --color-success-300: theme(colors.success.300);
+  --color-success-400: theme(colors.success.400);
+  --color-success-500: theme(colors.success.500);
+  --color-success-600: theme(colors.success.600);
+  --color-success-700: theme(colors.success.700);
+  --color-success-800: theme(colors.success.800);
+  --color-success-900: theme(colors.success.900);
+  --color-success-foreground: theme(colors.success.foreground);
+
+  --color-warning-50: theme(colors.warning.50);
+  --color-warning-100: theme(colors.warning.100);
+  --color-warning-200: theme(colors.warning.200);
+  --color-warning-300: theme(colors.warning.300);
+  --color-warning-400: theme(colors.warning.400);
+  --color-warning-500: theme(colors.warning.500);
+  --color-warning-600: theme(colors.warning.600);
+  --color-warning-700: theme(colors.warning.700);
+  --color-warning-800: theme(colors.warning.800);
+  --color-warning-900: theme(colors.warning.900);
+  --color-warning-foreground: theme(colors.warning.foreground);
+
+  --color-danger-50: theme(colors.danger.50);
+  --color-danger-100: theme(colors.danger.100);
+  --color-danger-200: theme(colors.danger.200);
+  --color-danger-300: theme(colors.danger.300);
+  --color-danger-400: theme(colors.danger.400);
+  --color-danger-500: theme(colors.danger.500);
+  --color-danger-600: theme(colors.danger.600);
+  --color-danger-700: theme(colors.danger.700);
+  --color-danger-800: theme(colors.danger.800);
+  --color-danger-900: theme(colors.danger.900);
+  --color-danger-foreground: theme(colors.danger.foreground);
+
+  --color-content1: theme(colors.content1.DEFAULT);
+  --color-content1-foreground: theme(colors.content1.foreground);
+  --color-content2: theme(colors.content2.DEFAULT);
+  --color-content2-foreground: theme(colors.content2.foreground);
+  --color-content3: theme(colors.content3.DEFAULT);
+  --color-content3-foreground: theme(colors.content3.foreground);
+  --color-content4: theme(colors.content4.DEFAULT);
+  --color-content4-foreground: theme(colors.content4.foreground);
+
+  --color-focus: theme(colors.focus);
+  --color-overlay: theme(colors.overlay);
+}
+
+/* Base layer */
 @layer base {
-  :root {
-    color-scheme: light;
-  }
-
-  .dark {
-    color-scheme: dark;
-  }
-
   body {
     @apply bg-background text-foreground antialiased;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight text-foreground;
   }
 
@@ -27,3 +104,4 @@
     @apply text-default-500;
   }
 }
+

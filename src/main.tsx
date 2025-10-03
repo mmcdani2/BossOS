@@ -1,6 +1,5 @@
 // src/main.tsx
 // Entry point that mounts React app into index.html
-
 import "./styles/tailwind.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
@@ -15,9 +14,11 @@ const rootElement = document.getElementById("root") as HTMLElement;
 ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
         <HeroUIProvider>
+            <main className="dark text-foreground bg-background">
             <AuthProvider>
                 <AppRouter />
             </AuthProvider>
+            </main>
         </HeroUIProvider>
     </React.StrictMode>
 );
