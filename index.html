@@ -1,48 +1,55 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0b0f14" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Ensure form controls/scrollbars respect theme -->
+  <meta name="color-scheme" content="dark light" />
+  <!-- Updated dynamically to match theme -->
+  <meta id="app-theme-color" name="theme-color" content="#0b0f14" />
+
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <title>BossOS</title>
+
+  <!-- Zero-FOUC theme bootstrap -->
   <script>
-    (function () {
-      const storageKey = "theme";
+    (() => {
+      const STORAGE_KEY = "theme";
       const root = document.documentElement;
-      if (!root) return;
-
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const savedTheme = localStorage.getItem(storageKey);
-
-      const applyTheme = (theme) => {
-        root.classList.toggle("dark", theme === "dark");
-        root.dataset.theme = theme;
+      const media = window.matchMedia("(prefers-color-scheme: dark)");
+      const metaTheme = document.querySelector('meta#app-theme-color');
+      const COLORS = {
+        light: { themeColor: "#ffffff" },
+        dark: { themeColor: "#0b0f14" },
       };
 
-      const resolveTheme = () => {
-        if (savedTheme === "light" || savedTheme === "dark") {
-          return savedTheme;
-        }
-        return mediaQuery.matches ? "dark" : "light";
+      const readSaved = () => {
+        try { const v = localStorage.getItem(STORAGE_KEY); return v === "dark" || v === "light" ? v : null; }
+        catch { return null; }
+      };
+      const resolveTheme = () => readSaved() ?? (media.matches ? "dark" : "light");
+
+      const applyTheme = (t) => {
+        root.classList.toggle("dark", t === "dark");
+        root.dataset.theme = t;
+        if (metaTheme) metaTheme.setAttribute("content", COLORS[t].themeColor);
+        // ❌ no inline background painting here
       };
 
       applyTheme(resolveTheme());
-
-      if (!savedTheme) {
-        mediaQuery.addEventListener("change", (event) => {
-          applyTheme(event.matches ? "dark" : "light");
-        });
-      }
+      if (!readSaved()) media.addEventListener("change", e => applyTheme(e.matches ? "dark" : "light"));
+      window.addEventListener("storage", e => { if (e.key === "theme" && e.newValue) applyTheme(e.newValue); });
+      window.__setTheme = (t) => { try { localStorage.setItem(STORAGE_KEY, t); } catch { } applyTheme(t); };
     })();
   </script>
+
+
 </head>
 
 <body>
-  <!-- React mounts here -->
   <div id="root"></div>
-  <!-- Vite entry point -->
   <script type="module" src="/src/main.tsx"></script>
 </body>
 
