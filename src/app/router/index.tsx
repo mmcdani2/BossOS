@@ -6,6 +6,7 @@ import Chrome from "../layouts/Chrome";
 import PublicLayout from "../layouts/PublicLayout";
 import Onboarding from "../../features/auth/onboarding/Onboarding";
 import Landing from "../../features/landing/Landing";
+import Dashboard from "@/features/dashboard/Dashboard";
 
 // Main Router component
 export default function AppRouter() {
@@ -20,6 +21,7 @@ export default function AppRouter() {
                 {/* Authenticated app shell */}
                 <Route element={<Chrome />}>
                     <Route path="/onboarding" element={<Onboarding />} />
+                    <Route path="/Dashboard" element={<Dashboard />} />
 
                     {/* TODO: add more routes here as we build */}
                 </Route>
