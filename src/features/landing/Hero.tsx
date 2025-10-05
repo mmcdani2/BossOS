@@ -11,12 +11,10 @@ export default function Hero() {
 
 
 
-    <section className="relative isolate overflow-hidden bg-background text-foreground">
-      <div className="absolute inset-0 z-0">
-        <BackgroundRippleEffect />
-      </div>
-      <div className="absolute inset-0 -z-20 bg-gradient-to-b from-primary-500/10 via-background to-background dark:from-primary-400/10 dark:via-background dark:to-background" />
-      <div className="absolute -left-40 top-1/2 -z-10 h-[30rem] w-[30rem] -translate-y-1/2 rounded-full bg-primary/20 blur-3xl dark:bg-primary/10" />
+      <section className="relative isolate bg-background text-foreground">
+          <div className="fixed inset-0 w-screen h-screen z-0 ">
+              <BackgroundRippleEffect />
+          </div>
 
       <div className="mx-auto flex max-w-6xl flex-col gap-16 px-6 pt-24 pb-20 sm:pt-32 lg:px-8">
         <header className="flex flex-col items-center gap-6 text-center">
@@ -24,7 +22,7 @@ export default function Hero() {
             <HoverBorderGradient
               containerClassName="rounded-full"
               as="button"
-              className="bg-content1 text-3xl text-foreground font-semibold flex items-center space-x-2"
+              className="bg-content1 text-4xl text-foreground font-semibold flex items-center space-x-2"
             >
               <span>Boss.OS</span>
             </HoverBorderGradient>
