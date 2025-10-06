@@ -238,5 +238,6 @@ export default {
       themes: bossOSThemes,
       layout: bossOSLayout,
     }),
+    require("tailwindcss-animate"), // ✅ add this line
   ],
 };

@@ -3,7 +3,6 @@ import { BackgroundRippleEffect } from "@/components/ui/background-ripple-effect
 import { HoverBorderGradient } from "@/components/ui/hover-border-gradient";
 import { LayoutTextFlip } from "@/components/ui/layout-text-flip";
 import { VERTICALS } from "@/config/verticals";
-import Dashboard from "../dashboard/Dashboard";
 import { Button } from "@heroui/react";
 import { Link } from "react-router-dom";
 

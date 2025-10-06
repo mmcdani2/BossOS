@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
 import OnboardingLayout from "@/app/layouts/OnboardingLayout";
 import Step1Welcome from "./steps/Step1Welcome";
 import Step2Business from "./steps/Step2Business";
@@ -14,7 +13,7 @@ export default function Onboarding() {
 
     const next = () => setStep((s) => Math.min(s + 1, 5));
     const back = () => setStep((s) => Math.max(s - 1, 1));
-    const navigate = useNavigate();
+
 
 
     return (
