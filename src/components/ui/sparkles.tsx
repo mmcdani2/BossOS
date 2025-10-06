@@ -6,6 +6,7 @@ import type { Container, SingleOrMultiple } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import { cn } from "@/lib/utils";
 import { motion, useAnimation } from "motion/react";
+import { useTheme } from "@/lib/hooks/useTheme";
 
 type ParticlesProps = {
   id?: string;
@@ -49,6 +50,8 @@ export const SparklesCore = (props: ParticlesProps) => {
       });
     }
   };
+  const { theme } = useTheme();
+
 
   const generatedId = useId();
   return (
@@ -122,7 +125,10 @@ export const SparklesCore = (props: ParticlesProps) => {
                 },
               },
               color: {
-                value: particleColor || "#ffffff",
+                value:
+                  particleColor ||
+                  (theme === "light" ? "#111111" : "hsl(var(--primary))"),
+
                 animation: {
                   h: {
                     count: 0,

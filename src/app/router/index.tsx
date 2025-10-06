@@ -16,12 +16,13 @@ export default function AppRouter() {
                 {/* Public marketing pages */}
                 <Route element={<PublicLayout />}>
                     <Route index element={<Landing />} />
+                    <Route path="/onboarding" element={<Onboarding />} />
                 </Route>
 
                 {/* Authenticated app shell */}
                 <Route element={<Chrome />}>
-                    <Route path="/onboarding" element={<Onboarding />} />
-                    <Route path="/Dashboard" element={<Dashboard />} />
+                    
+                    <Route path="/dashboard" element={<Dashboard />} />
 
                     {/* TODO: add more routes here as we build */}
                 </Route>
